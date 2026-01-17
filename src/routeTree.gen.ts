@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DocsRecipesRouteImport } from './routes/docs/recipes'
+import { Route as DocsLevitateRouteImport } from './routes/docs/levitate'
+import { Route as DocsInstallRouteImport } from './routes/docs/install'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocsRecipesRoute = DocsRecipesRouteImport.update({
+  id: '/docs/recipes',
+  path: '/docs/recipes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsLevitateRoute = DocsLevitateRouteImport.update({
+  id: '/docs/levitate',
+  path: '/docs/levitate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsInstallRoute = DocsInstallRouteImport.update({
+  id: '/docs/install',
+  path: '/docs/install',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/docs/install': typeof DocsInstallRoute
+  '/docs/levitate': typeof DocsLevitateRoute
+  '/docs/recipes': typeof DocsRecipesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/docs/install': typeof DocsInstallRoute
+  '/docs/levitate': typeof DocsLevitateRoute
+  '/docs/recipes': typeof DocsRecipesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/docs/install': typeof DocsInstallRoute
+  '/docs/levitate': typeof DocsLevitateRoute
+  '/docs/recipes': typeof DocsRecipesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/docs/install' | '/docs/levitate' | '/docs/recipes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/docs/install' | '/docs/levitate' | '/docs/recipes'
+  id: '__root__' | '/' | '/docs/install' | '/docs/levitate' | '/docs/recipes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DocsInstallRoute: typeof DocsInstallRoute
+  DocsLevitateRoute: typeof DocsLevitateRoute
+  DocsRecipesRoute: typeof DocsRecipesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docs/recipes': {
+      id: '/docs/recipes'
+      path: '/docs/recipes'
+      fullPath: '/docs/recipes'
+      preLoaderRoute: typeof DocsRecipesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/levitate': {
+      id: '/docs/levitate'
+      path: '/docs/levitate'
+      fullPath: '/docs/levitate'
+      preLoaderRoute: typeof DocsLevitateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/install': {
+      id: '/docs/install'
+      path: '/docs/install'
+      fullPath: '/docs/install'
+      preLoaderRoute: typeof DocsInstallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DocsInstallRoute: DocsInstallRoute,
+  DocsLevitateRoute: DocsLevitateRoute,
+  DocsRecipesRoute: DocsRecipesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,6 +1,7 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { Layout } from '@/components/layout'
 
 import appCss from '../styles.css?url'
 
@@ -15,7 +16,11 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'LevitateOS - AI-Powered Linux',
+      },
+      {
+        name: 'description',
+        content: 'The first Linux with an AI-powered installer. Chat in natural language, self-sufficient package manager, pure Wayland.',
       },
     ],
     links: [
@@ -27,11 +32,20 @@ export const Route = createRootRoute({
   }),
 
   shellComponent: RootDocument,
+  component: RootComponent,
 })
+
+function RootComponent() {
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
+  )
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>

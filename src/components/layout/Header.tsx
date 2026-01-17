@@ -1,0 +1,39 @@
+import { Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { GithubLogo } from "@phosphor-icons/react";
+
+export function Header() {
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+        <Link to="/" className="flex items-center gap-2">
+          <span className="text-xl font-bold">LevitateOS</span>
+        </Link>
+
+        <nav className="hidden md:flex items-center gap-6">
+          <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            Home
+          </Link>
+          <Link to="/docs/install" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            Install
+          </Link>
+          <Link to="/docs/recipes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            Recipes
+          </Link>
+          <Link to="/docs/levitate" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            CLI
+          </Link>
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" asChild>
+            <a href="https://github.com/LevitateOS/LevitateOS" target="_blank" rel="noopener noreferrer">
+              <GithubLogo className="h-5 w-5" />
+              <span className="sr-only">GitHub</span>
+            </a>
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+}
