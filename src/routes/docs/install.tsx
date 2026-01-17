@@ -13,12 +13,61 @@ function InstallPage() {
 
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Requirements</h2>
-        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+
+        <h3 className="text-xl font-medium mb-3">System</h3>
+        <ul className="list-disc list-inside space-y-1 text-muted-foreground mb-4">
           <li><strong>Architecture:</strong> x86_64</li>
-          <li><strong>RAM:</strong> 4GB minimum</li>
           <li><strong>Disk:</strong> 20GB minimum</li>
           <li><strong>Boot:</strong> UEFI recommended</li>
         </ul>
+
+        <h3 className="text-xl font-medium mb-3">AI Installer (SmolLM3-3B)</h3>
+        <p className="text-muted-foreground mb-2">
+          The LLM requires GPU acceleration or sufficient RAM:
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left py-2 pr-4">Hardware</th>
+                <th className="text-left py-2 pr-4">VRAM/RAM</th>
+                <th className="text-left py-2">Notes</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b">
+                <td className="py-2 pr-4">NVIDIA GPU</td>
+                <td className="py-2 pr-4">6GB+ VRAM</td>
+                <td className="py-2">CUDA, best compatibility</td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-2 pr-4">NVIDIA GPU (4-bit)</td>
+                <td className="py-2 pr-4">2GB+ VRAM</td>
+                <td className="py-2">With bitsandbytes quantization</td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-2 pr-4">AMD GPU</td>
+                <td className="py-2 pr-4">6GB+ VRAM</td>
+                <td className="py-2">ROCm 5.6+, RX 6000/7000 series</td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-2 pr-4">Intel Arc</td>
+                <td className="py-2 pr-4">6GB+ VRAM</td>
+                <td className="py-2">Via IPEX-LLM</td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-2 pr-4">Apple Silicon</td>
+                <td className="py-2 pr-4">8GB+ unified</td>
+                <td className="py-2">Metal/MPS acceleration</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4">CPU only</td>
+                <td className="py-2 pr-4">8GB+ RAM</td>
+                <td className="py-2">Slow, fallback option</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="mb-8">
