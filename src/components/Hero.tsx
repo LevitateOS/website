@@ -2,17 +2,30 @@ import { DownloadSimple, GithubLogo } from "@phosphor-icons/react"
 import { useTernaryDarkMode } from "usehooks-ts"
 
 import { buttonVariants } from "@/components/ui/button"
+import { useHasMounted } from "@/hooks/useHasMounted"
 
 export function Hero() {
+	const mounted = useHasMounted()
 	const { isDarkMode } = useTernaryDarkMode()
 
 	return (
-		<section className="container flex flex-col items-center text-center py-8">
-			<img
-				src={isDarkMode ? "/levitateos-dark.png" : "/levitateos-light.png"}
-				alt="LevitateOS"
-				className="h-64 w-auto rounded-br-[4rem]"
-			/>
+		<section className="container flex flex-col items-center text-center py-16">
+			{mounted ? (
+				<img
+					src={isDarkMode ? "/levitateos-dark.png" : "/levitateos-light.png"}
+					alt="LevitateOS"
+					className="h-64 w-auto rounded-br-[4rem]"
+				/>
+			) : (
+				<picture>
+					<source srcSet="/levitateos-dark.png" media="(prefers-color-scheme: dark)" />
+					<img
+						src="/levitateos-light.png"
+						alt="LevitateOS"
+						className="h-64 w-auto rounded-br-[4rem]"
+					/>
+				</picture>
+			)}
 			<p className="text-xl text-muted-foreground mb-6">Be your own package maintainer</p>
 
 			<ul className="flex flex-col gap-1.5 text-left text-sm text-muted-foreground mb-8">
