@@ -12,9 +12,9 @@ function HomePage() {
 			<Hero />
 
 			{/* Features Section */}
-			<section className="container py-12">
+			<section className="container py-16">
 				<h2 className="text-2xl font-bold text-center mb-8">Features</h2>
-				<div className="grid gap-4 grid-cols-2">
+				<div className="grid gap-6 grid-cols-2">
 					<FeatureCard
 						icon={<Package className="h-8 w-8" />}
 						title="Your Own Packages"
@@ -70,7 +70,7 @@ recipe remove ripgrep`}</CodeBlock>
 			</section>
 
 			{/* Local LLM Section */}
-			<section className="container py-12">
+			<section className="container py-16">
 				<h2 className="text-2xl font-bold text-center mb-8">Local LLM: SmolLM3</h2>
 				<p className="text-muted-foreground text-center mb-8">
 					Optional AI assistant powered by SmolLM3 from Hugging Face. Runs entirely on your machine.
@@ -108,7 +108,7 @@ recipe remove ripgrep`}</CodeBlock>
 
 				<div className="bg-muted/50 border p-4">
 					<h3 className="font-semibold mb-3">This is NOT Windows Copilot</h3>
-					<div className="grid grid-cols-2 gap-4 text-sm">
+					<div className="grid grid-cols-2 gap-6 text-sm">
 						<div>
 							<p className="text-muted-foreground mb-2">What it is:</p>
 							<ul className="space-y-1">
@@ -132,54 +132,52 @@ recipe remove ripgrep`}</CodeBlock>
 			</section>
 
 			{/* Installation Preview */}
-			<section className="container py-12">
+			<section className="container py-16">
 				<h2 className="text-2xl font-bold text-center mb-8">Quick Start</h2>
-				<div>
-					<div className="space-y-4">
-						<div>
-							<h3 className="font-semibold mb-2">1. Download the ISO</h3>
-							<CodeBlock language="bash">{`curl -LO https://releases.levitateos.org/latest/LevitateOS.iso
+				<div className="space-y-6">
+					<div>
+						<h3 className="font-semibold mb-2">1. Download the ISO</h3>
+						<CodeBlock language="bash">{`curl -LO https://releases.levitateos.org/latest/LevitateOS.iso
 sha256sum -c SHA256SUMS`}</CodeBlock>
-						</div>
-						<div>
-							<h3 className="font-semibold mb-2">2. Boot (USB or VM)</h3>
-							<CodeBlock language="bash">{`# USB
+					</div>
+					<div>
+						<h3 className="font-semibold mb-2">2. Boot (USB or VM)</h3>
+						<CodeBlock language="bash">{`# USB
 sudo dd if=LevitateOS.iso of=/dev/sdX bs=4M status=progress
 
 # QEMU
 qemu-system-x86_64 -m 4G -enable-kvm -cdrom LevitateOS.iso`}</CodeBlock>
+					</div>
+					<div>
+						<h3 className="font-semibold mb-2">3. Chat with the installer</h3>
+						<div className="bg-muted/50 p-4 space-y-2 text-sm">
+							<p>
+								<span className="text-primary">You:</span> install to the 500gb drive with user
+								vince
+							</p>
+							<p>
+								<span className="text-muted-foreground">AI:</span> I'll partition /dev/sda (500GB)
+								with ext4 and create user "vince".
+							</p>
+							<p>
+								<span className="text-primary">You:</span> yes, make vince a sudo user
+							</p>
+							<p>
+								<span className="text-muted-foreground">AI:</span> Done. Rebooting into
+								LevitateOS...
+							</p>
 						</div>
-						<div>
-							<h3 className="font-semibold mb-2">3. Chat with the installer</h3>
-							<div className="bg-muted/50 p-4 space-y-2 text-sm">
-								<p>
-									<span className="text-primary">You:</span> install to the 500gb drive with user
-									vince
-								</p>
-								<p>
-									<span className="text-muted-foreground">AI:</span> I'll partition /dev/sda (500GB)
-									with ext4 and create user "vince".
-								</p>
-								<p>
-									<span className="text-primary">You:</span> yes, make vince a sudo user
-								</p>
-								<p>
-									<span className="text-muted-foreground">AI:</span> Done. Rebooting into
-									LevitateOS...
-								</p>
-							</div>
-						</div>
-						<div>
-							<h3 className="font-semibold mb-2">4. You're done</h3>
-							<CodeBlock language="bash">{`# You're at a terminal. Install packages as needed:
+					</div>
+					<div>
+						<h3 className="font-semibold mb-2">4. You're done</h3>
+						<CodeBlock language="bash">{`# You're at a terminal. Install packages as needed:
 recipe install ripgrep fd`}</CodeBlock>
-						</div>
 					</div>
 				</div>
 			</section>
 
 			{/* Download Section */}
-			<section id="download" className="container py-12">
+			<section id="download" className="container py-16">
 				<div className="text-center">
 					<h2 className="text-2xl font-bold mb-3">Download</h2>
 					<p className="text-sm text-muted-foreground mb-4">x86_64, 2GB+ RAM, 10GB+ disk</p>
