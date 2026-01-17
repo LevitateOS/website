@@ -4,7 +4,8 @@ const docsNav = [
   {
     title: "Getting Started",
     items: [
-      { title: "Installation", href: "/docs/install" },
+      { title: "Installation (LLM)", href: "/docs/install" },
+      { title: "Manual Installation", href: "/docs/manual-install" },
     ],
   },
   {

@@ -14,14 +14,14 @@ export function Header() {
           <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             Home
           </Link>
+          <Link to="/download" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            Download
+          </Link>
           <Link to="/docs/install" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            Install
+            Docs
           </Link>
           <Link to="/docs/recipes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             Recipes
-          </Link>
-          <Link to="/docs/levitate" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            CLI
           </Link>
         </nav>
 

@@ -9,11 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DownloadRouteImport } from './routes/download'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsRecipesRouteImport } from './routes/docs/recipes'
+import { Route as DocsManualInstallRouteImport } from './routes/docs/manual-install'
 import { Route as DocsLevitateRouteImport } from './routes/docs/levitate'
 import { Route as DocsInstallRouteImport } from './routes/docs/install'
 
+const DownloadRoute = DownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -22,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const DocsRecipesRoute = DocsRecipesRouteImport.update({
   id: '/docs/recipes',
   path: '/docs/recipes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsManualInstallRoute = DocsManualInstallRouteImport.update({
+  id: '/docs/manual-install',
+  path: '/docs/manual-install',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsLevitateRoute = DocsLevitateRouteImport.update({
@@ -37,40 +49,74 @@ const DocsInstallRoute = DocsInstallRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/download': typeof DownloadRoute
   '/docs/install': typeof DocsInstallRoute
   '/docs/levitate': typeof DocsLevitateRoute
+  '/docs/manual-install': typeof DocsManualInstallRoute
   '/docs/recipes': typeof DocsRecipesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/download': typeof DownloadRoute
   '/docs/install': typeof DocsInstallRoute
   '/docs/levitate': typeof DocsLevitateRoute
+  '/docs/manual-install': typeof DocsManualInstallRoute
   '/docs/recipes': typeof DocsRecipesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/download': typeof DownloadRoute
   '/docs/install': typeof DocsInstallRoute
   '/docs/levitate': typeof DocsLevitateRoute
+  '/docs/manual-install': typeof DocsManualInstallRoute
   '/docs/recipes': typeof DocsRecipesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/docs/install' | '/docs/levitate' | '/docs/recipes'
+  fullPaths:
+    | '/'
+    | '/download'
+    | '/docs/install'
+    | '/docs/levitate'
+    | '/docs/manual-install'
+    | '/docs/recipes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/docs/install' | '/docs/levitate' | '/docs/recipes'
-  id: '__root__' | '/' | '/docs/install' | '/docs/levitate' | '/docs/recipes'
+  to:
+    | '/'
+    | '/download'
+    | '/docs/install'
+    | '/docs/levitate'
+    | '/docs/manual-install'
+    | '/docs/recipes'
+  id:
+    | '__root__'
+    | '/'
+    | '/download'
+    | '/docs/install'
+    | '/docs/levitate'
+    | '/docs/manual-install'
+    | '/docs/recipes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DownloadRoute: typeof DownloadRoute
   DocsInstallRoute: typeof DocsInstallRoute
   DocsLevitateRoute: typeof DocsLevitateRoute
+  DocsManualInstallRoute: typeof DocsManualInstallRoute
   DocsRecipesRoute: typeof DocsRecipesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/download': {
+      id: '/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof DownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -83,6 +129,13 @@ declare module '@tanstack/react-router' {
       path: '/docs/recipes'
       fullPath: '/docs/recipes'
       preLoaderRoute: typeof DocsRecipesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/manual-install': {
+      id: '/docs/manual-install'
+      path: '/docs/manual-install'
+      fullPath: '/docs/manual-install'
+      preLoaderRoute: typeof DocsManualInstallRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs/levitate': {
@@ -104,8 +157,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DownloadRoute: DownloadRoute,
   DocsInstallRoute: DocsInstallRoute,
   DocsLevitateRoute: DocsLevitateRoute,
+  DocsManualInstallRoute: DocsManualInstallRoute,
   DocsRecipesRoute: DocsRecipesRoute,
 }
 export const routeTree = rootRouteImport
