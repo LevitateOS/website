@@ -14,7 +14,7 @@ function LevitatePage() {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Overview</h2>
         <p className="text-muted-foreground mb-4">
-          <code className="bg-muted px-1.5 py-0.5 rounded">levitate</code> is the self-sufficient package manager for LevitateOS.
+          <code className="bg-muted px-1.5 py-0.5">levitate</code> is the self-sufficient package manager for LevitateOS.
           It handles the full package lifecycle without depending on apt, dnf, pacman, or any other package manager.
         </p>
         <CodeBlock language="bash">{`levitate <command> [options] [arguments]`}</CodeBlock>
@@ -160,7 +160,7 @@ levitate info firefox | grep Features`}</CodeBlock>
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Configuration</h2>
         <p className="text-muted-foreground mb-2">
-          Configuration is stored in <code className="bg-muted px-1.5 py-0.5 rounded">/etc/levitate/config</code>:
+          Configuration is stored in <code className="bg-muted px-1.5 py-0.5">/etc/levitate/config</code>:
         </p>
         <CodeBlock language="bash">{`# Recipe repository URL
 REPO_URL=https://recipes.levitateos.org

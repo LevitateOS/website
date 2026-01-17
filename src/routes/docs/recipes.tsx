@@ -254,7 +254,7 @@ function RecipesPage() {
         <p className="text-muted-foreground">
           To generate a recipe, ask the AI installer:
         </p>
-        <div className="bg-muted/50 p-4 rounded-lg mt-2 text-sm">
+        <div className="bg-muted/50 p-4  mt-2 text-sm">
           <span className="text-primary font-medium">You:</span>
           <span className="ml-2">create a recipe for ripgrep 14.1.0</span>
         </div>

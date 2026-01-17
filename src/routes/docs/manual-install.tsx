@@ -37,7 +37,7 @@ root@levitate-live ~ #`}</CodeBlock>
 # sda     500G Samsung SSD
 # nvme0n1 1T   WD Black SN850`}</CodeBlock>
         <p className="text-muted-foreground mt-4">
-          In this guide, we'll use <code className="bg-muted px-1 rounded">/dev/sda</code>.
+          In this guide, we'll use <code className="bg-muted px-1">/dev/sda</code>.
           Replace with your actual device.
         </p>
       </section>
@@ -67,7 +67,7 @@ fdisk /dev/sda
 #   [enter] - Use remaining space
 # w        - Write and exit`}</CodeBlock>
         <p className="text-muted-foreground mt-4">
-          Or use a single command with <code className="bg-muted px-1 rounded">parted</code>:
+          Or use a single command with <code className="bg-muted px-1">parted</code>:
         </p>
         <CodeBlock language="bash">{`parted /dev/sda --script \\
   mklabel gpt \\

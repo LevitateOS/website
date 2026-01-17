@@ -114,7 +114,7 @@ sudo dd if=LevitateOS.iso of=/dev/sdX bs=4M status=progress oflag=sync`}</CodeBl
         </p>
 
         <h3 className="text-xl font-medium mb-3">Example Conversation</h3>
-        <div className="bg-muted/50 p-4 rounded-lg space-y-3 text-sm mb-4">
+        <div className="bg-muted/50 p-4  space-y-3 text-sm mb-4">
           <div>
             <span className="text-primary font-medium">You:</span>
             <span className="ml-2">install to the 500gb nvme drive</span>

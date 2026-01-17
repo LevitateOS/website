@@ -32,7 +32,7 @@ export function DocsSidebar() {
                 <li key={item.href}>
                   <Link
                     to={item.href}
-                    className={`block px-3 py-1.5 text-sm rounded-md transition-colors ${
+                    className={`block px-3 py-1.5 text-sm transition-colors ${
                       currentPath === item.href
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"

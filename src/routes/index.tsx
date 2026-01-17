@@ -48,7 +48,7 @@ recipe remove ripgrep`}</CodeBlock>
             title="SmolLM3 Recipe Assistant"
             description="Optional local LLM (SmolLM3 from Hugging Face) helps draft recipes, suggest updates, and debug builds. Runs entirely on your machine."
           >
-            <div className="bg-muted/50 p-3 rounded-lg text-sm">
+            <div className="bg-muted/50 p-3 text-sm">
               <p className="text-muted-foreground mb-1">You:</p>
               <p>"create a recipe for ripgrep"</p>
               <p className="text-muted-foreground mt-2 mb-1">SmolLM3:</p>
@@ -96,7 +96,7 @@ qemu-system-x86_64 -m 4G -enable-kvm -cdrom LevitateOS.iso`}</CodeBlock>
             </div>
             <div>
               <h3 className="font-semibold mb-2">3. Chat with the installer</h3>
-              <div className="bg-muted/50 p-4 rounded-lg space-y-2 text-sm">
+              <div className="bg-muted/50 p-4 space-y-2 text-sm">
                 <p><span className="text-primary">You:</span> install to the 500gb drive with user vince</p>
                 <p><span className="text-muted-foreground">AI:</span> I'll partition /dev/sda (500GB) with ext4 and create user "vince".</p>
                 <p><span className="text-primary">You:</span> yes, make vince a sudo user</p>
@@ -119,7 +119,7 @@ recipe install ripgrep fd`}</CodeBlock>
           <p className="text-sm text-muted-foreground mb-4">
             x86_64, 2GB+ RAM, 10GB+ disk
           </p>
-          <div className="bg-card border rounded-lg p-4 inline-block">
+          <div className="bg-card border p-4 inline-block">
             <p className="font-semibold mb-1">LevitateOS 1.0</p>
             <p className="text-sm text-muted-foreground mb-3">
               Coming soon. Star the repo to get notified.

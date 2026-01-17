@@ -16,7 +16,7 @@ interface VariantCardProps {
 
 function VariantCard({ title, stack, description, features, hasLLM, available, downloadUrl }: VariantCardProps) {
   return (
-    <div className="bg-card border rounded-lg p-4 flex flex-col">
+    <div className="bg-card border  p-4 flex flex-col">
       <div className="flex items-center gap-2 mb-2">
         {hasLLM ? (
           <Robot className="h-5 w-5 text-primary" />
@@ -41,13 +41,13 @@ function VariantCard({ title, stack, description, features, hasLLM, available, d
       {available ? (
         <a
           href={downloadUrl}
-          className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors text-sm"
+          className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5  hover:bg-primary/90 transition-colors text-sm"
         >
           <Download className="h-4 w-4" />
           Download
         </a>
       ) : (
-        <span className="inline-flex items-center justify-center gap-2 bg-muted text-muted-foreground px-3 py-1.5 rounded-md text-sm">
+        <span className="inline-flex items-center justify-center gap-2 bg-muted text-muted-foreground px-3 py-1.5  text-sm">
           Coming Soon
         </span>
       )}
@@ -64,7 +64,7 @@ function DownloadPage() {
       </p>
 
       {/* Variant explanation */}
-      <div className="bg-muted/50 rounded-lg p-4 mb-8">
+      <div className="bg-muted/50  p-4 mb-8">
         <h2 className="font-semibold mb-3">Understanding the Variants</h2>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
@@ -146,7 +146,7 @@ function DownloadPage() {
       </div>
 
       {/* Manual installation note */}
-      <div className="bg-card border rounded-lg p-4 mb-8">
+      <div className="bg-card border  p-4 mb-8">
         <h2 className="font-semibold mb-2 flex items-center gap-2">
           <Package className="h-4 w-4" />
           Installing Without LLM
