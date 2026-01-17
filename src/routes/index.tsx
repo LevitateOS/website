@@ -35,43 +35,43 @@ function HomePage() {
 
           <FeatureCard
             icon={<Terminal className="h-8 w-8" />}
-            title="levitate Package Manager"
+            title="recipe Package Manager"
             description="No apt, dnf, or pacman dependency. Full lifecycle from acquire to remove."
           >
-            <CodeBlock language="bash">{`levitate install ripgrep
-levitate deps firefox
-levitate desktop  # Sway stack`}</CodeBlock>
+            <CodeBlock language="bash">{`recipe install ripgrep
+recipe deps firefox
+recipe remove ripgrep`}</CodeBlock>
           </FeatureCard>
 
           <FeatureCard
             icon={<Brain className="h-8 w-8" />}
-            title="LLM Recipe Assistant"
-            description="Optional local LLM helps with tedious maintenance: drafting recipes, suggesting updates, debugging builds."
+            title="SmolLM3 Recipe Assistant"
+            description="Optional local LLM (SmolLM3 from Hugging Face) helps draft recipes, suggest updates, and debug builds. Runs entirely on your machine."
           >
             <div className="bg-muted/50 p-3 rounded-lg text-sm">
               <p className="text-muted-foreground mb-1">You:</p>
               <p>"create a recipe for ripgrep"</p>
-              <p className="text-muted-foreground mt-2 mb-1">Assistant:</p>
+              <p className="text-muted-foreground mt-2 mb-1">SmolLM3:</p>
               <p>"Here's a recipe using the latest binary release..."</p>
             </div>
           </FeatureCard>
 
           <FeatureCard
-            icon={<Desktop className="h-8 w-8" />}
-            title="Pure Wayland"
-            description="Complete Sway compositor stack. 17 recipes including wlroots, foot, waybar, wofi. No X11."
+            icon={<Terminal className="h-8 w-8" />}
+            title="Natural Language Installer"
+            description="Just tell it what you want. 'Install to the 500GB drive with user vince' — no memorizing partition commands."
           />
 
           <FeatureCard
             icon={<Memory className="h-8 w-8" />}
-            title="musl + GNU"
-            description="Unusual combo: lightweight musl libc (~1MB vs ~10MB glibc) with full GNU tools."
+            title="Choose Your Stack"
+            description="Standard (systemd + glibc) for compatibility, or Minimal (runit + musl) for a lighter footprint. Your call."
           />
 
           <FeatureCard
-            icon={<Code className="h-8 w-8" />}
-            title="Reference-Driven"
-            description="vendor/ contains systemd, util-linux, brush shell references. Don't invent, copy what works."
+            icon={<Desktop className="h-8 w-8" />}
+            title="Terminal First"
+            description="Boots to a login prompt, like Arch. No desktop preinstalled. Install one if you want, or don't."
           />
         </div>
       </section>
@@ -104,8 +104,9 @@ qemu-system-x86_64 -m 4G -enable-kvm -cdrom LevitateOS.iso`}</CodeBlock>
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">4. Install the desktop</h3>
-              <CodeBlock language="bash">{`levitate desktop`}</CodeBlock>
+              <h3 className="font-semibold mb-2">4. You're done</h3>
+              <CodeBlock language="bash">{`# You're at a terminal. Install packages as needed:
+recipe install ripgrep fd`}</CodeBlock>
             </div>
           </div>
         </div>
