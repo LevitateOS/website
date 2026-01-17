@@ -1,46 +1,46 @@
-import { HeadContent, Scripts, createRootRoute, Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import { Layout } from '@/components/layout'
-
-import appCss from '../styles.css?url'
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router"
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
+import { TanStackDevtools } from "@tanstack/react-devtools"
+import appCss from "../styles.css?url"
+import { Layout } from "@/components/layout"
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'LevitateOS - Be Your Own Maintainer',
-      },
-      {
-        name: 'description',
-        content: 'Linux where you maintain your own packages. Simple recipes, no upstream dependencies, self-sufficient package manager.',
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-    ],
-  }),
+	head: () => ({
+		meta: [
+			{
+				charSet: "utf-8",
+			},
+			{
+				name: "viewport",
+				content: "width=device-width, initial-scale=1",
+			},
+			{
+				title: "LevitateOS - Be Your Own Maintainer",
+			},
+			{
+				name: "description",
+				content:
+					"Linux where you maintain your own packages. Simple recipes, no upstream dependencies, self-sufficient package manager.",
+			},
+		],
+		links: [
+			{
+				rel: "stylesheet",
+				href: appCss,
+			},
+		],
+	}),
 
-  shellComponent: RootDocument,
-  component: RootComponent,
+	shellComponent: RootDocument,
+	component: RootComponent,
 })
 
 function RootComponent() {
-  return (
-    <Layout>
-      <Outlet />
-    </Layout>
-  )
+	return (
+		<Layout>
+			<Outlet />
+		</Layout>
+	)
 }
 
 const themeScript = `
@@ -51,30 +51,30 @@ const themeScript = `
       document.documentElement.classList.add('dark');
     }
   })();
-`;
+`
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body>
-        {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
-        <Scripts />
-      </body>
-    </html>
-  )
+	return (
+		<html lang="en">
+			<head>
+				<HeadContent />
+				<script dangerouslySetInnerHTML={{ __html: themeScript }} />
+			</head>
+			<body>
+				{children}
+				<TanStackDevtools
+					config={{
+						position: "bottom-right",
+					}}
+					plugins={[
+						{
+							name: "Tanstack Router",
+							render: <TanStackRouterDevtoolsPanel />,
+						},
+					]}
+				/>
+				<Scripts />
+			</body>
+		</html>
+	)
 }
