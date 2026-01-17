@@ -16,11 +16,11 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'LevitateOS - AI-Powered Linux',
+        title: 'LevitateOS - Be Your Own Maintainer',
       },
       {
         name: 'description',
-        content: 'The first Linux with an AI-powered installer. Chat in natural language, self-sufficient package manager, pure Wayland.',
+        content: 'Linux where you maintain your own packages. Simple recipes, no upstream dependencies, self-sufficient package manager.',
       },
     ],
     links: [

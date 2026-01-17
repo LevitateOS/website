@@ -3,11 +3,11 @@ import { Hero } from "@/components/Hero";
 import { FeatureCard } from "@/components/FeatureCard";
 import { CodeBlock } from "@/components/CodeBlock";
 import {
-  Brain,
   Package,
+  Terminal,
+  Brain,
   Desktop,
   Memory,
-  Terminal,
   Code
 } from "@phosphor-icons/react";
 
@@ -23,22 +23,9 @@ function HomePage() {
         <h2 className="text-3xl font-bold text-center mb-12">Features</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <FeatureCard
-            icon={<Brain className="h-8 w-8" />}
-            title="AI-Powered Installer"
-            description="SmolLM3-3B runs locally. Chat naturally to partition disks, create users, and configure your system."
-          >
-            <div className="bg-muted/50 p-3 rounded-lg text-sm">
-              <p className="text-muted-foreground mb-1">You:</p>
-              <p>"use the whole 500gb drive"</p>
-              <p className="text-muted-foreground mt-2 mb-1">Installer:</p>
-              <p>"Creating GPT partition table on /dev/sda..."</p>
-            </div>
-          </FeatureCard>
-
-          <FeatureCard
             icon={<Package className="h-8 w-8" />}
-            title="S-Expression Recipes"
-            description="LLM-friendly Lisp-like syntax. 30-line parser. Small models can generate packages reliably."
+            title="Your Own Packages"
+            description="Write simple S-expression recipes. Be the maintainer. No waiting for upstream repos."
           >
             <CodeBlock language="lisp">{`(package "ripgrep" "14.1.0"
   (acquire (binary (x86_64 "URL")))
@@ -54,6 +41,19 @@ function HomePage() {
             <CodeBlock language="bash">{`levitate install ripgrep
 levitate deps firefox
 levitate desktop  # Sway stack`}</CodeBlock>
+          </FeatureCard>
+
+          <FeatureCard
+            icon={<Brain className="h-8 w-8" />}
+            title="LLM Recipe Assistant"
+            description="Optional local LLM helps with tedious maintenance: drafting recipes, suggesting updates, debugging builds."
+          >
+            <div className="bg-muted/50 p-3 rounded-lg text-sm">
+              <p className="text-muted-foreground mb-1">You:</p>
+              <p>"create a recipe for ripgrep"</p>
+              <p className="text-muted-foreground mt-2 mb-1">Assistant:</p>
+              <p>"Here's a recipe using the latest binary release..."</p>
+            </div>
           </FeatureCard>
 
           <FeatureCard

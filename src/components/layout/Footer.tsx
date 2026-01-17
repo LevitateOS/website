@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col gap-2">
           <span className="text-lg font-semibold">LevitateOS</span>
           <p className="text-sm text-muted-foreground">
-            The first Linux with an AI-powered installer.
+            Be your own package maintainer.
           </p>
         </div>
 

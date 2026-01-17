@@ -9,26 +9,30 @@ export function Hero() {
           <span className="text-primary">LevitateOS</span>
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground max-w-[700px]">
-          The first Linux with an AI-powered installer
+          Be your own package maintainer
         </p>
       </div>
 
       <ul className="flex flex-col gap-2 text-left text-muted-foreground">
         <li className="flex items-center gap-2">
           <span className="text-primary">•</span>
-          Chat with your installer in natural language
+          Write simple recipes, build your own packages
         </li>
         <li className="flex items-center gap-2">
           <span className="text-primary">•</span>
-          Self-sufficient package manager (no apt/dnf/pacman)
+          No waiting for upstream maintainers
         </li>
         <li className="flex items-center gap-2">
           <span className="text-primary">•</span>
-          Pure Wayland desktop, no X11 bloat
+          LLM assists with tedious maintenance tasks
         </li>
         <li className="flex items-center gap-2">
           <span className="text-primary">•</span>
-          Lightweight musl-based system
+          Pure Wayland desktop
+        </li>
+        <li className="flex items-center gap-2">
+          <span className="text-primary">•</span>
+          Lightweight musl + GNU stack
         </li>
       </ul>
 
