@@ -1,19 +1,22 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { GithubLogo, DownloadSimple } from "@phosphor-icons/react";
+import { useTernaryDarkMode } from "usehooks-ts";
 
 export function Hero() {
-  return (
-    <section className="container flex flex-col items-center gap-6 py-16 text-center">
-      <div className="flex flex-col gap-3">
-        <h1 className="text-4xl font-bold tracking-tight">
-          <span className="text-primary">LevitateOS</span>
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Be your own package maintainer
-        </p>
-      </div>
+  const { isDarkMode } = useTernaryDarkMode();
 
-      <ul className="flex flex-col gap-1.5 text-left text-sm text-muted-foreground">
+  return (
+    <section className="container flex flex-col items-center text-center py-8">
+      <img
+        src={isDarkMode ? "/levitateos-dark.png" : "/levitateos-light.png"}
+        alt="LevitateOS"
+        className="h-64 w-auto rounded-br-[4rem]"
+      />
+      <p className="text-xl text-muted-foreground mb-6">
+        Be your own package maintainer
+      </p>
+
+      <ul className="flex flex-col gap-1.5 text-left text-sm text-muted-foreground mb-8">
         <li className="flex items-center gap-2">
           <span className="text-primary">+</span>
           Write simple recipes, build your own packages
@@ -28,23 +31,24 @@ export function Hero() {
         </li>
         <li className="flex items-center gap-2">
           <span className="text-primary">+</span>
-          Pure Wayland desktop (Sway)
+          Terminal first, like Arch
         </li>
       </ul>
 
-      <div className="flex gap-3">
-        <Button asChild>
-          <a href="/download">
-            <DownloadSimple className="mr-2 h-4 w-4" />
-            Download
-          </a>
-        </Button>
-        <Button variant="outline" asChild>
-          <a href="https://github.com/LevitateOS/LevitateOS" target="_blank" rel="noopener noreferrer">
-            <GithubLogo className="mr-2 h-4 w-4" />
-            GitHub
-          </a>
-        </Button>
+      <div className="flex gap-6">
+        <a href="/download" className={buttonVariants()}>
+          <DownloadSimple data-icon="inline-start" />
+          Download
+        </a>
+        <a
+          href="https://github.com/LevitateOS/LevitateOS"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={buttonVariants({ variant: "outline" })}
+        >
+          <GithubLogo data-icon="inline-start" />
+          GitHub
+        </a>
       </div>
     </section>
   );

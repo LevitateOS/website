@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { GithubLogo } from "@phosphor-icons/react";
 
 export function Header() {
@@ -26,12 +27,16 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" asChild>
-            <a href="https://github.com/LevitateOS/LevitateOS" target="_blank" rel="noopener noreferrer">
-              <GithubLogo className="h-5 w-5" />
-              <span className="sr-only">GitHub</span>
-            </a>
-          </Button>
+          <ThemeToggle />
+          <a
+            href="https://github.com/LevitateOS/LevitateOS"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonVariants({ variant: "ghost", size: "icon" })}
+          >
+            <GithubLogo className="h-5 w-5" />
+            <span className="sr-only">GitHub</span>
+          </a>
         </div>
       </div>
     </header>

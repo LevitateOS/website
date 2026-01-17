@@ -7,8 +7,7 @@ import {
   Terminal,
   Brain,
   Desktop,
-  Memory,
-  Code
+  Memory
 } from "@phosphor-icons/react";
 
 export const Route = createFileRoute("/")({ component: HomePage });
@@ -73,6 +72,66 @@ recipe remove ripgrep`}</CodeBlock>
             title="Terminal First"
             description="Boots to a login prompt, like Arch. No desktop preinstalled. Install one if you want, or don't."
           />
+        </div>
+      </section>
+
+      {/* Local LLM Section */}
+      <section className="container py-12">
+        <h2 className="text-2xl font-bold text-center mb-8">Local LLM: SmolLM3</h2>
+        <p className="text-muted-foreground text-center mb-8">
+          Optional AI assistant powered by SmolLM3 from Hugging Face. Runs entirely on your machine.
+        </p>
+
+        <div className="grid gap-6 grid-cols-2 mb-8">
+          <div className="bg-card border p-4">
+            <h3 className="font-semibold mb-2">Installer LoRA</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Focused on installation. Understands your hardware and generates the right commands to partition, format, and install LevitateOS.
+            </p>
+            <div className="bg-muted/50 p-3 text-sm">
+              <p className="text-muted-foreground mb-1">You:</p>
+              <p>"install to the nvme drive, use ext4, create user vince"</p>
+              <p className="text-muted-foreground mt-2 mb-1">Installer:</p>
+              <p className="text-primary">Runs: parted, mkfs.ext4, pacstrap...</p>
+            </div>
+          </div>
+
+          <div className="bg-card border p-4">
+            <h3 className="font-semibold mb-2">Recipe LoRA</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Sandboxed to the recipes folder. Can only create and edit .recipe files. Cannot run commands or access anything else.
+            </p>
+            <div className="bg-muted/50 p-3 text-sm">
+              <p className="text-muted-foreground mb-1">You:</p>
+              <p>"create a recipe for htop"</p>
+              <p className="text-muted-foreground mt-2 mb-1">Recipe:</p>
+              <p className="text-primary">Writes: /recipes/htop.recipe</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-muted/50 border p-4">
+          <h3 className="font-semibold mb-3">This is NOT Windows Copilot</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-muted-foreground mb-2">What it is:</p>
+              <ul className="space-y-1">
+                <li>+ Local model (no cloud, no telemetry)</li>
+                <li>+ Two specialized LoRAs for specific tasks</li>
+                <li>+ Recipe LoRA is fully sandboxed</li>
+                <li>+ Automated package maintainer</li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-muted-foreground mb-2">What it isn't:</p>
+              <ul className="space-y-1">
+                <li>- Not a general assistant</li>
+                <li>- Not watching your activity</li>
+                <li>- Not sending data anywhere</li>
+                <li>- Not integrated into the whole OS</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
