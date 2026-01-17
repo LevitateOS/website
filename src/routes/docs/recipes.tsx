@@ -1,46 +1,57 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { DocsLayout } from "@/components/layout"
-import { CodeBlock } from "@/components/CodeBlock"
+import { DocsPage, type DocsContent } from "@/components/docs"
 
 export const Route = createFileRoute("/docs/recipes")({
 	component: RecipesPage,
 })
 
-function RecipesPage() {
-	return (
-		<DocsLayout>
-			<h1 className="text-3xl font-bold mb-6">Recipe Format</h1>
-
-			<section className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">Overview</h2>
-				<p className="text-muted-foreground mb-4">
-					LevitateOS uses <strong>S-expression recipes</strong> - a Lisp-like format that's both
-					human-readable and easy for LLMs to generate. The parser is only 30 lines, making it
-					simple and reliable.
-				</p>
-				<p className="text-muted-foreground mb-4">
-					A single recipe can handle both <strong>binary</strong> and <strong>source</strong>{" "}
-					builds, with version constraints, conditional dependencies, and split packages.
-				</p>
-			</section>
-
-			<section className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">Basic Structure</h2>
-				<CodeBlock language="lisp">{`(package "name" "version"
+const recipesContent: DocsContent = {
+	title: "Recipe Format",
+	sections: [
+		{
+			title: "Overview",
+			content: [
+				{
+					type: "text",
+					content:
+						"LevitateOS uses **S-expression recipes** - a Lisp-like format that's both human-readable and easy for LLMs to generate. The parser is only 30 lines, making it simple and reliable.",
+				},
+				{
+					type: "text",
+					content:
+						"A single recipe can handle both **binary** and **source** builds, with version constraints, conditional dependencies, and split packages.",
+				},
+			],
+		},
+		{
+			title: "Basic Structure",
+			content: [
+				{
+					type: "code",
+					language: "lisp",
+					content: `(package "name" "version"
   (acquire ...)     ; How to get the package
   (build ...)       ; How to build (optional for binaries)
   (install ...)     ; How to install
   (configure ...)   ; Post-install configuration (optional)
   (deps ...)        ; Dependencies (optional)
-)`}</CodeBlock>
-			</section>
-
-			<section className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">Examples</h2>
-
-				<h3 className="text-xl font-medium mb-3">Binary Package</h3>
-				<p className="text-muted-foreground mb-2">Simple binary download and install:</p>
-				<CodeBlock language="lisp">{`(package "ripgrep" "14.1.0"
+)`,
+				},
+			],
+		},
+		{
+			title: "Examples",
+			content: [],
+		},
+		{
+			title: "Binary Package",
+			level: 3,
+			content: [
+				{ type: "text", content: "Simple binary download and install:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(package "ripgrep" "14.1.0"
   (acquire
     (binary
       (x86_64 "https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz")))
@@ -48,11 +59,19 @@ function RecipesPage() {
     (extract tar-gz))
   (install
     (to-bin "rg")
-    (to-man "doc/rg.1")))`}</CodeBlock>
-
-				<h3 className="text-xl font-medium mb-3 mt-6">Source Package</h3>
-				<p className="text-muted-foreground mb-2">Build from source with dependencies:</p>
-				<CodeBlock language="lisp">{`(package "htop" "3.3.0"
+    (to-man "doc/rg.1")))`,
+				},
+			],
+		},
+		{
+			title: "Source Package",
+			level: 3,
+			content: [
+				{ type: "text", content: "Build from source with dependencies:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(package "htop" "3.3.0"
   (acquire
     (source "https://github.com/htop-dev/htop/releases/download/3.3.0/htop-3.3.0.tar.xz"
       (sha256 "abc123...")))
@@ -64,11 +83,19 @@ function RecipesPage() {
     (run "./configure --prefix=/usr")
     (run "make"))
   (install
-    (run "make install DESTDIR=$PKG")))`}</CodeBlock>
-
-				<h3 className="text-xl font-medium mb-3 mt-6">Package with Features</h3>
-				<p className="text-muted-foreground mb-2">Conditional dependencies based on features:</p>
-				<CodeBlock language="lisp">{`(package "firefox" "133.0"
+    (run "make install DESTDIR=$PKG")))`,
+				},
+			],
+		},
+		{
+			title: "Package with Features",
+			level: 3,
+			content: [
+				{ type: "text", content: "Conditional dependencies based on features:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(package "firefox" "133.0"
   (acquire
     (binary
       (x86_64 "https://...")))
@@ -83,15 +110,23 @@ function RecipesPage() {
     (default wayland pulseaudio)
     (optional pipewire))
   (install
-    (to-prefix "lib/firefox")))`}</CodeBlock>
-			</section>
-
-			<section className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">Actions Reference</h2>
-
-				<h3 className="text-xl font-medium mb-3">acquire</h3>
-				<p className="text-muted-foreground mb-2">How to download the package:</p>
-				<CodeBlock language="lisp">{`(acquire
+    (to-prefix "lib/firefox")))`,
+				},
+			],
+		},
+		{
+			title: "Actions Reference",
+			content: [],
+		},
+		{
+			title: "acquire",
+			level: 3,
+			content: [
+				{ type: "text", content: "How to download the package:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(acquire
   ; Binary: pre-built binaries per architecture
   (binary
     (x86_64 "URL")
@@ -105,11 +140,19 @@ function RecipesPage() {
   (git "URL"
     (tag "v1.0.0"))
     ; or (branch "main")
-    ; or (commit "abc123")))`}</CodeBlock>
-
-				<h3 className="text-xl font-medium mb-3 mt-6">build</h3>
-				<p className="text-muted-foreground mb-2">Build steps:</p>
-				<CodeBlock language="lisp">{`(build
+    ; or (commit "abc123")))`,
+				},
+			],
+		},
+		{
+			title: "build",
+			level: 3,
+			content: [
+				{ type: "text", content: "Build steps:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(build
   ; Extract archives
   (extract tar-gz)   ; .tar.gz
   (extract tar-xz)   ; .tar.xz
@@ -124,11 +167,19 @@ function RecipesPage() {
   (patch "fix-musl.patch")
 
   ; Set environment
-  (env "CFLAGS" "-O2 -pipe"))`}</CodeBlock>
-
-				<h3 className="text-xl font-medium mb-3 mt-6">install</h3>
-				<p className="text-muted-foreground mb-2">Installation locations:</p>
-				<CodeBlock language="lisp">{`(install
+  (env "CFLAGS" "-O2 -pipe"))`,
+				},
+			],
+		},
+		{
+			title: "install",
+			level: 3,
+			content: [
+				{ type: "text", content: "Installation locations:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(install
   ; Install to /usr/bin
   (to-bin "binary-name")
 
@@ -142,11 +193,19 @@ function RecipesPage() {
   (to-prefix "lib/program")
 
   ; Run make install
-  (run "make install DESTDIR=$PKG"))`}</CodeBlock>
-
-				<h3 className="text-xl font-medium mb-3 mt-6">deps</h3>
-				<p className="text-muted-foreground mb-2">Dependency specification:</p>
-				<CodeBlock language="lisp">{`(deps
+  (run "make install DESTDIR=$PKG"))`,
+				},
+			],
+		},
+		{
+			title: "deps",
+			level: 3,
+			content: [
+				{ type: "text", content: "Dependency specification:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(deps
   ; Build-time only
   (build "gcc" "make" "cmake")
 
@@ -161,11 +220,19 @@ function RecipesPage() {
   ; Conditional dependencies
   (runtime
     (if wayland "wayland-protocols")
-    (if !x11 "xorg-libs")))`}</CodeBlock>
-
-				<h3 className="text-xl font-medium mb-3 mt-6">configure</h3>
-				<p className="text-muted-foreground mb-2">Post-install configuration:</p>
-				<CodeBlock language="lisp">{`(configure
+    (if !x11 "xorg-libs")))`,
+				},
+			],
+		},
+		{
+			title: "configure",
+			level: 3,
+			content: [
+				{ type: "text", content: "Post-install configuration:" },
+				{
+					type: "code",
+					language: "lisp",
+					content: `(configure
   ; Create config file
   (config "/etc/program.conf"
     "setting=value")
@@ -177,57 +244,39 @@ function RecipesPage() {
   (chmod "/usr/bin/program" "755")
 
   ; Run post-install script
-  (run "ldconfig"))`}</CodeBlock>
-			</section>
-
-			<section className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">Version Constraints</h2>
-				<div className="overflow-x-auto">
-					<table className="w-full text-sm">
-						<thead>
-							<tr className="border-b">
-								<th className="text-left py-2 pr-4">Operator</th>
-								<th className="text-left py-2 pr-4">Example</th>
-								<th className="text-left py-2">Meaning</th>
-							</tr>
-						</thead>
-						<tbody className="text-muted-foreground">
-							<tr className="border-b">
-								<td className="py-2 pr-4 font-mono">&gt;=</td>
-								<td className="py-2 pr-4 font-mono">&gt;= 1.0</td>
-								<td className="py-2">1.0 or higher</td>
-							</tr>
-							<tr className="border-b">
-								<td className="py-2 pr-4 font-mono">&lt;=</td>
-								<td className="py-2 pr-4 font-mono">&lt;= 2.0</td>
-								<td className="py-2">2.0 or lower</td>
-							</tr>
-							<tr className="border-b">
-								<td className="py-2 pr-4 font-mono">~=</td>
-								<td className="py-2 pr-4 font-mono">~= 1.4</td>
-								<td className="py-2">Compatible release (1.4.x, &lt; 2.0)</td>
-							</tr>
-							<tr className="border-b">
-								<td className="py-2 pr-4 font-mono">=</td>
-								<td className="py-2 pr-4 font-mono">= 1.0.0</td>
-								<td className="py-2">Exact version</td>
-							</tr>
-							<tr>
-								<td className="py-2 pr-4 font-mono">,</td>
-								<td className="py-2 pr-4 font-mono">&gt;= 1.0, &lt; 2.0</td>
-								<td className="py-2">Multiple constraints (AND)</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</section>
-
-			<section className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">Split Packages</h2>
-				<p className="text-muted-foreground mb-2">
-					Create subpackages for development files, documentation, etc:
-				</p>
-				<CodeBlock language="lisp">{`(package "openssl" "3.2.0"
+  (run "ldconfig"))`,
+				},
+			],
+		},
+		{
+			title: "Version Constraints",
+			content: [
+				{
+					type: "table",
+					headers: ["Operator", "Example", "Meaning"],
+					rows: [
+						[">=", ">= 1.0", "1.0 or higher"],
+						["<=", "<= 2.0", "2.0 or lower"],
+						["~=", "~= 1.4", "Compatible release (1.4.x, < 2.0)"],
+						["=", "= 1.0.0", "Exact version"],
+						[",", ">= 1.0, < 2.0", "Multiple constraints (AND)"],
+					],
+					monospaceCol: 0,
+				},
+			],
+		},
+		{
+			title: "Split Packages",
+			content: [
+				{
+					type: "text",
+					content:
+						"Create subpackages for development files, documentation, etc:",
+				},
+				{
+					type: "code",
+					language: "lisp",
+					content: `(package "openssl" "3.2.0"
   (acquire (source "..."))
   (build ...)
   (install ...)
@@ -237,22 +286,28 @@ function RecipesPage() {
       "usr/include/*"
       "usr/lib/*.a"
       "usr/lib/pkgconfig/*")
-    (deps (runtime "openssl"))))`}</CodeBlock>
-			</section>
+    (deps (runtime "openssl"))))`,
+				},
+			],
+		},
+		{
+			title: "LLM Generation",
+			content: [
+				{
+					type: "text",
+					content:
+						"The S-expression format was specifically designed for small LLMs (3B parameters) to generate reliably. The simple grammar and consistent structure mean fewer hallucinations compared to YAML or TOML.",
+				},
+				{ type: "text", content: "To generate a recipe, ask the AI installer:" },
+				{
+					type: "conversation",
+					messages: [{ role: "user", text: "create a recipe for ripgrep 14.1.0" }],
+				},
+			],
+		},
+	],
+}
 
-			<section className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">LLM Generation</h2>
-				<p className="text-muted-foreground mb-4">
-					The S-expression format was specifically designed for small LLMs (3B parameters) to
-					generate reliably. The simple grammar and consistent structure mean fewer hallucinations
-					compared to YAML or TOML.
-				</p>
-				<p className="text-muted-foreground">To generate a recipe, ask the AI installer:</p>
-				<div className="bg-muted/50 p-4  mt-2 text-sm">
-					<span className="text-primary font-medium">You:</span>
-					<span className="ml-2">create a recipe for ripgrep 14.1.0</span>
-				</div>
-			</section>
-		</DocsLayout>
-	)
+function RecipesPage() {
+	return <DocsPage content={recipesContent} />
 }
