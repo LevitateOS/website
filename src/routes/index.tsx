@@ -19,9 +19,9 @@ function HomePage() {
       <Hero />
 
       {/* Features Section */}
-      <section className="container py-16 px-4 md:px-6">
-        <h2 className="text-3xl font-bold text-center mb-12">Features</h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <section className="container py-12">
+        <h2 className="text-2xl font-bold text-center mb-8">Features</h2>
+        <div className="grid gap-4 grid-cols-2">
           <FeatureCard
             icon={<Package className="h-8 w-8" />}
             title="Your Own Packages"
@@ -77,9 +77,9 @@ levitate desktop  # Sway stack`}</CodeBlock>
       </section>
 
       {/* Installation Preview */}
-      <section className="container py-16 px-4 md:px-6">
-        <h2 className="text-3xl font-bold text-center mb-12">Quick Start</h2>
-        <div className="max-w-2xl mx-auto">
+      <section className="container py-12">
+        <h2 className="text-2xl font-bold text-center mb-8">Quick Start</h2>
+        <div>
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold mb-2">1. Download the ISO</h3>
@@ -112,20 +112,20 @@ qemu-system-x86_64 -m 4G -enable-kvm -cdrom LevitateOS.iso`}</CodeBlock>
       </section>
 
       {/* Download Section */}
-      <section id="download" className="container py-16 px-4 md:px-6">
-        <div className="max-w-xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Download</h2>
-          <p className="text-muted-foreground mb-6">
-            Requires x86_64, 4GB RAM, 20GB disk.
+      <section id="download" className="container py-12">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-3">Download</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            x86_64, 2GB+ RAM, 10GB+ disk
           </p>
-          <div className="bg-card border rounded-lg p-6">
-            <p className="text-lg font-semibold mb-2">LevitateOS 1.0</p>
-            <p className="text-sm text-muted-foreground mb-4">
+          <div className="bg-card border rounded-lg p-4 inline-block">
+            <p className="font-semibold mb-1">LevitateOS 1.0</p>
+            <p className="text-sm text-muted-foreground mb-3">
               Coming soon. Star the repo to get notified.
             </p>
             <a
               href="https://github.com/LevitateOS/LevitateOS"
-              className="text-primary hover:underline"
+              className="text-primary hover:underline text-sm"
             >
               github.com/LevitateOS/LevitateOS
             </a>

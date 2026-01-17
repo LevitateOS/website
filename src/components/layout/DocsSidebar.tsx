@@ -22,8 +22,8 @@ export function DocsSidebar() {
   const currentPath = router.location.pathname;
 
   return (
-    <aside className="hidden md:block w-64 shrink-0">
-      <nav className="sticky top-20 space-y-6">
+    <aside className="hidden md:block w-48 shrink-0">
+      <nav className="sticky top-20 space-y-4">
         {docsNav.map((section) => (
           <div key={section.title}>
             <h3 className="font-semibold mb-2">{section.title}</h3>
