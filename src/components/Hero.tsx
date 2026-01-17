@@ -1,6 +1,7 @@
 import { CaretDown, Check, DownloadSimple, GithubLogo } from "@phosphor-icons/react"
 import { useTernaryDarkMode } from "usehooks-ts"
 
+import { CodeBlock } from "@/components/CodeBlock"
 import { buttonVariants } from "@/components/ui/button"
 import { useHasMounted } from "@/hooks/useHasMounted"
 
@@ -51,24 +52,10 @@ export function Hero() {
 				</p>
 
 				{/* Terminal Preview */}
-				<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-backwards mt-8 w-full max-w-md">
-					<div className="rounded-lg border bg-card text-card-foreground shadow-lg overflow-hidden">
-						<div className="flex items-center gap-2 px-4 py-2 border-b bg-muted/50">
-							<div className="flex gap-1.5">
-								<div className="w-3 h-3 rounded-full bg-red-500/80" />
-								<div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-								<div className="w-3 h-3 rounded-full bg-green-500/80" />
-							</div>
-							<span className="text-xs text-muted-foreground ml-2">terminal</span>
-						</div>
-						<div className="p-4 font-mono text-sm text-left">
-							<div className="text-muted-foreground">
-								<span className="text-primary">$</span> recipe install ripgrep
-							</div>
-							<div className="mt-1 text-muted-foreground/80">Installing ripgrep@14.1.0...</div>
-							<div className="mt-1 text-green-500">Done in 2.3s</div>
-						</div>
-					</div>
+				<div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-backwards mt-8 w-full max-w-md text-left">
+					<CodeBlock language="bash">{`$ recipe install ripgrep
+Installing ripgrep@14.1.0...
+Done in 2.3s`}</CodeBlock>
 				</div>
 
 				{/* Features Grid */}
