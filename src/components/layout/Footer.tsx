@@ -25,7 +25,7 @@ export function Footer() {
 							Recipes
 						</Link>
 						<Link
-							to="/docs/levitate"
+							to="/docs/recipe"
 							className="text-sm text-muted-foreground hover:text-foreground"
 						>
 							CLI Reference

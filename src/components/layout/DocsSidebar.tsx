@@ -12,7 +12,7 @@ const docsNav = [
 		title: "Package Manager",
 		items: [
 			{ title: "Recipe Format", href: "/docs/recipes" },
-			{ title: "CLI Reference", href: "/docs/levitate" },
+			{ title: "CLI Reference", href: "/docs/recipe" },
 		],
 	},
 ]

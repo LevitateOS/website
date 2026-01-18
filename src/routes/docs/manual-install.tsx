@@ -7,51 +7,93 @@ export const Route = createFileRoute("/docs/manual-install")({
 
 const manualInstallContent: DocsContent = {
 	title: "Manual Installation Guide",
-	intro: "This guide is for users installing LevitateOS **without** the LLM assistant. If you have the LLM variant, see the [Installation Guide](/docs/install) instead.",
+	intro: "This guide walks through installing LevitateOS by hand. Use this if you prefer full control or are installing without the AI assistant.",
 	sections: [
 		{
-			title: "1. Boot the ISO",
+			title: "Prerequisites",
 			content: [
 				{
-					type: "text",
-					content:
-						"After booting from the ISO, you'll be dropped into a root shell. The live environment has all the tools you need to partition, format, and install.",
-				},
-				{
-					type: "code",
-					language: "bash",
-					content: `# You'll see a prompt like:
-root@levitate-live ~ #`,
+					type: "list",
+					items: [
+						"**Architecture:** x86_64",
+						"**Disk:** 8GB minimum (20GB recommended)",
+						"**RAM:** 512MB minimum (2GB recommended)",
+						"**Boot mode:** UEFI (this guide assumes UEFI)",
+					],
 				},
 			],
 		},
 		{
-			title: "2. Identify Your Disk",
+			title: "1. Boot the Live Environment",
 			content: [
-				{ type: "text", content: "List available disks and identify your target:" },
+				{
+					type: "text",
+					content:
+						"Boot from the LevitateOS ISO. You'll be dropped into a root shell.",
+				},
 				{
 					type: "code",
 					language: "bash",
-					content: `lsblk -d -o NAME,SIZE,MODEL
+					content: `# Verify you booted in UEFI mode
+ls /sys/firmware/efi/efivars`,
+				},
+				{
+					type: "text",
+					content:
+						"If the directory exists, you're in UEFI mode. If not, reboot and select UEFI boot in your firmware settings.",
+				},
+			],
+		},
+		{
+			title: "2. Connect to the Internet",
+			content: [
+				{
+					type: "text",
+					content: "Wired connections should work automatically. For WiFi:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `# Connect using nmcli
+nmcli device wifi list
+nmcli device wifi connect "YourNetwork" password "YourPassword"
+
+# Verify connectivity
+ping -c 3 levitateos.org`,
+				},
+			],
+		},
+		{
+			title: "3. Identify Target Disk",
+			content: [
+				{
+					type: "text",
+					content: "List all disks and identify your installation target:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `lsblk -d -o NAME,SIZE,MODEL,TRAN
 
 # Example output:
-# NAME    SIZE MODEL
-# sda     500G Samsung SSD
-# nvme0n1 1T   WD Black SN850`,
+# NAME      SIZE MODEL                   TRAN
+# sda       500G Samsung SSD 860         sata
+# nvme0n1     1T WD Black SN850X         nvme`,
 				},
 				{
 					type: "text",
 					content:
-						"In this guide, we'll use `/dev/sda`. Replace with your actual device.",
+						"This guide uses `/dev/sda`. **Replace with your actual device** (e.g., `/dev/nvme0n1` for NVMe).",
 				},
 			],
 		},
 		{
-			title: "3. Partition the Disk",
+			title: "4. Partition the Disk",
 			content: [
 				{
 					type: "text",
-					content: "Create a GPT partition table with EFI and root partitions:",
+					content:
+						"Create a 512MB EFI partition and use the rest for root:",
 				},
 				{
 					type: "code",
@@ -59,142 +101,180 @@ root@levitate-live ~ #`,
 					content: `# Wipe existing partition table
 wipefs -a /dev/sda
 
-# Create partitions with fdisk
-fdisk /dev/sda
+# Create GPT partition table and partitions
+parted /dev/sda --script \\
+  mklabel gpt \\
+  mkpart "EFI" fat32 1MiB 513MiB \\
+  set 1 esp on \\
+  mkpart "root" ext4 513MiB 100%
 
-# In fdisk:
-# g        - Create GPT partition table
-# n        - New partition (EFI)
-#   1      - Partition number
-#   [enter] - Default first sector
-#   +512M  - 512MB for EFI
-# t        - Change type
-#   1      - EFI System
-# n        - New partition (root)
-#   2      - Partition number
-#   [enter] - Default first sector
-#   [enter] - Use remaining space
-# w        - Write and exit`,
+# Verify
+lsblk /dev/sda`,
 				},
 				{
 					type: "text",
-					content: "Or use a single command with `parted`:",
-				},
-				{
-					type: "code",
-					language: "bash",
-					content: `parted /dev/sda --script \\
-  mklabel gpt \\
-  mkpart ESP fat32 1MiB 513MiB \\
-  set 1 esp on \\
-  mkpart root ext4 513MiB 100%`,
+					content: "For NVMe drives, partitions are named `/dev/nvme0n1p1`, `/dev/nvme0n1p2`, etc.",
 				},
 			],
 		},
 		{
-			title: "4. Format Partitions",
+			title: "5. Format Partitions",
 			content: [
 				{
 					type: "code",
 					language: "bash",
-					content: `# Format EFI partition as FAT32
-mkfs.fat -F32 /dev/sda1
+					content: `# Format EFI partition
+mkfs.fat -F32 -n EFI /dev/sda1
 
-# Format root partition as ext4
-mkfs.ext4 /dev/sda2`,
+# Format root partition
+mkfs.ext4 -L root /dev/sda2`,
 				},
 			],
 		},
 		{
-			title: "5. Mount Filesystems",
+			title: "6. Mount Filesystems",
 			content: [
 				{
 					type: "code",
 					language: "bash",
-					content: `# Mount root
+					content: `# Mount root partition
 mount /dev/sda2 /mnt
 
-# Create and mount EFI
-mkdir -p /mnt/boot/efi
-mount /dev/sda1 /mnt/boot/efi`,
+# Create mount point and mount EFI
+mkdir -p /mnt/boot
+mount /dev/sda1 /mnt/boot`,
 				},
 			],
 		},
 		{
-			title: "6. Install Base System",
+			title: "7. Install Base System",
 			content: [
-				{ type: "text", content: "Extract the base system to the target:" },
+				{
+					type: "text",
+					content: "Install the base system using dnf:",
+				},
 				{
 					type: "code",
 					language: "bash",
-					content: `# Copy base system
-levitate-install --target /mnt
+					content: `dnf --installroot=/mnt --releasever=41 groupinstall -y core
 
-# This installs:
-# - Linux kernel
-# - Init system (systemd or runit)
-# - libc (glibc or musl)
-# - GNU coreutils
-# - levitate package manager`,
+dnf --installroot=/mnt install -y \\
+  kernel \\
+  kernel-modules \\
+  grub2-efi-x64 \\
+  shim-x64 \\
+  systemd-boot \\
+  NetworkManager`,
 				},
 			],
 		},
 		{
-			title: "7. Generate fstab",
+			title: "8. Generate fstab",
 			content: [
 				{
 					type: "code",
 					language: "bash",
-					content: `# Generate fstab from current mounts
-genfstab -U /mnt >> /mnt/etc/fstab
+					content: `# Generate fstab using UUIDs
+cat > /mnt/etc/fstab << EOF
+UUID=$(blkid -s UUID -o value /dev/sda2)  /      ext4  defaults  0 1
+UUID=$(blkid -s UUID -o value /dev/sda1)  /boot  vfat  defaults  0 2
+EOF
 
-# Verify it looks correct
 cat /mnt/etc/fstab`,
 				},
 			],
 		},
 		{
-			title: "8. Chroot and Configure",
+			title: "9. Enter the New System",
 			content: [
 				{
 					type: "code",
 					language: "bash",
-					content: `# Enter the new system
-arch-chroot /mnt
-
-# Set timezone
-ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
-hwclock --systohc
-
-# Set hostname
-echo "levitate" > /etc/hostname
-
-# Set root password
-passwd
-
-# Create your user
-useradd -m -G wheel -s /bin/bash vince
-passwd vince
-
-# Enable sudo for wheel group
-echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers`,
+					content: `# Bind mount system directories and chroot
+mount --bind /dev /mnt/dev
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
+mount --bind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
+chroot /mnt /bin/bash`,
 				},
 			],
 		},
 		{
-			title: "9. Install Bootloader",
+			title: "10. Set Timezone",
+			content: [
+				{
+					type: "code",
+					language: "bash",
+					content: `# List timezones
+timedatectl list-timezones | grep America
+
+# Set your timezone
+ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+hwclock --systohc`,
+				},
+			],
+		},
+		{
+			title: "11. Set Locale",
+			content: [
+				{
+					type: "code",
+					language: "bash",
+					content: `# Set locale
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen`,
+				},
+			],
+		},
+		{
+			title: "12. Set Hostname",
+			content: [
+				{
+					type: "code",
+					language: "bash",
+					content: `echo "levitate" > /etc/hostname
+
+cat > /etc/hosts << 'EOF'
+127.0.0.1   localhost
+::1         localhost
+127.0.1.1   levitate.localdomain levitate
+EOF`,
+				},
+			],
+		},
+		{
+			title: "13. Set Root Password",
+			content: [
+				{
+					type: "code",
+					language: "bash",
+					content: `passwd`,
+				},
+			],
+		},
+		{
+			title: "14. Create User Account",
+			content: [
+				{
+					type: "code",
+					language: "bash",
+					content: `# Create user with sudo access
+useradd -m -G wheel -s /bin/bash yourname
+passwd yourname
+
+# Enable sudo for wheel group
+echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel`,
+				},
+			],
+		},
+		{
+			title: "15. Install Bootloader",
 			content: [
 				{
 					type: "text",
-					content:
-						"Install and configure systemd-boot (for systemd variant) or GRUB:",
+					content: "Install and configure systemd-boot:",
 				},
-			],
-		},
-		{
-			title: "systemd-boot (systemd variant)",
-			level: 3,
-			content: [
 				{
 					type: "code",
 					language: "bash",
@@ -209,32 +289,28 @@ editor no
 EOF
 
 # Create boot entry
-cat > /boot/loader/entries/levitate.conf << 'EOF'
+cat > /boot/loader/entries/levitate.conf << EOF
 title   LevitateOS
-linux   /vmlinuz-linux
-initrd  /initramfs-linux.img
-options root=/dev/sda2 rw
+linux   /vmlinuz-$(uname -r)
+initrd  /initramfs-$(uname -r).img
+options root=UUID=$(blkid -s UUID -o value /dev/sda2) rw quiet
 EOF`,
 				},
 			],
 		},
 		{
-			title: "GRUB (runit variant)",
-			level: 3,
+			title: "16. Enable Services",
 			content: [
 				{
 					type: "code",
 					language: "bash",
-					content: `# Install GRUB
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=LevitateOS
-
-# Generate config
-grub-mkconfig -o /boot/grub/grub.cfg`,
+					content: `# Enable networking
+systemctl enable NetworkManager`,
 				},
 			],
 		},
 		{
-			title: "10. Exit and Reboot",
+			title: "17. Exit and Reboot",
 			content: [
 				{
 					type: "code",
@@ -242,11 +318,15 @@ grub-mkconfig -o /boot/grub/grub.cfg`,
 					content: `# Exit chroot
 exit
 
-# Unmount
+# Unmount all partitions
 umount -R /mnt
 
 # Reboot
 reboot`,
+				},
+				{
+					type: "text",
+					content: "Remove the installation media when prompted.",
 				},
 			],
 		},
@@ -256,16 +336,16 @@ reboot`,
 				{
 					type: "text",
 					content:
-						"After rebooting, log in and install the desktop environment:",
+						"Log in with your user account and install packages with `recipe`:",
 				},
 				{
 					type: "code",
 					language: "bash",
-					content: `# Install Sway desktop stack
-levitate desktop
+					content: `# List available recipes
+recipe list
 
-# Or install individual packages
-levitate install firefox foot waybar`,
+# Install a package
+recipe install ripgrep`,
 				},
 			],
 		},
@@ -274,41 +354,49 @@ levitate install firefox foot waybar`,
 			content: [],
 		},
 		{
-			title: 'Boot fails with "no bootable device"',
+			title: "System fails to boot",
 			level: 3,
 			content: [
 				{
 					type: "text",
 					content:
-						"The EFI partition may not be properly configured. Boot from the ISO again and verify:",
+						"Boot from the ISO again and verify your installation:",
 				},
 				{
 					type: "code",
 					language: "bash",
-					content: `# Check EFI partition is set correctly
-fdisk -l /dev/sda | grep EFI
-
-# Reinstall bootloader
+					content: `# Mount your partitions
 mount /dev/sda2 /mnt
-mount /dev/sda1 /mnt/boot/efi
-arch-chroot /mnt
-bootctl install  # or grub-install`,
+mount /dev/sda1 /mnt/boot
+
+# Check fstab has correct UUIDs
+cat /mnt/etc/fstab
+blkid
+
+# Re-enter chroot and reinstall bootloader
+mount --bind /dev /mnt/dev
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
+chroot /mnt /bin/bash
+bootctl install`,
 				},
 			],
 		},
 		{
-			title: "Network not working",
+			title: "No network after reboot",
 			level: 3,
 			content: [
 				{
 					type: "code",
 					language: "bash",
-					content: `# For systemd variant
-systemctl enable --now systemd-networkd
-systemctl enable --now systemd-resolved
+					content: `# Check NetworkManager status
+systemctl status NetworkManager
 
-# Check status
-networkctl status`,
+# Start if not running
+sudo systemctl enable --now NetworkManager
+
+# Connect to WiFi
+nmcli device wifi connect "YourNetwork" password "YourPassword"`,
 				},
 			],
 		},
