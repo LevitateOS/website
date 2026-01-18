@@ -10,6 +10,41 @@ const manualInstallContent: DocsContent = {
 	intro: "This guide walks through installing LevitateOS by hand. Use this if you prefer full control or are installing without the AI assistant.",
 	sections: [
 		{
+			title: "Overview",
+			content: [
+				{
+					type: "text",
+					content:
+						"Installing LevitateOS manually follows the same process as other Linux distributions like Arch or Gentoo. You'll boot from a live environment, prepare your disk, install the base system, and configure it before rebooting into your new installation.",
+				},
+			],
+		},
+		{
+			title: "What You'll Do",
+			content: [
+				{
+					type: "list",
+					items: [
+						"**Prepare** - Boot the live ISO, connect to the internet",
+						"**Partition** - Create EFI and root partitions on your disk",
+						"**Install** - Run `recipe bootstrap` to install the base system",
+						"**Configure** - Set timezone, locale, hostname, users, and bootloader",
+						"**Reboot** - Boot into your new LevitateOS installation",
+					],
+				},
+			],
+		},
+		{
+			title: "Time Required",
+			content: [
+				{
+					type: "text",
+					content:
+						"A typical installation takes 15-30 minutes depending on your hardware and familiarity with the process.",
+				},
+			],
+		},
+		{
 			title: "Prerequisites",
 			content: [
 				{
@@ -29,18 +64,24 @@ const manualInstallContent: DocsContent = {
 				{
 					type: "text",
 					content:
-						"Boot from the LevitateOS ISO. You'll be dropped into a root shell.",
+						"Boot from the LevitateOS ISO. You'll be dropped into a root shell with the `recipe` package manager available.",
 				},
 				{
 					type: "code",
 					language: "bash",
 					content: `# Verify you booted in UEFI mode
-ls /sys/firmware/efi/efivars`,
+ls /sys/firmware/efi/efivars
+
+# Set keyboard layout (optional, default is US)
+loadkeys us
+
+# Sync system clock
+timedatectl set-ntp true`,
 				},
 				{
 					type: "text",
 					content:
-						"If the directory exists, you're in UEFI mode. If not, reboot and select UEFI boot in your firmware settings.",
+						"If `/sys/firmware/efi/efivars` doesn't exist, you're in BIOS mode. Reboot and select UEFI boot in your firmware settings.",
 				},
 			],
 		},
@@ -54,8 +95,10 @@ ls /sys/firmware/efi/efivars`,
 				{
 					type: "code",
 					language: "bash",
-					content: `# Connect using nmcli
+					content: `# List available networks
 nmcli device wifi list
+
+# Connect to WiFi
 nmcli device wifi connect "YourNetwork" password "YourPassword"
 
 # Verify connectivity
@@ -93,12 +136,12 @@ ping -c 3 levitateos.org`,
 				{
 					type: "text",
 					content:
-						"Create a 512MB EFI partition and use the rest for root:",
+						"**WARNING: This will erase all data on the disk.** Create a 512MB EFI partition and use the rest for root:",
 				},
 				{
 					type: "code",
 					language: "bash",
-					content: `# Wipe existing partition table
+					content: `# Wipe existing partition table (DESTROYS ALL DATA)
 wipefs -a /dev/sda
 
 # Create GPT partition table and partitions
@@ -151,20 +194,16 @@ mount /dev/sda1 /mnt/boot`,
 			content: [
 				{
 					type: "text",
-					content: "Install the base system using dnf:",
+					content: "Install the base system using `recipe bootstrap`. This is similar to Arch's `pacstrap`:",
 				},
 				{
 					type: "code",
 					language: "bash",
-					content: `dnf --installroot=/mnt --releasever=41 groupinstall -y core
-
-dnf --installroot=/mnt install -y \\
-  kernel \\
-  kernel-modules \\
-  grub2-efi-x64 \\
-  shim-x64 \\
-  systemd-boot \\
-  NetworkManager`,
+					content: `recipe bootstrap /mnt`,
+				},
+				{
+					type: "text",
+					content: "This installs the base system: kernel, systemd, coreutils, networking, and the `recipe` package manager itself.",
 				},
 			],
 		},
@@ -172,12 +211,24 @@ dnf --installroot=/mnt install -y \\
 			title: "8. Generate fstab",
 			content: [
 				{
+					type: "text",
+					content: "Save the partition UUIDs and generate fstab:",
+				},
+				{
 					type: "code",
 					language: "bash",
-					content: `# Generate fstab using UUIDs
+					content: `# Get UUIDs (save these for the bootloader step)
+ROOT_UUID=$(blkid -s UUID -o value /dev/sda2)
+EFI_UUID=$(blkid -s UUID -o value /dev/sda1)
+
+echo "Root UUID: $ROOT_UUID"
+echo "EFI UUID: $EFI_UUID"
+
+# Generate fstab
 cat > /mnt/etc/fstab << EOF
-UUID=$(blkid -s UUID -o value /dev/sda2)  /      ext4  defaults  0 1
-UUID=$(blkid -s UUID -o value /dev/sda1)  /boot  vfat  defaults  0 2
+# <device>                                <mount>  <type>  <options>  <dump>  <fsck>
+UUID=$ROOT_UUID  /      ext4   defaults   0       1
+UUID=$EFI_UUID   /boot  vfat   defaults   0       2
 EOF
 
 cat /mnt/etc/fstab`,
@@ -190,11 +241,15 @@ cat /mnt/etc/fstab`,
 				{
 					type: "code",
 					language: "bash",
-					content: `# Bind mount system directories and chroot
+					content: `# Bind mount system directories
 mount --bind /dev /mnt/dev
+mount --bind /dev/pts /mnt/dev/pts
 mount --bind /proc /mnt/proc
 mount --bind /sys /mnt/sys
 mount --bind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
+mount --bind /run /mnt/run
+
+# Enter chroot
 chroot /mnt /bin/bash`,
 				},
 			],
@@ -206,10 +261,12 @@ chroot /mnt /bin/bash`,
 					type: "code",
 					language: "bash",
 					content: `# List timezones
-timedatectl list-timezones | grep America
+ls /usr/share/zoneinfo/
 
-# Set your timezone
+# Set your timezone (example: US Eastern)
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+
+# Sync hardware clock
 hwclock --systohc`,
 				},
 			],
@@ -220,10 +277,8 @@ hwclock --systohc`,
 				{
 					type: "code",
 					language: "bash",
-					content: `# Set locale
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-locale-gen`,
+					content: `# Set system locale
+echo "LANG=en_US.UTF-8" > /etc/locale.conf`,
 				},
 			],
 		},
@@ -233,12 +288,15 @@ locale-gen`,
 				{
 					type: "code",
 					language: "bash",
-					content: `echo "levitate" > /etc/hostname
+					content: `# Set hostname (replace 'myhostname' with your preferred name)
+HOSTNAME="myhostname"
+echo "$HOSTNAME" > /etc/hostname
 
-cat > /etc/hosts << 'EOF'
+# Configure hosts file
+cat > /etc/hosts << EOF
 127.0.0.1   localhost
 ::1         localhost
-127.0.1.1   levitate.localdomain levitate
+127.0.1.1   $HOSTNAME.localdomain $HOSTNAME
 EOF`,
 				},
 			],
@@ -259,12 +317,13 @@ EOF`,
 				{
 					type: "code",
 					language: "bash",
-					content: `# Create user with sudo access
+					content: `# Create user with sudo access (replace 'yourname')
 useradd -m -G wheel -s /bin/bash yourname
 passwd yourname
 
 # Enable sudo for wheel group
-echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel`,
+echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel
+chmod 0440 /etc/sudoers.d/wheel`,
 				},
 			],
 		},
@@ -278,8 +337,11 @@ echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel`,
 				{
 					type: "code",
 					language: "bash",
-					content: `# Install systemd-boot
+					content: `# Install systemd-boot to EFI partition
 bootctl install
+
+# Check what kernel files exist
+ls /boot/vmlinuz* /boot/initramfs*
 
 # Create loader config
 cat > /boot/loader/loader.conf << 'EOF'
@@ -289,10 +351,11 @@ editor no
 EOF
 
 # Create boot entry
+# NOTE: Adjust vmlinuz/initramfs filenames to match what's in /boot
 cat > /boot/loader/entries/levitate.conf << EOF
 title   LevitateOS
-linux   /vmlinuz-$(uname -r)
-initrd  /initramfs-$(uname -r).img
+linux   /vmlinuz-linux
+initrd  /initramfs-linux.img
 options root=UUID=$(blkid -s UUID -o value /dev/sda2) rw quiet
 EOF`,
 				},
@@ -336,7 +399,7 @@ reboot`,
 				{
 					type: "text",
 					content:
-						"Log in with your user account and install packages with `recipe`:",
+						"Log in with your user account and install additional packages:",
 				},
 				{
 					type: "code",
@@ -345,7 +408,10 @@ reboot`,
 recipe list
 
 # Install a package
-recipe install ripgrep`,
+recipe install ripgrep
+
+# View package info
+recipe info firefox`,
 				},
 			],
 		},
@@ -373,11 +439,14 @@ mount /dev/sda1 /mnt/boot
 cat /mnt/etc/fstab
 blkid
 
-# Re-enter chroot and reinstall bootloader
+# Re-enter chroot
 mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
 mount --bind /sys /mnt/sys
+mount --bind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
 chroot /mnt /bin/bash
+
+# Reinstall bootloader
 bootctl install`,
 				},
 			],
