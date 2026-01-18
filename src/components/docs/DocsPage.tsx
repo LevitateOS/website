@@ -7,7 +7,9 @@ import type {
 	ListBlock,
 	ConversationBlock,
 	TableBlock,
+	FileBlock,
 } from "@levitate/docs-content"
+import { useCopyToClipboard } from "@levitate/docs-content"
 
 interface DocsPageProps {
 	content: DocsContent
@@ -81,6 +83,8 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 			return <ListBlockRenderer list={block} />
 		case "conversation":
 			return <ConversationBlockRenderer conversation={block} />
+		case "file":
+			return <FileBlockRenderer block={block} />
 		case "link":
 			return (
 				<p className="text-muted-foreground mb-2">
@@ -275,4 +279,50 @@ function ConversationBlockRenderer({ conversation }: { conversation: Conversatio
 			))}
 		</div>
 	)
+}
+
+function FileBlockRenderer({ block }: { block: FileBlock }) {
+	const { copied, copy } = useCopyToClipboard()
+	const language = block.language || inferLanguage(block.filename)
+
+	return (
+		<div className="mb-4 border border-border rounded-md overflow-hidden">
+			<div className="bg-muted px-3 py-1.5 border-b border-border flex items-center justify-between">
+				<div className="flex items-center gap-2">
+					<svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+					</svg>
+					<span className="text-sm font-mono text-foreground">{block.filename}</span>
+				</div>
+				<div className="flex items-center gap-2 text-xs text-muted-foreground">
+					{language && <span>{language}</span>}
+					{language && <span className="text-muted-foreground/50">|</span>}
+					<button
+						onClick={() => copy(block.content)}
+						className="hover:text-foreground transition-colors"
+					>
+						{copied ? "copied!" : "copy"}
+					</button>
+				</div>
+			</div>
+			<pre className="bg-muted/50 p-4 overflow-x-auto text-sm">
+				<code>{block.content}</code>
+			</pre>
+		</div>
+	)
+}
+
+function inferLanguage(filename: string): string | undefined {
+	const ext = filename.split(".").pop()?.toLowerCase()
+	const langMap: Record<string, string> = {
+		conf: "conf",
+		json: "json",
+		yaml: "yaml",
+		yml: "yaml",
+		toml: "toml",
+		sh: "bash",
+		bash: "bash",
+		zsh: "bash",
+	}
+	return langMap[ext || ""]
 }
