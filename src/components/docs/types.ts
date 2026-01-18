@@ -18,6 +18,7 @@ export interface Section {
 export type ContentBlock =
 	| TextBlock
 	| CodeBlock
+	| FileBlock
 	| TableBlock
 	| ListBlock
 	| ConversationBlock
@@ -32,6 +33,12 @@ export interface TextBlock {
 export interface CodeBlock {
 	type: "code"
 	language: string
+	content: string
+}
+
+export interface FileBlock {
+	type: "file"
+	filename: string
 	content: string
 }
 

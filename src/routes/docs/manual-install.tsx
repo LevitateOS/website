@@ -212,26 +212,33 @@ mount /dev/sda1 /mnt/boot`,
 			content: [
 				{
 					type: "text",
-					content: "Save the partition UUIDs and generate fstab:",
+					content: "First, get the UUIDs for your partitions:",
 				},
 				{
 					type: "code",
 					language: "bash",
-					content: `# Get UUIDs (save these for the bootloader step)
-ROOT_UUID=$(blkid -s UUID -o value /dev/sda2)
-EFI_UUID=$(blkid -s UUID -o value /dev/sda1)
-
-echo "Root UUID: $ROOT_UUID"
-echo "EFI UUID: $EFI_UUID"
-
-# Generate fstab
-cat > /mnt/etc/fstab << EOF
-# <device>                                <mount>  <type>  <options>  <dump>  <fsck>
-UUID=$ROOT_UUID  /      ext4   defaults   0       1
-UUID=$EFI_UUID   /boot  vfat   defaults   0       2
-EOF
-
-cat /mnt/etc/fstab`,
+					content: `# Display partition UUIDs
+blkid /dev/sda1 /dev/sda2`,
+				},
+				{
+					type: "text",
+					content: "Create the fstab file (use nano or vim):",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `nano /mnt/etc/fstab`,
+				},
+				{
+					type: "text",
+					content: "Add the following content, replacing the UUIDs with your actual values from `blkid`:",
+				},
+				{
+					type: "file",
+					filename: "/etc/fstab",
+					content: `# <device>                                 <mount>  <type>  <options>  <dump>  <fsck>
+UUID=your-root-uuid-here  /      ext4    defaults   0       1
+UUID=your-efi-uuid-here   /boot  vfat    defaults   0       2`,
 				},
 			],
 		},
@@ -286,18 +293,33 @@ echo "LANG=en_US.UTF-8" > /etc/locale.conf`,
 			title: "12. Set Hostname",
 			content: [
 				{
+					type: "text",
+					content: "Set your hostname (replace `myhostname` with your preferred name):",
+				},
+				{
 					type: "code",
 					language: "bash",
-					content: `# Set hostname (replace 'myhostname' with your preferred name)
-HOSTNAME="myhostname"
-echo "$HOSTNAME" > /etc/hostname
-
-# Configure hosts file
-cat > /etc/hosts << EOF
-127.0.0.1   localhost
+					content: `echo "myhostname" > /etc/hostname`,
+				},
+				{
+					type: "text",
+					content: "Edit the hosts file:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `nano /etc/hosts`,
+				},
+				{
+					type: "text",
+					content: "Add the following (use the same hostname you chose above):",
+				},
+				{
+					type: "file",
+					filename: "/etc/hosts",
+					content: `127.0.0.1   localhost
 ::1         localhost
-127.0.1.1   $HOSTNAME.localdomain $HOSTNAME
-EOF`,
+127.0.1.1   myhostname.localdomain myhostname`,
 				},
 			],
 		},
@@ -315,15 +337,41 @@ EOF`,
 			title: "14. Create User Account",
 			content: [
 				{
+					type: "text",
+					content: "Create your user (replace `yourname` with your username):",
+				},
+				{
 					type: "code",
 					language: "bash",
-					content: `# Create user with sudo access (replace 'yourname')
-useradd -m -G wheel -s /bin/bash yourname
-passwd yourname
-
-# Enable sudo for wheel group
-echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel
-chmod 0440 /etc/sudoers.d/wheel`,
+					content: `useradd -m -G wheel -s /bin/bash yourname
+passwd yourname`,
+				},
+				{
+					type: "text",
+					content: "Enable sudo for the wheel group:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `nano /etc/sudoers.d/wheel`,
+				},
+				{
+					type: "text",
+					content: "Add this single line:",
+				},
+				{
+					type: "file",
+					filename: "/etc/sudoers.d/wheel",
+					content: `%wheel ALL=(ALL:ALL) ALL`,
+				},
+				{
+					type: "text",
+					content: "Save and set correct permissions:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `chmod 0440 /etc/sudoers.d/wheel`,
 				},
 			],
 		},
@@ -332,7 +380,7 @@ chmod 0440 /etc/sudoers.d/wheel`,
 			content: [
 				{
 					type: "text",
-					content: "Install and configure systemd-boot:",
+					content: "Install systemd-boot and check kernel files:",
 				},
 				{
 					type: "code",
@@ -340,24 +388,58 @@ chmod 0440 /etc/sudoers.d/wheel`,
 					content: `# Install systemd-boot to EFI partition
 bootctl install
 
-# Check what kernel files exist
-ls /boot/vmlinuz* /boot/initramfs*
-
-# Create loader config
-cat > /boot/loader/loader.conf << 'EOF'
-default levitate.conf
+# Check what kernel files exist (note the exact filenames)
+ls /boot/vmlinuz* /boot/initramfs*`,
+				},
+				{
+					type: "text",
+					content: "Create the loader configuration:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `nano /boot/loader/loader.conf`,
+				},
+				{
+					type: "text",
+					content: "Add:",
+				},
+				{
+					type: "file",
+					filename: "/boot/loader/loader.conf",
+					content: `default levitate.conf
 timeout 3
-editor no
-EOF
-
-# Create boot entry
-# NOTE: Adjust vmlinuz/initramfs filenames to match what's in /boot
-cat > /boot/loader/entries/levitate.conf << EOF
-title   LevitateOS
+editor no`,
+				},
+				{
+					type: "text",
+					content: "Get your root partition UUID:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `blkid /dev/sda2`,
+				},
+				{
+					type: "text",
+					content: "Create the boot entry:",
+				},
+				{
+					type: "code",
+					language: "bash",
+					content: `nano /boot/loader/entries/levitate.conf`,
+				},
+				{
+					type: "text",
+					content: "Add the following, replacing the UUID and adjusting kernel filenames if needed:",
+				},
+				{
+					type: "file",
+					filename: "/boot/loader/entries/levitate.conf",
+					content: `title   LevitateOS
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
-options root=UUID=$(blkid -s UUID -o value /dev/sda2) rw quiet
-EOF`,
+options root=UUID=your-root-uuid-here rw quiet`,
 				},
 			],
 		},
