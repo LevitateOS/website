@@ -1,21 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router"
-
-const docsNav = [
-	{
-		title: "Getting Started",
-		items: [
-			{ title: "Installation (LLM)", href: "/docs/install" },
-			{ title: "Manual Installation", href: "/docs/manual-install" },
-		],
-	},
-	{
-		title: "Package Manager",
-		items: [
-			{ title: "Recipe Format", href: "/docs/recipes" },
-			{ title: "CLI Reference", href: "/docs/levitate" },
-		],
-	},
-]
+import { docsNav } from "@levitate/docs-content"
 
 export function DocsSidebar() {
 	const router = useRouterState()

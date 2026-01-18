@@ -7,7 +7,7 @@ import type {
 	ListBlock,
 	ConversationBlock,
 	TableBlock,
-} from "./types"
+} from "@levitate/docs-content"
 
 interface DocsPageProps {
 	content: DocsContent

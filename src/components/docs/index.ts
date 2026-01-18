@@ -1,4 +1,5 @@
 export { DocsPage } from "./DocsPage"
+// Types re-exported from shared package
 export type {
 	DocsContent,
 	Section,
@@ -12,4 +13,4 @@ export type {
 	ConversationMessage,
 	LinkBlock,
 	InlineCodeBlock,
-} from "./types"
+} from "@levitate/docs-content"
