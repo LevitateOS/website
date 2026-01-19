@@ -104,20 +104,6 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 			return <ListBlockRenderer list={block} />
 		case "conversation":
 			return <ConversationBlockRenderer conversation={block} />
-		case "link":
-			return (
-				<p className="text-muted-foreground mb-2">
-					<a href={block.href} className="text-primary hover:underline">
-						{block.text}
-					</a>
-				</p>
-			)
-		case "inline-code":
-			return (
-				<p className="text-muted-foreground mb-2">
-					<code className="bg-muted px-1.5 py-0.5">{block.content}</code>
-				</p>
-			)
 		case "interactive":
 			return <InteractiveBlockRenderer block={block} />
 		case "command":
