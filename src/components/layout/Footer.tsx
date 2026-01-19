@@ -5,7 +5,7 @@ export function Footer() {
 		<footer className="border-t bg-muted/40">
 			<div className="container flex flex-col gap-4 py-10 md:flex-row md:justify-between md:gap-0 px-4 md:px-6">
 				<div className="flex flex-col gap-2">
-					<span className="text-lg font-semibold">LevitateOS</span>
+					<span className="text-lg font-semibold font-logo">LevitateOS</span>
 					<p className="text-sm text-muted-foreground">Be your own package maintainer.</p>
 				</div>
 

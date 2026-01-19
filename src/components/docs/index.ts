@@ -6,6 +6,7 @@ export type {
 	ContentBlock,
 	TextBlock,
 	CodeBlock,
+	FileBlock,
 	TableBlock,
 	ListBlock,
 	ListItem,

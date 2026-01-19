@@ -1,9 +1,12 @@
 import { DocsLayout } from "@/components/layout"
 import { CodeBlock } from "@/components/CodeBlock"
+import { Check, Copy, File } from "@phosphor-icons/react"
+import { useCopyToClipboard } from "usehooks-ts"
 import type {
 	DocsContent,
 	Section,
 	ContentBlock,
+	FileBlock,
 	ListBlock,
 	ConversationBlock,
 	TableBlock,
@@ -86,6 +89,8 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 			return <TextBlockRenderer content={block.content} />
 		case "code":
 			return <CodeBlock language={block.language}>{block.content}</CodeBlock>
+		case "file":
+			return <FileBlockRenderer file={block} />
 		case "table":
 			return <TableBlockRenderer table={block} />
 		case "list":
@@ -111,6 +116,42 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 		default:
 			return null
 	}
+}
+
+function FileBlockRenderer({ file }: { file: FileBlock }) {
+	const [copiedText, copy] = useCopyToClipboard()
+	const hasCopied = copiedText === file.content
+
+	return (
+		<div className="mb-4">
+			<div className="flex items-center justify-between bg-muted/50 border border-border px-3 py-2 text-sm font-mono">
+				<div className="flex items-center gap-2">
+					<File className="h-4 w-4 text-muted-foreground" weight="fill" />
+					<span className="text-muted-foreground">{file.filename}</span>
+				</div>
+				<button
+					type="button"
+					onClick={() => copy(file.content)}
+					className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+				>
+					{hasCopied ? (
+						<>
+							<Check className="w-3 h-3" />
+							copied
+						</>
+					) : (
+						<>
+							<Copy className="w-3 h-3" />
+							copy
+						</>
+					)}
+				</button>
+			</div>
+			<pre className="bg-muted/30 border border-t-0 border-border p-4 overflow-x-auto">
+				<code className="text-sm font-mono">{file.content}</code>
+			</pre>
+		</div>
+	)
 }
 
 function TextBlockRenderer({ content }: { content: string }) {
