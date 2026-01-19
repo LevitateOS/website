@@ -18,12 +18,18 @@ function HomePage() {
 					<FeatureCard
 						icon={<Package className="h-8 w-8" />}
 						title="Your Own Packages"
-						description="Write simple S-expression recipes. Be the maintainer. No waiting for upstream repos."
+						description="Write simple Rhai recipes. Be the maintainer. No waiting for upstream repos."
 					>
-						<CodeBlock language="lisp">{`(package "ripgrep" "14.1.0"
-  (acquire (binary (x86_64 "URL")))
-  (build (extract tar-gz))
-  (install (to-bin "rg")))`}</CodeBlock>
+						<CodeBlock language="rhai">{`let name = "ripgrep";
+let version = "14.1.0";
+
+fn acquire() {
+    download_bin("rg", ARCH);
+}
+
+fn install() {
+    install_bin("rg");
+}`}</CodeBlock>
 					</FeatureCard>
 
 					<FeatureCard
@@ -49,11 +55,6 @@ recipe remove ripgrep`}</CodeBlock>
 						</div>
 					</FeatureCard>
 
-					<FeatureCard
-						icon={<Terminal className="h-8 w-8" />}
-						title="Natural Language Installer"
-						description="Just tell it what you want. 'Install to the 500GB drive with user vince' — no memorizing partition commands."
-					/>
 
 					<FeatureCard
 						icon={<Memory className="h-8 w-8" />}
@@ -71,38 +72,22 @@ recipe remove ripgrep`}</CodeBlock>
 
 			{/* Local LLM Section */}
 			<section className="container py-16">
-				<h2 className="text-2xl font-bold text-center mb-8">Local LLM: SmolLM3</h2>
+				<h2 className="text-2xl font-bold text-center mb-8">Recipe Assistant</h2>
 				<p className="text-muted-foreground text-center mb-8">
-					Optional AI assistant powered by SmolLM3 from Hugging Face. Runs entirely on your machine.
+					Optional local LLM helps write and maintain recipes. Runs entirely on your machine.
 				</p>
 
-				<div className="grid gap-6 grid-cols-2 mb-8">
-					<div className="bg-card border p-4">
-						<h3 className="font-semibold mb-2">Installer LoRA</h3>
-						<p className="text-sm text-muted-foreground mb-3">
-							Focused on installation. Understands your hardware and generates the right commands to
-							partition, format, and install LevitateOS.
-						</p>
-						<div className="bg-muted/50 p-3 text-sm">
-							<p className="text-muted-foreground mb-1">You:</p>
-							<p>"install to the nvme drive, use ext4, create user vince"</p>
-							<p className="text-muted-foreground mt-2 mb-1">Installer:</p>
-							<p className="text-primary">Runs: parted, mkfs.ext4, pacstrap...</p>
-						</div>
-					</div>
-
-					<div className="bg-card border p-4">
-						<h3 className="font-semibold mb-2">Recipe LoRA</h3>
-						<p className="text-sm text-muted-foreground mb-3">
-							Sandboxed to the recipes folder. Can only create and edit .recipe files. Cannot run
-							commands or access anything else.
-						</p>
-						<div className="bg-muted/50 p-3 text-sm">
-							<p className="text-muted-foreground mb-1">You:</p>
-							<p>"create a recipe for htop"</p>
-							<p className="text-muted-foreground mt-2 mb-1">Recipe:</p>
-							<p className="text-primary">Writes: /recipes/htop.recipe</p>
-						</div>
+				<div className="bg-card border p-4 mb-8 max-w-lg mx-auto">
+					<h3 className="font-semibold mb-2">Recipe LoRA</h3>
+					<p className="text-sm text-muted-foreground mb-3">
+						Sandboxed to the recipes folder. Can only create and edit .rhai recipe files. Cannot run
+						commands or access anything else.
+					</p>
+					<div className="bg-muted/50 p-3 text-sm">
+						<p className="text-muted-foreground mb-1">You:</p>
+						<p>"create a recipe for htop"</p>
+						<p className="text-muted-foreground mt-2 mb-1">Assistant:</p>
+						<p className="text-primary">Writes: /recipes/htop.rhai</p>
 					</div>
 				</div>
 
@@ -113,8 +98,8 @@ recipe remove ripgrep`}</CodeBlock>
 							<p className="text-muted-foreground mb-2">What it is:</p>
 							<ul className="space-y-1">
 								<li>+ Local model (no cloud, no telemetry)</li>
-								<li>+ Two specialized LoRAs for specific tasks</li>
-								<li>+ Recipe LoRA is fully sandboxed</li>
+								<li>+ Specialized for recipe writing</li>
+								<li>+ Fully sandboxed to recipes folder</li>
 								<li>+ Automated package maintainer</li>
 							</ul>
 						</div>
@@ -149,29 +134,15 @@ sudo dd if=LevitateOS.iso of=/dev/sdX bs=4M status=progress
 qemu-system-x86_64 -m 4G -enable-kvm -cdrom LevitateOS.iso`}</CodeBlock>
 					</div>
 					<div>
-						<h3 className="font-semibold mb-2">3. Chat with the installer</h3>
-						<div className="bg-muted/50 p-4 space-y-2 text-sm">
-							<p>
-								<span className="text-primary">You:</span> install to the 500gb drive with user
-								vince
-							</p>
-							<p>
-								<span className="text-muted-foreground">AI:</span> I'll partition /dev/sda (500GB)
-								with ext4 and create user "vince".
-							</p>
-							<p>
-								<span className="text-primary">You:</span> yes, make vince a sudo user
-							</p>
-							<p>
-								<span className="text-muted-foreground">AI:</span> Done. Rebooting into
-								LevitateOS...
-							</p>
-						</div>
+						<h3 className="font-semibold mb-2">3. Install</h3>
+						<CodeBlock language="bash">{`# Partition, format, and install the base system
+# See docs/installation for full guide
+recipe bootstrap /dev/sda`}</CodeBlock>
 					</div>
 					<div>
 						<h3 className="font-semibold mb-2">4. You're done</h3>
-						<CodeBlock language="bash">{`# You're at a terminal. Install packages as needed:
-recipe install ripgrep fd`}</CodeBlock>
+						<CodeBlock language="bash">{`# You're at a terminal. Install packages:
+recipe install ripgrep fd htop`}</CodeBlock>
 					</div>
 				</div>
 			</section>
