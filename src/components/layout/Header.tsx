@@ -26,7 +26,7 @@ export function Header() {
 						Download
 					</Link>
 					<Link
-						to="/docs/install"
+						to="/docs/getting-started"
 						className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
 					>
 						Docs

@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Link, useRouterState } from "@tanstack/react-router"
 import { docsNav, contentBySlug } from "@levitate/docs-content"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -13,6 +14,7 @@ function toAnchor(title: string): string {
 export function DocsSidebar() {
 	const router = useRouterState()
 	const currentPath = router.location.pathname
+	const [collapsed, setCollapsed] = useState(false)
 
 	return (
 		<aside className="hidden md:block w-48 shrink-0 sticky top-20 h-[calc(100vh-6rem)]">
@@ -27,11 +29,20 @@ export function DocsSidebar() {
 								const slug = item.href.replace("/docs/", "")
 								const content = contentBySlug[slug]
 								const sections = content?.sections || []
+								const showSections = isActive && !collapsed && sections.length > 0
 
 								return (
 									<li key={item.href}>
 										<Link
 											to={item.href}
+											onClick={(e) => {
+												if (isActive) {
+													e.preventDefault()
+													setCollapsed(!collapsed)
+												} else {
+													setCollapsed(false)
+												}
+											}}
 											className={`block px-3 py-1.5 text-sm transition-colors ${
 												isActive
 													? "bg-primary text-primary-foreground"
@@ -40,7 +51,7 @@ export function DocsSidebar() {
 										>
 											{item.title}
 										</Link>
-										{isActive && sections.length > 0 && (
+										{showSections && (
 											<ul className="mt-1 ml-3 border-l border-border space-y-0.5">
 												{sections.map((s) => (
 													<li key={s.title}>

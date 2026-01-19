@@ -160,8 +160,8 @@ function DownloadPage() {
 				</h2>
 				<p className="text-sm text-muted-foreground">
 					Without the LLM assistant, follow the{" "}
-					<Link to="/docs/manual-install" className="text-primary hover:underline">
-						Manual Installation Guide
+					<Link to="/docs/installation" className="text-primary hover:underline">
+						Installation Guide
 					</Link>
 					.
 				</p>

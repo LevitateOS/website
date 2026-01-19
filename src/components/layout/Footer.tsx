@@ -13,10 +13,10 @@ export function Footer() {
 					<div className="flex flex-col gap-2">
 						<span className="font-medium">Documentation</span>
 						<Link
-							to="/docs/install"
+							to="/docs/getting-started"
 							className="text-sm text-muted-foreground hover:text-foreground"
 						>
-							Installation
+							Getting Started
 						</Link>
 						<Link
 							to="/docs/recipes"
@@ -25,7 +25,7 @@ export function Footer() {
 							Recipes
 						</Link>
 						<Link
-							to="/docs/levitate"
+							to="/docs/cli-reference"
 							className="text-sm text-muted-foreground hover:text-foreground"
 						>
 							CLI Reference
