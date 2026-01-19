@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router"
 import { docsNav, contentBySlug } from "@levitate/docs-content"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 /** Convert title to anchor slug */
 function toAnchor(title: string): string {
@@ -14,9 +15,10 @@ export function DocsSidebar() {
 	const currentPath = router.location.pathname
 
 	return (
-		<aside className="hidden md:block w-48 shrink-0">
-			<nav className="sticky top-20 space-y-4">
-				{docsNav.map((section) => (
+		<aside className="hidden md:block w-48 shrink-0 sticky top-20 h-[calc(100vh-6rem)]">
+			<ScrollArea className="h-full">
+				<nav className="space-y-4 pr-4">
+					{docsNav.map((section) => (
 					<div key={section.title}>
 						<h3 className="font-semibold mb-2">{section.title}</h3>
 						<ul className="space-y-1">
@@ -59,8 +61,9 @@ export function DocsSidebar() {
 							})}
 						</ul>
 					</div>
-				))}
-			</nav>
+					))}
+				</nav>
+			</ScrollArea>
 		</aside>
 	)
 }
