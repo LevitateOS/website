@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { Cpu, Download, Package, Robot, Terminal } from "@phosphor-icons/react"
 
 export const Route = createFileRoute("/download")({ component: DownloadPage })
@@ -160,9 +160,9 @@ function DownloadPage() {
 				</h2>
 				<p className="text-sm text-muted-foreground">
 					Without the LLM assistant, follow the{" "}
-					<Link to="/docs/installation" className="text-primary hover:underline">
+					<a href="/docs/installation" className="text-primary hover:underline">
 						Installation Guide
-					</Link>
+					</a>
 					.
 				</p>
 			</div>

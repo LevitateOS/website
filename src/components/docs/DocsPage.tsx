@@ -2,6 +2,15 @@ import { DocsLayout } from "@/components/layout"
 import { CodeBlock } from "@/components/CodeBlock"
 import { Check, Copy, File } from "@phosphor-icons/react"
 import { useCopyToClipboard } from "usehooks-ts"
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import type {
 	DocsContent,
 	Section,
@@ -10,9 +19,7 @@ import type {
 	ListBlock,
 	ConversationBlock,
 	TableBlock,
-	FileBlock,
 } from "@levitate/docs-content"
-import { useCopyToClipboard } from "@levitate/docs-content"
 
 interface DocsPageProps {
 	content: DocsContent
@@ -97,8 +104,6 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 			return <ListBlockRenderer list={block} />
 		case "conversation":
 			return <ConversationBlockRenderer conversation={block} />
-		case "file":
-			return <FileBlockRenderer block={block} />
 		case "link":
 			return (
 				<p className="text-muted-foreground mb-2">
@@ -121,41 +126,63 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 function FileBlockRenderer({ file }: { file: FileBlock }) {
 	const [copiedText, copy] = useCopyToClipboard()
 	const hasCopied = copiedText === file.content
+	const language = file.language || inferLanguage(file.filename)
 
 	return (
-		<div className="mb-4">
-			<div className="flex items-center justify-between bg-muted/50 border border-border px-3 py-2 text-sm font-mono">
+		<Card className="mb-4">
+			<CardHeader className="py-2 px-3 border-b flex-row items-center justify-between">
 				<div className="flex items-center gap-2">
 					<File className="h-4 w-4 text-muted-foreground" weight="fill" />
-					<span className="text-muted-foreground">{file.filename}</span>
+					<span className="text-sm font-mono">{file.filename}</span>
 				</div>
-				<button
-					type="button"
-					onClick={() => copy(file.content)}
-					className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-				>
-					{hasCopied ? (
-						<>
-							<Check className="w-3 h-3" />
-							copied
-						</>
-					) : (
-						<>
-							<Copy className="w-3 h-3" />
-							copy
-						</>
-					)}
-				</button>
-			</div>
-			<pre className="bg-muted/30 border border-t-0 border-border p-4 overflow-x-auto">
-				<code className="text-sm font-mono">{file.content}</code>
-			</pre>
-		</div>
+				<div className="flex items-center gap-2 text-xs text-muted-foreground">
+					{language && <span>{language}</span>}
+					{language && <span className="text-muted-foreground/50">|</span>}
+					<button
+						type="button"
+						onClick={() => copy(file.content)}
+						className="flex items-center gap-1 hover:text-foreground transition-colors"
+					>
+						{hasCopied ? (
+							<>
+								<Check className="w-3 h-3" />
+								copied
+							</>
+						) : (
+							<>
+								<Copy className="w-3 h-3" />
+								copy
+							</>
+						)}
+					</button>
+				</div>
+			</CardHeader>
+			<CardContent className="p-0">
+				<pre className="bg-muted/30 p-4 overflow-x-auto">
+					<code className="text-sm font-mono">{file.content}</code>
+				</pre>
+			</CardContent>
+		</Card>
 	)
 }
 
+function inferLanguage(filename: string): string | undefined {
+	const ext = filename.split(".").pop()?.toLowerCase()
+	const langMap: Record<string, string> = {
+		conf: "conf",
+		json: "json",
+		yaml: "yaml",
+		yml: "yaml",
+		toml: "toml",
+		sh: "bash",
+		bash: "bash",
+		zsh: "bash",
+		rhai: "rhai",
+	}
+	return langMap[ext || ""]
+}
+
 function TextBlockRenderer({ content }: { content: string }) {
-	// Handle inline code (wrapped in backticks) and links (markdown-style)
 	const parts = parseInlineContent(content)
 
 	return (
@@ -192,32 +219,26 @@ type InlinePart =
 
 function parseInlineContent(text: string): InlinePart[] {
 	const parts: InlinePart[] = []
-	// Regex to match inline code `...`, links [text](url), or bold **...**
 	const regex = /`([^`]+)`|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
 	let lastIndex = 0
 	let match
 
 	while ((match = regex.exec(text)) !== null) {
-		// Add text before match
 		if (match.index > lastIndex) {
 			parts.push({ type: "text", content: text.slice(lastIndex, match.index) })
 		}
 
 		if (match[1]) {
-			// Inline code
 			parts.push({ type: "code", content: match[1] })
 		} else if (match[2] && match[3]) {
-			// Link
 			parts.push({ type: "link", content: match[2], href: match[3] })
 		} else if (match[4]) {
-			// Bold
 			parts.push({ type: "bold", content: match[4] })
 		}
 
 		lastIndex = match.index + match[0].length
 	}
 
-	// Add remaining text
 	if (lastIndex < text.length) {
 		parts.push({ type: "text", content: text.slice(lastIndex) })
 	}
@@ -227,33 +248,29 @@ function parseInlineContent(text: string): InlinePart[] {
 
 function TableBlockRenderer({ table }: { table: TableBlock }) {
 	return (
-		<div className="overflow-x-auto">
-			<table className="w-full text-sm">
-				<thead>
-					<tr className="border-b">
-						{table.headers.map((header, i) => (
-							<th key={i} className="text-left py-2 pr-4">
-								{header}
-							</th>
-						))}
-					</tr>
-				</thead>
-				<tbody className="text-muted-foreground">
-					{table.rows.map((row, i) => (
-						<tr key={i} className={i < table.rows.length - 1 ? "border-b" : ""}>
-							{row.map((cell, j) => (
-								<td
-									key={j}
-									className={`py-2 pr-4 ${j === table.monospaceCol ? "font-mono" : ""}`}
-								>
-									{cell}
-								</td>
-							))}
-						</tr>
+		<Table className="mb-4">
+			<TableHeader>
+				<TableRow>
+					{table.headers.map((header, i) => (
+						<TableHead key={i}>{header}</TableHead>
 					))}
-				</tbody>
-			</table>
-		</div>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{table.rows.map((row, i) => (
+					<TableRow key={i}>
+						{row.map((cell, j) => (
+							<TableCell
+								key={j}
+								className={j === table.monospaceCol ? "font-mono" : ""}
+							>
+								{cell}
+							</TableCell>
+						))}
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
 	)
 }
 
@@ -305,74 +322,30 @@ function ListBlockRenderer({ list }: { list: ListBlock }) {
 
 function ConversationBlockRenderer({ conversation }: { conversation: ConversationBlock }) {
 	return (
-		<div className="bg-muted/50 p-4 space-y-3 text-sm mb-4">
-			{conversation.messages.map((msg, i) => (
-				<div key={i}>
-					<span
-						className={
-							msg.role === "user"
-								? "text-primary font-medium"
-								: "text-muted-foreground font-medium"
-						}
-					>
-						{msg.role === "user" ? "You:" : "AI:"}
-					</span>
-					<span className="ml-2">{msg.text}</span>
-					{msg.list && (
-						<ul className="list-disc list-inside ml-4 mt-1">
-							{msg.list.map((item, j) => (
-								<li key={j}>{item}</li>
-							))}
-						</ul>
-					)}
-				</div>
-			))}
-		</div>
+		<Card className="mb-4">
+			<CardContent className="p-4 space-y-3 text-sm">
+				{conversation.messages.map((msg, i) => (
+					<div key={i}>
+						<span
+							className={
+								msg.role === "user"
+									? "text-primary font-medium"
+									: "text-muted-foreground font-medium"
+							}
+						>
+							{msg.role === "user" ? "You:" : "AI:"}
+						</span>
+						<span className="ml-2">{msg.text}</span>
+						{msg.list && (
+							<ul className="list-disc list-inside ml-4 mt-1">
+								{msg.list.map((item, j) => (
+									<li key={j}>{item}</li>
+								))}
+							</ul>
+						)}
+					</div>
+				))}
+			</CardContent>
+		</Card>
 	)
-}
-
-function FileBlockRenderer({ block }: { block: FileBlock }) {
-	const { copied, copy } = useCopyToClipboard()
-	const language = block.language || inferLanguage(block.filename)
-
-	return (
-		<div className="mb-4 border border-border rounded-md overflow-hidden">
-			<div className="bg-muted px-3 py-1.5 border-b border-border flex items-center justify-between">
-				<div className="flex items-center gap-2">
-					<svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-					</svg>
-					<span className="text-sm font-mono text-foreground">{block.filename}</span>
-				</div>
-				<div className="flex items-center gap-2 text-xs text-muted-foreground">
-					{language && <span>{language}</span>}
-					{language && <span className="text-muted-foreground/50">|</span>}
-					<button
-						onClick={() => copy(block.content)}
-						className="hover:text-foreground transition-colors"
-					>
-						{copied ? "copied!" : "copy"}
-					</button>
-				</div>
-			</div>
-			<pre className="bg-muted/50 p-4 overflow-x-auto text-sm">
-				<code>{block.content}</code>
-			</pre>
-		</div>
-	)
-}
-
-function inferLanguage(filename: string): string | undefined {
-	const ext = filename.split(".").pop()?.toLowerCase()
-	const langMap: Record<string, string> = {
-		conf: "conf",
-		json: "json",
-		yaml: "yaml",
-		yml: "yaml",
-		toml: "toml",
-		sh: "bash",
-		bash: "bash",
-		zsh: "bash",
-	}
-	return langMap[ext || ""]
 }

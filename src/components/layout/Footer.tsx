@@ -1,5 +1,3 @@
-import { Link } from "@tanstack/react-router"
-
 export function Footer() {
 	return (
 		<footer className="border-t bg-muted/40">
@@ -12,24 +10,24 @@ export function Footer() {
 				<div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
 					<div className="flex flex-col gap-2">
 						<span className="font-medium">Documentation</span>
-						<Link
-							to="/docs/getting-started"
+						<a
+							href="/docs/getting-started"
 							className="text-sm text-muted-foreground hover:text-foreground"
 						>
 							Getting Started
-						</Link>
-						<Link
-							to="/docs/recipes"
+						</a>
+						<a
+							href="/docs/recipe-format"
 							className="text-sm text-muted-foreground hover:text-foreground"
 						>
-							Recipes
-						</Link>
-						<Link
-							to="/docs/cli-reference"
+							Recipe Format
+						</a>
+						<a
+							href="/docs/cli-reference"
 							className="text-sm text-muted-foreground hover:text-foreground"
 						>
 							CLI Reference
-						</Link>
+						</a>
 					</div>
 
 					<div className="flex flex-col gap-2">

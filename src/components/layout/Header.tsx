@@ -25,18 +25,18 @@ export function Header() {
 					>
 						Download
 					</Link>
-					<Link
-						to="/docs/getting-started"
+					<a
+						href="/docs/getting-started"
 						className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
 					>
 						Docs
-					</Link>
-					<Link
-						to="/docs/recipes"
+					</a>
+					<a
+						href="/docs/recipe-format"
 						className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
 					>
 						Recipes
-					</Link>
+					</a>
 				</nav>
 
 				<div className="flex items-center gap-2">

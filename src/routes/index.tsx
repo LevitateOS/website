@@ -3,6 +3,8 @@ import { Brain, Desktop, Package, Terminal } from "@phosphor-icons/react"
 import { Hero } from "@/components/Hero"
 import { FeatureCard } from "@/components/FeatureCard"
 import { CodeBlock } from "@/components/CodeBlock"
+import { ChatMessage } from "@/components/ChatMessage"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
 export const Route = createFileRoute("/")({ component: HomePage })
 
@@ -47,12 +49,12 @@ recipe remove ripgrep`}</CodeBlock>
 						title="SmolLM3 Recipe Assistant"
 						description="Optional local LLM (SmolLM3 from Hugging Face) helps draft recipes, suggest updates, and debug builds. Runs entirely on your machine."
 					>
-						<div className="bg-muted/50 p-3 text-sm">
-							<p className="text-muted-foreground mb-1">You:</p>
-							<p>"create a recipe for ripgrep"</p>
-							<p className="text-muted-foreground mt-2 mb-1">SmolLM3:</p>
-							<p>"Here's a recipe using the latest binary release..."</p>
-						</div>
+						<ChatMessage
+							messages={[
+								{ role: "user", text: '"create a recipe for ripgrep"' },
+								{ role: "assistant", text: '"Here\'s a recipe using the latest binary release..."' },
+							]}
+						/>
 					</FeatureCard>
 
 
@@ -72,43 +74,51 @@ recipe remove ripgrep`}</CodeBlock>
 					Optional local LLM helps write and maintain recipes. Runs entirely on your machine.
 				</p>
 
-				<div className="bg-card border p-4 mb-8 max-w-lg mx-auto">
-					<h3 className="font-semibold mb-2">Recipe LoRA</h3>
-					<p className="text-sm text-muted-foreground mb-3">
-						Sandboxed to the recipes folder. Can only create and edit .rhai recipe files. Cannot run
-						commands or access anything else.
-					</p>
-					<div className="bg-muted/50 p-3 text-sm">
-						<p className="text-muted-foreground mb-1">You:</p>
-						<p>"create a recipe for htop"</p>
-						<p className="text-muted-foreground mt-2 mb-1">Assistant:</p>
-						<p className="text-primary">Writes: /recipes/htop.rhai</p>
-					</div>
-				</div>
+				<Card className="mb-8 max-w-lg mx-auto">
+					<CardHeader>
+						<CardTitle className="text-lg">Recipe LoRA</CardTitle>
+						<CardDescription>
+							Sandboxed to the recipes folder. Can only create and edit .rhai recipe files. Cannot run
+							commands or access anything else.
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<ChatMessage
+							messages={[
+								{ role: "user", text: '"create a recipe for htop"' },
+								{ role: "assistant", text: "Writes: /recipes/htop.rhai", highlight: true },
+							]}
+						/>
+					</CardContent>
+				</Card>
 
-				<div className="bg-muted/50 border p-4">
-					<h3 className="font-semibold mb-3">This is NOT Windows Copilot</h3>
-					<div className="grid grid-cols-2 gap-6 text-sm">
-						<div>
-							<p className="text-muted-foreground mb-2">What it is:</p>
-							<ul className="space-y-1">
-								<li>+ Local model (no cloud, no telemetry)</li>
-								<li>+ Specialized for recipe writing</li>
-								<li>+ Fully sandboxed to recipes folder</li>
-								<li>+ Automated package maintainer</li>
-							</ul>
+				<Card>
+					<CardHeader>
+						<CardTitle className="text-lg">This is NOT Windows Copilot</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="grid grid-cols-2 gap-6 text-sm">
+							<div>
+								<p className="text-muted-foreground mb-2">What it is:</p>
+								<ul className="space-y-1">
+									<li>+ Local model (no cloud, no telemetry)</li>
+									<li>+ Specialized for recipe writing</li>
+									<li>+ Fully sandboxed to recipes folder</li>
+									<li>+ Automated package maintainer</li>
+								</ul>
+							</div>
+							<div>
+								<p className="text-muted-foreground mb-2">What it isn't:</p>
+								<ul className="space-y-1">
+									<li>- Not a general assistant</li>
+									<li>- Not watching your activity</li>
+									<li>- Not sending data anywhere</li>
+									<li>- Not integrated into the whole OS</li>
+								</ul>
+							</div>
 						</div>
-						<div>
-							<p className="text-muted-foreground mb-2">What it isn't:</p>
-							<ul className="space-y-1">
-								<li>- Not a general assistant</li>
-								<li>- Not watching your activity</li>
-								<li>- Not sending data anywhere</li>
-								<li>- Not integrated into the whole OS</li>
-							</ul>
-						</div>
-					</div>
-				</div>
+					</CardContent>
+				</Card>
 			</section>
 
 			{/* Installation Preview */}
@@ -147,18 +157,22 @@ recipe install ripgrep fd htop`}</CodeBlock>
 				<div className="text-center">
 					<h2 className="text-2xl font-bold mb-3">Download</h2>
 					<p className="text-sm text-muted-foreground mb-4">x86_64, 2GB+ RAM, 10GB+ disk</p>
-					<div className="bg-card border p-4 inline-block">
-						<p className="font-semibold mb-1">LevitateOS 1.0</p>
-						<p className="text-sm text-muted-foreground mb-3">
-							Coming soon. Star the repo to get notified.
-						</p>
-						<a
-							href="https://github.com/LevitateOS/LevitateOS"
-							className="text-primary hover:underline text-sm"
-						>
-							github.com/LevitateOS/LevitateOS
-						</a>
-					</div>
+					<Card className="inline-block text-left">
+						<CardHeader>
+							<CardTitle>LevitateOS 1.0</CardTitle>
+							<CardDescription>
+								Coming soon. Star the repo to get notified.
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<a
+								href="https://github.com/LevitateOS/LevitateOS"
+								className="text-primary hover:underline text-sm"
+							>
+								github.com/LevitateOS/LevitateOS
+							</a>
+						</CardContent>
+					</Card>
 				</div>
 			</section>
 		</>
