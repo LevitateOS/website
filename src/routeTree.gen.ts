@@ -11,12 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DocsRecipeFormatRouteImport } from './routes/docs/recipe-format'
-import { Route as DocsLevitateRouteImport } from './routes/docs/levitate'
-import { Route as DocsInstallationRouteImport } from './routes/docs/installation'
-import { Route as DocsHelperFunctionsRouteImport } from './routes/docs/helper-functions'
-import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
-import { Route as DocsCliReferenceRouteImport } from './routes/docs/cli-reference'
+import { Route as DocsSlugRouteImport } from './routes/docs/$slug'
 
 const DownloadRoute = DownloadRouteImport.update({
   id: '/download',
@@ -28,110 +23,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DocsRecipeFormatRoute = DocsRecipeFormatRouteImport.update({
-  id: '/docs/recipe-format',
-  path: '/docs/recipe-format',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsLevitateRoute = DocsLevitateRouteImport.update({
-  id: '/docs/levitate',
-  path: '/docs/levitate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsInstallationRoute = DocsInstallationRouteImport.update({
-  id: '/docs/installation',
-  path: '/docs/installation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsHelperFunctionsRoute = DocsHelperFunctionsRouteImport.update({
-  id: '/docs/helper-functions',
-  path: '/docs/helper-functions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsGettingStartedRoute = DocsGettingStartedRouteImport.update({
-  id: '/docs/getting-started',
-  path: '/docs/getting-started',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsCliReferenceRoute = DocsCliReferenceRouteImport.update({
-  id: '/docs/cli-reference',
-  path: '/docs/cli-reference',
+const DocsSlugRoute = DocsSlugRouteImport.update({
+  id: '/docs/$slug',
+  path: '/docs/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
-  '/docs/cli-reference': typeof DocsCliReferenceRoute
-  '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/helper-functions': typeof DocsHelperFunctionsRoute
-  '/docs/installation': typeof DocsInstallationRoute
-  '/docs/levitate': typeof DocsLevitateRoute
-  '/docs/recipe-format': typeof DocsRecipeFormatRoute
+  '/docs/$slug': typeof DocsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
-  '/docs/cli-reference': typeof DocsCliReferenceRoute
-  '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/helper-functions': typeof DocsHelperFunctionsRoute
-  '/docs/installation': typeof DocsInstallationRoute
-  '/docs/levitate': typeof DocsLevitateRoute
-  '/docs/recipe-format': typeof DocsRecipeFormatRoute
+  '/docs/$slug': typeof DocsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
-  '/docs/cli-reference': typeof DocsCliReferenceRoute
-  '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/helper-functions': typeof DocsHelperFunctionsRoute
-  '/docs/installation': typeof DocsInstallationRoute
-  '/docs/levitate': typeof DocsLevitateRoute
-  '/docs/recipe-format': typeof DocsRecipeFormatRoute
+  '/docs/$slug': typeof DocsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/download'
-    | '/docs/cli-reference'
-    | '/docs/getting-started'
-    | '/docs/helper-functions'
-    | '/docs/installation'
-    | '/docs/levitate'
-    | '/docs/recipe-format'
+  fullPaths: '/' | '/download' | '/docs/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/download'
-    | '/docs/cli-reference'
-    | '/docs/getting-started'
-    | '/docs/helper-functions'
-    | '/docs/installation'
-    | '/docs/levitate'
-    | '/docs/recipe-format'
-  id:
-    | '__root__'
-    | '/'
-    | '/download'
-    | '/docs/cli-reference'
-    | '/docs/getting-started'
-    | '/docs/helper-functions'
-    | '/docs/installation'
-    | '/docs/levitate'
-    | '/docs/recipe-format'
+  to: '/' | '/download' | '/docs/$slug'
+  id: '__root__' | '/' | '/download' | '/docs/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DownloadRoute: typeof DownloadRoute
-  DocsCliReferenceRoute: typeof DocsCliReferenceRoute
-  DocsGettingStartedRoute: typeof DocsGettingStartedRoute
-  DocsHelperFunctionsRoute: typeof DocsHelperFunctionsRoute
-  DocsInstallationRoute: typeof DocsInstallationRoute
-  DocsLevitateRoute: typeof DocsLevitateRoute
-  DocsRecipeFormatRoute: typeof DocsRecipeFormatRoute
+  DocsSlugRoute: typeof DocsSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -150,46 +75,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/docs/recipe-format': {
-      id: '/docs/recipe-format'
-      path: '/docs/recipe-format'
-      fullPath: '/docs/recipe-format'
-      preLoaderRoute: typeof DocsRecipeFormatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/levitate': {
-      id: '/docs/levitate'
-      path: '/docs/levitate'
-      fullPath: '/docs/levitate'
-      preLoaderRoute: typeof DocsLevitateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/installation': {
-      id: '/docs/installation'
-      path: '/docs/installation'
-      fullPath: '/docs/installation'
-      preLoaderRoute: typeof DocsInstallationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/helper-functions': {
-      id: '/docs/helper-functions'
-      path: '/docs/helper-functions'
-      fullPath: '/docs/helper-functions'
-      preLoaderRoute: typeof DocsHelperFunctionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/getting-started': {
-      id: '/docs/getting-started'
-      path: '/docs/getting-started'
-      fullPath: '/docs/getting-started'
-      preLoaderRoute: typeof DocsGettingStartedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/cli-reference': {
-      id: '/docs/cli-reference'
-      path: '/docs/cli-reference'
-      fullPath: '/docs/cli-reference'
-      preLoaderRoute: typeof DocsCliReferenceRouteImport
+    '/docs/$slug': {
+      id: '/docs/$slug'
+      path: '/docs/$slug'
+      fullPath: '/docs/$slug'
+      preLoaderRoute: typeof DocsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -198,12 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DownloadRoute: DownloadRoute,
-  DocsCliReferenceRoute: DocsCliReferenceRoute,
-  DocsGettingStartedRoute: DocsGettingStartedRoute,
-  DocsHelperFunctionsRoute: DocsHelperFunctionsRoute,
-  DocsInstallationRoute: DocsInstallationRoute,
-  DocsLevitateRoute: DocsLevitateRoute,
-  DocsRecipeFormatRoute: DocsRecipeFormatRoute,
+  DocsSlugRoute: DocsSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
