@@ -17,9 +17,9 @@
     "ci": "bun run typecheck && bun run lint && biome ci src"
   },
   "dependencies": {
-    "@levitate/docs-content": "workspace:*",
     "@base-ui/react": "^1.1.0",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@levitate/docs-content": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
@@ -42,6 +42,7 @@
     "react-resizable-panels": "^4.4.1",
     "recharts": "2.15.4",
     "shadcn": "^3.7.0",
+    "shiki": "^3.21.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.0.6",

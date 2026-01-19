@@ -154,3 +154,21 @@
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
 }
+
+/* Shiki syntax highlighting - dual theme support */
+.shiki {
+	background-color: transparent !important;
+}
+.shiki code {
+	background-color: transparent !important;
+}
+
+/* Light mode: use --shiki-light colors */
+.shiki span {
+	color: var(--shiki-light) !important;
+}
+
+/* Dark mode: use --shiki-dark colors */
+.dark .shiki span {
+	color: var(--shiki-dark) !important;
+}

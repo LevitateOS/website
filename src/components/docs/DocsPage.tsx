@@ -2,6 +2,8 @@ import { DocsLayout } from "@/components/layout"
 import { CodeBlock } from "@/components/CodeBlock"
 import { Check, Copy, File } from "@phosphor-icons/react"
 import { useCopyToClipboard } from "usehooks-ts"
+import { useState, useEffect } from "react"
+import { highlightCode } from "@/lib/highlighter"
 import {
 	Table,
 	TableBody,
@@ -141,6 +143,13 @@ function FileBlockRenderer({ file }: { file: FileBlock }) {
 	const [copiedText, copy] = useCopyToClipboard()
 	const hasCopied = copiedText === file.content
 	const language = file.language || inferLanguage(file.filename)
+	const [html, setHtml] = useState<string | null>(null)
+
+	useEffect(() => {
+		if (language) {
+			highlightCode(file.content, language).then(setHtml)
+		}
+	}, [file.content, language])
 
 	return (
 		<div className="mb-4 rounded overflow-hidden ring-1 ring-foreground/10">
@@ -171,9 +180,16 @@ function FileBlockRenderer({ file }: { file: FileBlock }) {
 					</button>
 				</div>
 			</div>
-			<pre className="bg-muted/30 p-4 overflow-x-auto">
-				<code className="text-sm font-mono">{file.content}</code>
-			</pre>
+			{html ? (
+				<div
+					dangerouslySetInnerHTML={{ __html: html }}
+					className="bg-muted/30 [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm [&>pre]:font-mono"
+				/>
+			) : (
+				<pre className="bg-muted/30 p-4 overflow-x-auto">
+					<code className="text-sm font-mono">{file.content}</code>
+				</pre>
+			)}
 		</div>
 	)
 }
