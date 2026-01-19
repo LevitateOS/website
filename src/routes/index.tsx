@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { Brain, Desktop, Memory, Package, Terminal } from "@phosphor-icons/react"
+import { Brain, Desktop, Package, Terminal } from "@phosphor-icons/react"
 import { Hero } from "@/components/Hero"
 import { FeatureCard } from "@/components/FeatureCard"
 import { CodeBlock } from "@/components/CodeBlock"
@@ -56,11 +56,6 @@ recipe remove ripgrep`}</CodeBlock>
 					</FeatureCard>
 
 
-					<FeatureCard
-						icon={<Memory className="h-8 w-8" />}
-						title="Choose Your Stack"
-						description="Standard (systemd + glibc) for compatibility, or Minimal (runit + musl) for a lighter footprint. Your call."
-					/>
 
 					<FeatureCard
 						icon={<Desktop className="h-8 w-8" />}
