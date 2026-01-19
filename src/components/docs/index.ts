@@ -14,4 +14,12 @@ export type {
 	ConversationMessage,
 	LinkBlock,
 	InlineCodeBlock,
+	RichText,
+	InlineNode,
+	InlineLink,
+	InlineBold,
+	InlineCode,
+	InlineItalic,
 } from "@levitate/docs-content"
+// Rich text helpers
+export { rich, link, bold, code, italic } from "@levitate/docs-content"

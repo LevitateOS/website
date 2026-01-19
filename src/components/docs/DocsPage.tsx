@@ -19,6 +19,8 @@ import type {
 	ListBlock,
 	ConversationBlock,
 	TableBlock,
+	RichText,
+	InlineNode,
 } from "@levitate/docs-content"
 
 interface DocsPageProps {
@@ -37,7 +39,19 @@ export function DocsPage({ content }: DocsPageProps) {
 	)
 }
 
-function IntroRenderer({ content }: { content: string }) {
+function IntroRenderer({ content }: { content: string | RichText }) {
+	// If it's a RichText array, render directly without parsing
+	if (Array.isArray(content)) {
+		return (
+			<p className="text-muted-foreground mb-8">
+				{content.map((node, i) => (
+					<InlineNodeRenderer key={i} node={node} />
+				))}
+			</p>
+		)
+	}
+
+	// Otherwise parse the markdown string (legacy support)
 	const parts = parseInlineContent(content)
 	return (
 		<p className="text-muted-foreground mb-8">
@@ -182,7 +196,19 @@ function inferLanguage(filename: string): string | undefined {
 	return langMap[ext || ""]
 }
 
-function TextBlockRenderer({ content }: { content: string }) {
+function TextBlockRenderer({ content }: { content: string | RichText }) {
+	// If it's a RichText array, render directly without parsing
+	if (Array.isArray(content)) {
+		return (
+			<p className="text-muted-foreground mb-2">
+				{content.map((node, i) => (
+					<InlineNodeRenderer key={i} node={node} />
+				))}
+			</p>
+		)
+	}
+
+	// Otherwise parse the markdown string (legacy support)
 	const parts = parseInlineContent(content)
 
 	return (
@@ -211,15 +237,50 @@ function TextBlockRenderer({ content }: { content: string }) {
 	)
 }
 
+/** Renders a single inline node from RichText */
+function InlineNodeRenderer({ node }: { node: InlineNode }) {
+	if (typeof node === "string") {
+		return <>{node}</>
+	}
+
+	switch (node.type) {
+		case "link":
+			return (
+				<a href={node.href} className="text-primary hover:underline">
+					{node.text}
+				</a>
+			)
+		case "bold":
+			return <strong>{node.text}</strong>
+		case "code":
+			return <code className="bg-muted px-1.5 py-0.5">{node.text}</code>
+		case "italic":
+			return <em>{node.text}</em>
+		default:
+			return null
+	}
+}
+
 type InlinePart =
 	| { type: "text"; content: string }
 	| { type: "code"; content: string }
 	| { type: "link"; content: string; href: string }
 	| { type: "bold"; content: string }
 
+/**
+ * Parse legacy markdown strings into inline parts.
+ * Supports: `code`, [link](url), **bold**
+ *
+ * Note: For new content, use the RichText system (rich`...`) instead.
+ * This parser handles URLs with query params and one level of nested parentheses.
+ */
 function parseInlineContent(text: string): InlinePart[] {
 	const parts: InlinePart[] = []
-	const regex = /`([^`]+)`|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g
+	// Improved regex:
+	// - Code: `...` (no backticks inside)
+	// - Links: [text](url) where url can contain query params and one level of nested parens
+	// - Bold: **...** using non-greedy match (allows * inside)
+	const regex = /`([^`]+)`|\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))+)\)|\*\*(.+?)\*\*/g
 	let lastIndex = 0
 	let match
 
@@ -274,6 +335,38 @@ function TableBlockRenderer({ table }: { table: TableBlock }) {
 	)
 }
 
+/** Renders inline content - either a string (parsed) or RichText array (direct) */
+function InlineContentRenderer({ content }: { content: string | RichText }) {
+	if (Array.isArray(content)) {
+		return (
+			<>
+				{content.map((node, i) => (
+					<InlineNodeRenderer key={i} node={node} />
+				))}
+			</>
+		)
+	}
+
+	const parts = parseInlineContent(content)
+	return (
+		<>
+			{parts.map((part, i) => {
+				if (part.type === "code") {
+					return (
+						<code key={i} className="bg-muted px-1.5 py-0.5">
+							{part.content}
+						</code>
+					)
+				}
+				if (part.type === "bold") {
+					return <strong key={i}>{part.content}</strong>
+				}
+				return <span key={i}>{part.content}</span>
+			})}
+		</>
+	)
+}
+
 function ListBlockRenderer({ list }: { list: ListBlock }) {
 	const ListTag = list.ordered ? "ol" : "ul"
 	const listClass = list.ordered
@@ -283,33 +376,24 @@ function ListBlockRenderer({ list }: { list: ListBlock }) {
 	return (
 		<ListTag className={listClass}>
 			{list.items.map((item, i) => {
-				if (typeof item === "string") {
-					const parts = parseInlineContent(item)
+				// String or RichText array - render inline content
+				if (typeof item === "string" || Array.isArray(item)) {
 					return (
 						<li key={i}>
-							{parts.map((part, j) => {
-								if (part.type === "code") {
-									return (
-										<code key={j} className="bg-muted px-1.5 py-0.5">
-											{part.content}
-										</code>
-									)
-								}
-								if (part.type === "bold") {
-									return <strong key={j}>{part.content}</strong>
-								}
-								return <span key={j}>{part.content}</span>
-							})}
+							<InlineContentRenderer content={item} />
 						</li>
 					)
 				}
+				// ListItem object with text and optional children
 				return (
 					<li key={i}>
-						{item.text}
+						<InlineContentRenderer content={item.text} />
 						{item.children && (
 							<ul className="list-disc list-inside ml-4 mt-1">
 								{item.children.map((child, j) => (
-									<li key={j}>{child}</li>
+									<li key={j}>
+										<InlineContentRenderer content={child} />
+									</li>
 								))}
 							</ul>
 						)}
