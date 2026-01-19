@@ -21,6 +21,8 @@ import type {
 	ListBlock,
 	ConversationBlock,
 	TableBlock,
+	InteractiveBlock,
+	CommandBlock,
 	RichText,
 	InlineNode,
 } from "@levitate/docs-content"
@@ -134,6 +136,10 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 					<code className="bg-muted px-1.5 py-0.5">{block.content}</code>
 				</p>
 			)
+		case "interactive":
+			return <InteractiveBlockRenderer block={block} />
+		case "command":
+			return <CommandBlockRenderer block={block} />
 		default:
 			return null
 	}
@@ -445,5 +451,79 @@ function ConversationBlockRenderer({ conversation }: { conversation: Conversatio
 				))}
 			</CardContent>
 		</Card>
+	)
+}
+
+function InteractiveBlockRenderer({ block }: { block: InteractiveBlock }) {
+	return (
+		<div className="mb-4 space-y-3">
+			{block.intro && (
+				<p className="text-muted-foreground">{block.intro}</p>
+			)}
+			{block.steps.map((step, i) => (
+				<div key={i} className="flex items-start gap-3">
+					<code className="bg-muted px-3 py-1.5 rounded text-sm font-mono shrink-0">
+						{step.command}
+					</code>
+					<span className="text-muted-foreground text-sm pt-1.5">
+						{step.description}
+					</span>
+				</div>
+			))}
+		</div>
+	)
+}
+
+function CommandBlockRenderer({ block }: { block: CommandBlock }) {
+	const [copiedText, copy] = useCopyToClipboard()
+	const hasCopied = copiedText === block.command
+	const [html, setHtml] = useState<string | null>(null)
+
+	useEffect(() => {
+		highlightCode(block.command, "bash").then(setHtml)
+	}, [block.command])
+
+	return (
+		<div className="mb-4">
+			<div className="bg-muted rounded text-sm overflow-hidden">
+				<div className="text-muted-foreground px-4 py-2 border-b border-foreground/10">{block.description}</div>
+				<div className="relative p-4">
+					<div className="absolute top-0 right-0 flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground">
+						<span>bash</span>
+						<span className="text-muted-foreground/50">|</span>
+						<button
+							type="button"
+							onClick={() => copy(block.command)}
+							className="flex items-center gap-1 hover:text-foreground transition-colors"
+						>
+							{hasCopied ? (
+								<>
+									<Check className="w-3 h-3" />
+									copied
+								</>
+							) : (
+								<>
+									<Copy className="w-3 h-3" />
+									copy
+								</>
+							)}
+						</button>
+					</div>
+					{html ? (
+						<div
+							dangerouslySetInnerHTML={{ __html: html }}
+							className="[&>pre]:p-0 [&>pre]:overflow-x-auto"
+						/>
+					) : (
+						<code>{block.command}</code>
+					)}
+				</div>
+				{block.output && (
+					<div className="bg-background/50 px-4 py-3 border-t border-dashed border-foreground/10">
+						<pre className="text-muted-foreground/60 text-xs overflow-x-auto">{block.output}</pre>
+					</div>
+				)}
+			</div>
+		</div>
 	)
 }
