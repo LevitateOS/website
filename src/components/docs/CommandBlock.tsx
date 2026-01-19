@@ -5,13 +5,18 @@ import { highlightCode } from "@/lib/highlighter"
 import type { CommandBlock } from "@levitate/docs-content"
 
 export function CommandBlockRenderer({ block }: { block: CommandBlock }) {
+	// Normalize command to string (join array with newlines)
+	const commandText = Array.isArray(block.command)
+		? block.command.join("\n")
+		: block.command
+
 	const [copiedText, copy] = useCopyToClipboard()
-	const hasCopied = copiedText === block.command
+	const hasCopied = copiedText === commandText
 	const [html, setHtml] = useState<string | null>(null)
 
 	useEffect(() => {
-		highlightCode(block.command, "bash").then(setHtml)
-	}, [block.command])
+		highlightCode(commandText, "bash").then(setHtml)
+	}, [commandText])
 
 	return (
 		<div className="mb-4">
@@ -23,7 +28,7 @@ export function CommandBlockRenderer({ block }: { block: CommandBlock }) {
 						<span className="text-muted-foreground/50">|</span>
 						<button
 							type="button"
-							onClick={() => copy(block.command)}
+							onClick={() => copy(commandText)}
 							className="flex items-center gap-1 hover:text-foreground transition-colors"
 						>
 							{hasCopied ? (
@@ -45,7 +50,7 @@ export function CommandBlockRenderer({ block }: { block: CommandBlock }) {
 							className="[&>pre]:p-0 [&>pre]:overflow-x-auto"
 						/>
 					) : (
-						<code>{block.command}</code>
+						<code>{commandText}</code>
 					)}
 				</div>
 				{block.output && (
