@@ -55,14 +55,23 @@ function IntroRenderer({ content }: { content: string }) {
 	)
 }
 
+/** Convert title to anchor slug */
+function toAnchor(title: string): string {
+	return title
+		.toLowerCase()
+		.replace(/[^a-z0-9\s-]/g, "")
+		.replace(/\s+/g, "-")
+}
+
 function SectionBlock({ section }: { section: Section }) {
 	const level = section.level ?? 2
 	const Heading = level === 2 ? "h2" : "h3"
 	const headingClass =
 		level === 2 ? "text-2xl font-semibold mb-4" : "text-xl font-medium mb-3"
+	const anchor = toAnchor(section.title)
 
 	return (
-		<section className="mb-8">
+		<section id={anchor} className="mb-8 scroll-mt-20">
 			<Heading className={headingClass}>{section.title}</Heading>
 			{section.content.map((block, i) => (
 				<ContentBlockRenderer key={i} block={block} />
