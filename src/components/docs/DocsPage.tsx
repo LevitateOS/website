@@ -10,7 +10,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import type {
 	DocsContent,
 	Section,
@@ -143,15 +143,15 @@ function FileBlockRenderer({ file }: { file: FileBlock }) {
 	const language = file.language || inferLanguage(file.filename)
 
 	return (
-		<Card className="mb-4">
-			<CardHeader className="py-2 px-3 border-b flex-row items-center justify-between">
+		<div className="mb-4 rounded overflow-hidden ring-1 ring-foreground/10">
+			<div className="flex items-center justify-between px-3 py-2 bg-muted text-xs text-muted-foreground">
 				<div className="flex items-center gap-2">
-					<File className="h-4 w-4 text-muted-foreground" weight="fill" />
-					<span className="text-sm font-mono">{file.filename}</span>
+					<File className="h-4 w-4" weight="fill" />
+					<span className="font-mono">{file.filename}</span>
 				</div>
-				<div className="flex items-center gap-2 text-xs text-muted-foreground">
+				<div className="flex items-center gap-2">
 					{language && <span>{language}</span>}
-					{language && <span className="text-muted-foreground/50">|</span>}
+					<span className="text-muted-foreground/50">|</span>
 					<button
 						type="button"
 						onClick={() => copy(file.content)}
@@ -170,13 +170,11 @@ function FileBlockRenderer({ file }: { file: FileBlock }) {
 						)}
 					</button>
 				</div>
-			</CardHeader>
-			<CardContent className="p-0">
-				<pre className="bg-muted/30 p-4 overflow-x-auto">
-					<code className="text-sm font-mono">{file.content}</code>
-				</pre>
-			</CardContent>
-		</Card>
+			</div>
+			<pre className="bg-muted/30 p-4 overflow-x-auto">
+				<code className="text-sm font-mono">{file.content}</code>
+			</pre>
+		</div>
 	)
 }
 
