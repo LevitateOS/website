@@ -9,7 +9,7 @@ import { TableBlockRenderer } from "./TableBlock"
 import { ListBlockRenderer } from "./ListBlock"
 import { ConversationBlockRenderer } from "./ConversationBlock"
 import { TextBlockRenderer } from "./TextBlock"
-import { InlineNodeRenderer, parseInlineContent } from "./InlineContent"
+import { InlineContentRenderer } from "./InlineContent"
 
 interface DocsPageProps {
 	content: DocsContent
@@ -28,39 +28,9 @@ export function DocsPage({ content }: DocsPageProps) {
 }
 
 function IntroRenderer({ content }: { content: string | RichText }) {
-	if (Array.isArray(content)) {
-		return (
-			<p className="text-muted-foreground mb-8">
-				{content.map((node, i) => (
-					<InlineNodeRenderer key={i} node={node} />
-				))}
-			</p>
-		)
-	}
-
-	const parts = parseInlineContent(content)
 	return (
 		<p className="text-muted-foreground mb-8">
-			{parts.map((part, i) => {
-				if (part.type === "code") {
-					return (
-						<code key={i} className="bg-muted px-1.5 py-0.5">
-							{part.content}
-						</code>
-					)
-				}
-				if (part.type === "link") {
-					return (
-						<a key={i} href={part.href} className="text-primary hover:underline">
-							{part.content}
-						</a>
-					)
-				}
-				if (part.type === "bold") {
-					return <strong key={i}>{part.content}</strong>
-				}
-				return <span key={i}>{part.content}</span>
-			})}
+			<InlineContentRenderer content={content} />
 		</p>
 	)
 }
