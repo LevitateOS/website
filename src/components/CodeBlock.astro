@@ -1,0 +1,122 @@
+---
+import { Code } from "astro:components"
+
+interface Props {
+	code: string
+	language?: string
+	filename?: string
+}
+
+const { code, language = "text", filename } = Astro.props
+
+const langMap: Record<string, string> = {
+	conf: "ini",
+	json: "json",
+	yaml: "yaml",
+	yml: "yaml",
+	toml: "toml",
+	sh: "bash",
+	bash: "bash",
+	zsh: "bash",
+	rhai: "rust",
+	ts: "typescript",
+	tsx: "tsx",
+	js: "javascript",
+	jsx: "jsx",
+	rs: "rust",
+	py: "python",
+	go: "go",
+	md: "markdown",
+}
+
+function inferLanguage(filename: string): string {
+	const ext = filename.split(".").pop()?.toLowerCase() || ""
+	return langMap[ext] || "text"
+}
+
+// Map language through langMap to handle aliases (e.g., rhai -> rust)
+const mappedLanguage = langMap[language] || language
+const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) : "text")
+---
+
+{
+	filename ? (
+		<div class="mb-4 rounded overflow-hidden ring-1 ring-foreground/10">
+			<div class="flex items-center justify-between px-3 py-2 bg-muted text-xs text-muted-foreground">
+				<div class="flex items-center gap-2">
+					<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+						<path d="M213.66 82.34l-56-56A8 8 0 0 0 152 24H56a16 16 0 0 0-16 16v176a16 16 0 0 0 16 16h144a16 16 0 0 0 16-16V88a8 8 0 0 0-2.34-5.66ZM160 51.31L188.69 80H160ZM200 216H56V40h88v48a8 8 0 0 0 8 8h48v120Z" />
+					</svg>
+					<span class="font-mono">{filename}</span>
+				</div>
+				<div class="flex items-center gap-2">
+					{resolvedLanguage && <span>{resolvedLanguage}</span>}
+					<span class="text-muted-foreground/50">|</span>
+					<button
+						type="button"
+						class="copy-btn flex items-center gap-1 hover:text-foreground transition-colors"
+						data-code={code}
+					>
+						<svg class="copy-icon w-3 h-3" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
+						</svg>
+						<svg class="check-icon hidden w-3 h-3" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+						</svg>
+						<span class="copy-text">copy</span>
+					</button>
+				</div>
+			</div>
+			<div class="bg-muted/30 [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm [&>pre]:font-mono">
+				<Code code={code} lang={resolvedLanguage} themes={{ light: "github-light", dark: "github-dark" }} />
+			</div>
+		</div>
+	) : (
+		<div class="relative mb-4">
+			<div class="absolute top-0 right-0 flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground bg-muted rounded-bl z-10">
+				{resolvedLanguage && <span>{resolvedLanguage}</span>}
+				{resolvedLanguage && <span class="text-muted-foreground/50">|</span>}
+				<button
+					type="button"
+					class="copy-btn flex items-center gap-1 hover:text-foreground transition-colors"
+					data-code={code}
+				>
+					<svg class="copy-icon w-3 h-3" viewBox="0 0 256 256" fill="currentColor">
+						<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
+					</svg>
+					<svg class="check-icon hidden w-3 h-3" viewBox="0 0 256 256" fill="currentColor">
+						<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+					</svg>
+					<span class="copy-text">copy</span>
+				</button>
+			</div>
+			<div class="bg-muted rounded [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm">
+				<Code code={code} lang={resolvedLanguage} themes={{ light: "github-light", dark: "github-dark" }} />
+			</div>
+		</div>
+	)
+}
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+		btn.addEventListener("click", async () => {
+			const code = btn.dataset.code
+			if (code) {
+				await navigator.clipboard.writeText(code)
+				const copyIcon = btn.querySelector(".copy-icon")
+				const checkIcon = btn.querySelector(".check-icon")
+				const copyText = btn.querySelector(".copy-text")
+				if (copyIcon && checkIcon && copyText) {
+					copyIcon.classList.add("hidden")
+					checkIcon.classList.remove("hidden")
+					copyText.textContent = "copied"
+					setTimeout(() => {
+						copyIcon.classList.remove("hidden")
+						checkIcon.classList.add("hidden")
+						copyText.textContent = "copy"
+					}, 2000)
+				}
+			}
+		})
+	})
+</script>

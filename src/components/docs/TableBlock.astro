@@ -1,0 +1,39 @@
+---
+import type { TableBlock } from "@levitate/docs-content"
+import InlineContent from "./InlineContent.astro"
+
+interface Props {
+	table: TableBlock
+}
+
+const { table } = Astro.props
+---
+
+<div class="relative w-full overflow-x-auto mb-4">
+	<table class="w-full caption-bottom text-xs">
+		<thead class="[&_tr]:border-b">
+			<tr class="hover:bg-muted/50 border-b transition-colors">
+				{
+					table.headers.map((header) => (
+						<th class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap">
+							<InlineContent content={header} />
+						</th>
+					))
+				}
+			</tr>
+		</thead>
+		<tbody class="[&_tr:last-child]:border-0">
+			{
+				table.rows.map((row) => (
+					<tr class="hover:bg-muted/50 border-b transition-colors">
+						{row.map((cell, j) => (
+							<td class={`p-2 align-middle whitespace-nowrap ${j === table.monospaceCol ? "font-mono" : ""}`}>
+								<InlineContent content={cell} />
+							</td>
+						))}
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</div>

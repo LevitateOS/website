@@ -1,0 +1,28 @@
+---
+interface Message {
+	role: "user" | "assistant"
+	text: string
+	highlight?: boolean
+}
+
+interface Props {
+	messages: Message[]
+}
+
+const { messages } = Astro.props
+---
+
+<div
+	class="ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-none py-4 text-xs/relaxed ring-1 group/card flex flex-col"
+>
+	<div class="px-4 space-y-2 text-sm">
+		{
+			messages.map((msg) => (
+				<div>
+					<span class="text-muted-foreground">{msg.role === "user" ? "You:" : "Assistant:"}</span>
+					<span class={msg.highlight ? "text-primary ml-2" : "ml-2"}>{msg.text}</span>
+				</div>
+			))
+		}
+	</div>
+</div>

@@ -1,0 +1,26 @@
+---
+import Header from "./Header.astro"
+import Footer from "./Footer.astro"
+import DocsSidebar from "./DocsSidebar.astro"
+import BaseLayout from "../../layouts/BaseLayout.astro"
+
+interface Props {
+	title: string
+	currentSlug: string
+}
+
+const { title, currentSlug } = Astro.props
+---
+
+<BaseLayout title={`${title} - LevitateOS Docs`}>
+	<Header />
+	<div class="container flex gap-6 py-8">
+		<DocsSidebar currentSlug={currentSlug} />
+		<article
+			class="flex-1 min-w-0 prose prose-sm prose-invert prose-headings:font-semibold prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-pre:bg-muted"
+		>
+			<slot />
+		</article>
+	</div>
+	<Footer />
+</BaseLayout>

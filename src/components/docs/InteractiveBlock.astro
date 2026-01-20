@@ -1,0 +1,30 @@
+---
+import type { InteractiveBlock } from "@levitate/docs-content"
+import InlineContent from "./InlineContent.astro"
+
+interface Props {
+	block: InteractiveBlock
+}
+
+const { block } = Astro.props
+---
+
+<div class="mb-4 space-y-3">
+	{
+		block.intro && (
+			<p class="text-muted-foreground">
+				<InlineContent content={block.intro} />
+			</p>
+		)
+	}
+	{
+		block.steps.map((step) => (
+			<div class="flex items-start gap-3">
+				<code class="bg-muted px-3 py-1.5 rounded text-sm font-mono shrink-0">{step.command}</code>
+				<span class="text-muted-foreground text-sm pt-1.5">
+					<InlineContent content={step.description} />
+				</span>
+			</div>
+		))
+	}
+</div>

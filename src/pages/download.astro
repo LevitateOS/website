@@ -1,0 +1,193 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Header from "../components/layout/Header.astro"
+import Footer from "../components/layout/Footer.astro"
+
+interface VariantCardProps {
+	title: string
+	stack: string
+	description: string
+	features: string[]
+	hasLLM: boolean
+	available: boolean
+	downloadUrl?: string
+}
+
+const variants: VariantCardProps[] = [
+	{
+		title: "Standard",
+		stack: "systemd + glibc + GNU",
+		description: "Traditional Linux stack. Maximum compatibility.",
+		features: ["systemd service management", "glibc for compatibility", "Manual installation"],
+		hasLLM: false,
+		available: false,
+	},
+	{
+		title: "Standard + LLM",
+		stack: "systemd + glibc + GNU + SmolLM3",
+		description: "Traditional stack with AI installer.",
+		features: ["Everything in Standard", "Natural language installer", "LLM recipe assistant"],
+		hasLLM: true,
+		available: false,
+	},
+	{
+		title: "Minimal",
+		stack: "runit + musl + GNU",
+		description: "Lightweight stack. Smaller footprint.",
+		features: ["runit simple init", "musl libc (~1MB)", "Manual installation"],
+		hasLLM: false,
+		available: false,
+	},
+	{
+		title: "Minimal + LLM",
+		stack: "runit + musl + GNU + SmolLM3",
+		description: "Lightweight stack with AI installer.",
+		features: ["Everything in Minimal", "Natural language installer", "LLM recipe assistant"],
+		hasLLM: true,
+		available: false,
+	},
+]
+---
+
+<BaseLayout title="Download - LevitateOS">
+	<div class="flex min-h-screen flex-col">
+		<Header />
+		<main class="flex-1">
+			<div class="container py-12">
+				<h1 class="text-3xl font-bold mb-3">Download LevitateOS</h1>
+				<p class="text-lg text-muted-foreground mb-8">
+					Choose your variant based on init system and LLM preference.
+				</p>
+
+				<!-- Variant explanation -->
+				<div class="bg-muted/50 p-4 mb-8">
+					<h2 class="font-semibold mb-3">Understanding the Variants</h2>
+					<div class="grid grid-cols-2 gap-4 text-sm">
+						<div>
+							<h3 class="font-medium flex items-center gap-2 mb-1">
+								<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M152 96a8 8 0 0 1-8 8h-32a8 8 0 0 1 0-16h32a8 8 0 0 1 8 8Zm-8 24h-32a8 8 0 0 0 0 16h32a8 8 0 0 0 0-16Zm96-16v96a24 24 0 0 1-24 24h-8v16a8 8 0 0 1-16 0v-16H64v16a8 8 0 0 1-16 0v-16h-8a24 24 0 0 1-24-24V56a24 24 0 0 1 24-24h176a24 24 0 0 1 24 24v48Zm-16 0V56a8 8 0 0 0-8-8H40a8 8 0 0 0-8 8v144a8 8 0 0 0 8 8h176a8 8 0 0 0 8-8v-96Z"/>
+								</svg>
+								Init System
+							</h3>
+							<ul class="space-y-0.5 text-muted-foreground text-xs">
+								<li><strong>systemd + glibc:</strong> Traditional</li>
+								<li><strong>runit + musl:</strong> Minimal</li>
+							</ul>
+						</div>
+						<div>
+							<h3 class="font-medium flex items-center gap-2 mb-1">
+								<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M200 48H136V16a8 8 0 0 0-16 0v32H56a32 32 0 0 0-32 32v32a32 32 0 0 0 32 32h6.73A111.84 111.84 0 0 0 32 216a8 8 0 0 0 8 8h64a8 8 0 0 0 0-16H49.23a96.14 96.14 0 0 1 58.53-63.48a32 32 0 0 0 40.48 0A96.14 96.14 0 0 1 206.77 208H152a8 8 0 0 0 0 16h64a8 8 0 0 0 8-8a111.84 111.84 0 0 0-30.73-75.48A32 32 0 0 0 232 112V80a32 32 0 0 0-32-32Zm-72 80a16 16 0 1 1 16-16a16 16 0 0 1-16 16Zm88-16a16 16 0 0 1-16 16h-9.52a32 32 0 0 0 1.52-10V96a32.05 32.05 0 0 0-26.61-31.47A16 16 0 0 1 200 80v32Zm-160 0V80a16 16 0 0 1 16-16h112a16 16 0 0 1 16 16v22a32 32 0 0 0 0 20v10a16 16 0 0 1-16 16H72a16 16 0 0 1-16-16Z"/>
+								</svg>
+								LLM Assistant
+							</h3>
+							<ul class="space-y-0.5 text-muted-foreground text-xs">
+								<li><strong>With:</strong> AI installer + recipe helper</li>
+								<li><strong>Without:</strong> Manual, smaller ISO</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<!-- Variant cards -->
+				<div class="grid grid-cols-2 gap-4 mb-8">
+					{variants.map((variant) => (
+						<div class="bg-card border p-4 flex flex-col">
+							<div class="flex items-center gap-2 mb-2">
+								{variant.hasLLM ? (
+									<svg class="h-5 w-5 text-primary" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M200 48H136V16a8 8 0 0 0-16 0v32H56a32 32 0 0 0-32 32v32a32 32 0 0 0 32 32h6.73A111.84 111.84 0 0 0 32 216a8 8 0 0 0 8 8h64a8 8 0 0 0 0-16H49.23a96.14 96.14 0 0 1 58.53-63.48a32 32 0 0 0 40.48 0A96.14 96.14 0 0 1 206.77 208H152a8 8 0 0 0 0 16h64a8 8 0 0 0 8-8a111.84 111.84 0 0 0-30.73-75.48A32 32 0 0 0 232 112V80a32 32 0 0 0-32-32Zm-72 80a16 16 0 1 1 16-16a16 16 0 0 1-16 16Zm88-16a16 16 0 0 1-16 16h-9.52a32 32 0 0 0 1.52-10V96a32.05 32.05 0 0 0-26.61-31.47A16 16 0 0 1 200 80v32Zm-160 0V80a16 16 0 0 1 16-16h112a16 16 0 0 1 16 16v22a32 32 0 0 0 0 20v10a16 16 0 0 1-16 16H72a16 16 0 0 1-16-16Z"/>
+									</svg>
+								) : (
+									<svg class="h-5 w-5 text-muted-foreground" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M120 137V40a8 8 0 0 1 16 0v97a8 8 0 0 1-16 0Zm-8 71a8 8 0 1 0 8 8a8 8 0 0 0-8-8Zm106.78-64.25L160 200.53a40 40 0 0 1-64 0L37.22 143.75A60 60 0 0 1 136 65.19V116a8 8 0 0 0 16 0V65.19A60 60 0 0 1 218.78 143.75ZM203.24 135a44 44 0 0 0-75.24-31v0a44 44 0 0 0-75.24 31L108 188.74a24 24 0 0 0 40 0Z"/>
+									</svg>
+								)}
+								<h3 class="font-semibold">{variant.title}</h3>
+							</div>
+
+							<p class="text-xs font-mono text-muted-foreground mb-2">{variant.stack}</p>
+							<p class="text-sm text-muted-foreground mb-3">{variant.description}</p>
+
+							<ul class="space-y-0.5 text-xs mb-4 flex-1">
+								{variant.features.map((feature) => (
+									<li class="flex items-start gap-1.5">
+										<span class="text-primary">+</span>
+										<span>{feature}</span>
+									</li>
+								))}
+							</ul>
+
+							{variant.available ? (
+								<a
+									href={variant.downloadUrl}
+									class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 hover:bg-primary/90 transition-colors text-sm"
+								>
+									<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+									</svg>
+									Download
+								</a>
+							) : (
+								<span class="inline-flex items-center justify-center gap-2 bg-muted text-muted-foreground px-3 py-1.5 text-sm">
+									Coming Soon
+								</span>
+							)}
+						</div>
+					))}
+				</div>
+
+				<!-- Manual installation note -->
+				<div class="bg-card border p-4 mb-8">
+					<h2 class="font-semibold mb-2 flex items-center gap-2">
+						<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M223.68 66.15L135.68 18a15.88 15.88 0 0 0-15.36 0l-88 48.17a16 16 0 0 0-8.32 14v95.64a16 16 0 0 0 8.32 14l88 48.17a15.88 15.88 0 0 0 15.36 0l88-48.17a16 16 0 0 0 8.32-14V80.18a16 16 0 0 0-8.32-14.03ZM128 32l80.35 44L128 120L47.65 76ZM40 90l80 43.78v85.79l-80-43.75Zm96 129.57v-85.75L216 90v85.78Z"/>
+						</svg>
+						Installing Without LLM
+					</h2>
+					<p class="text-sm text-muted-foreground">
+						Without the LLM assistant, follow the <a href="/docs/installation" class="text-primary hover:underline">Installation Guide</a>.
+					</p>
+				</div>
+
+				<!-- Requirements -->
+				<div>
+					<h2 class="text-xl font-semibold mb-3">System Requirements</h2>
+					<table class="w-full text-sm">
+						<thead>
+							<tr class="border-b">
+								<th class="text-left py-1.5 pr-4">Component</th>
+								<th class="text-left py-1.5 pr-4">Without LLM</th>
+								<th class="text-left py-1.5">With LLM</th>
+							</tr>
+						</thead>
+						<tbody class="text-muted-foreground">
+							<tr class="border-b">
+								<td class="py-1.5 pr-4">Architecture</td>
+								<td class="py-1.5 pr-4">x86_64</td>
+								<td class="py-1.5">x86_64</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-1.5 pr-4">RAM</td>
+								<td class="py-1.5 pr-4">2GB</td>
+								<td class="py-1.5">8GB (or 6GB VRAM)</td>
+							</tr>
+							<tr class="border-b">
+								<td class="py-1.5 pr-4">Disk</td>
+								<td class="py-1.5 pr-4">10GB</td>
+								<td class="py-1.5">20GB</td>
+							</tr>
+							<tr>
+								<td class="py-1.5 pr-4">ISO Size</td>
+								<td class="py-1.5 pr-4">~500MB</td>
+								<td class="py-1.5">~3GB</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</div>
+</BaseLayout>

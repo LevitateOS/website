@@ -1,0 +1,169 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Header from "../components/layout/Header.astro"
+import Footer from "../components/layout/Footer.astro"
+import Hero from "../components/Hero.astro"
+import FeatureCard from "../components/FeatureCard.astro"
+import ChatMessage from "../components/ChatMessage.astro"
+import CodeBlock from "../components/CodeBlock.astro"
+---
+
+<BaseLayout title="LevitateOS - Be Your Own Maintainer">
+	<div class="flex min-h-screen flex-col">
+		<Header />
+		<main class="flex-1">
+			<Hero />
+
+			<!-- Features Section -->
+			<section class="container py-16">
+				<h2 class="text-2xl font-bold text-center mb-8">Features</h2>
+				<div class="grid gap-6 grid-cols-2">
+					<FeatureCard title="Your Own Packages" description="Write simple Rhai recipes. Be the maintainer. No waiting for upstream repos.">
+						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M223.68 66.15L135.68 18a15.88 15.88 0 0 0-15.36 0l-88 48.17a16 16 0 0 0-8.32 14v95.64a16 16 0 0 0 8.32 14l88 48.17a15.88 15.88 0 0 0 15.36 0l88-48.17a16 16 0 0 0 8.32-14V80.18a16 16 0 0 0-8.32-14.03ZM128 32l80.35 44L128 120L47.65 76ZM40 90l80 43.78v85.79l-80-43.75Zm96 129.57v-85.75L216 90v85.78Z"/>
+						</svg>
+						<CodeBlock code={`let name = "ripgrep";
+let version = "14.1.0";
+
+fn acquire() {
+    download_bin("rg", ARCH);
+}
+
+fn install() {
+    install_bin("rg");
+}`} language="rhai" />
+					</FeatureCard>
+
+					<FeatureCard title="recipe Package Manager" description="No apt, dnf, or pacman dependency. Full lifecycle from acquire to remove.">
+						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M120 137V40a8 8 0 0 1 16 0v97a8 8 0 0 1-16 0Zm-8 71a8 8 0 1 0 8 8a8 8 0 0 0-8-8Zm106.78-64.25L160 200.53a40 40 0 0 1-64 0L37.22 143.75A60 60 0 0 1 136 65.19V116a8 8 0 0 0 16 0V65.19A60 60 0 0 1 218.78 143.75ZM203.24 135a44 44 0 0 0-75.24-31v0a44 44 0 0 0-75.24 31L108 188.74a24 24 0 0 0 40 0Z"/>
+						</svg>
+						<CodeBlock code={`recipe install ripgrep
+recipe deps firefox
+recipe remove ripgrep`} language="bash" />
+					</FeatureCard>
+
+					<FeatureCard title="SmolLM3 Recipe Assistant" description="Optional local LLM (SmolLM3 from Hugging Face) helps draft recipes, suggest updates, and debug builds. Runs entirely on your machine.">
+						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M248 124a56.11 56.11 0 0 0-32-50.61V72a48 48 0 0 0-88-26.49A48 48 0 0 0 40 72v1.39a56 56 0 0 0 0 101.2V176a48 48 0 0 0 88 26.49A48 48 0 0 0 216 176v-1.41A56.09 56.09 0 0 0 248 124ZM88 208a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 88 128h8v48a32 32 0 0 1-32 32Zm80-80h-8v-8a8 8 0 0 0-16 0v8h-8a56 56 0 0 0-31.19 9.45A40 40 0 0 1 72 124a40 40 0 0 1 40-40h32a40 40 0 0 1 40 40a40 40 0 0 1-16 32Zm32 48a32 32 0 0 1-32 32a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 168 128h8v48Z"/>
+						</svg>
+						<ChatMessage messages={[
+							{ role: "user", text: '"create a recipe for ripgrep"' },
+							{ role: "assistant", text: '"Here\'s a recipe using the latest binary release..."' },
+						]} />
+					</FeatureCard>
+
+					<FeatureCard title="Terminal First" description="Boots to a login prompt, like Arch. No desktop preinstalled. Install one if you want, or don't.">
+						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M208 40H48a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 160H48V56h160v144ZM80 112a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm96 0a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm-60.27 60.27a40 40 0 0 0 44.54 0a8 8 0 0 1 8.9 13.32a56 56 0 0 1-62.34 0a8 8 0 0 1 8.9-13.32Z"/>
+						</svg>
+					</FeatureCard>
+				</div>
+			</section>
+
+			<!-- Local LLM Section -->
+			<section class="container py-16">
+				<h2 class="text-2xl font-bold text-center mb-8">Recipe Assistant</h2>
+				<p class="text-muted-foreground text-center mb-8">
+					Optional local LLM helps write and maintain recipes. Runs entirely on your machine.
+				</p>
+
+				<div class="ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-none py-4 text-xs/relaxed ring-1 group/card flex flex-col mb-8 max-w-lg mx-auto">
+					<div class="gap-1 rounded-none px-4 grid auto-rows-min items-start">
+						<div class="text-lg font-medium">Recipe LoRA</div>
+						<div class="text-muted-foreground text-xs/relaxed">
+							Sandboxed to the recipes folder. Can only create and edit .rhai recipe files. Cannot run commands or access anything else.
+						</div>
+					</div>
+					<div class="px-4">
+						<ChatMessage messages={[
+							{ role: "user", text: '"create a recipe for htop"' },
+							{ role: "assistant", text: "Writes: /recipes/htop.rhai", highlight: true },
+						]} />
+					</div>
+				</div>
+
+				<div class="ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-none py-4 text-xs/relaxed ring-1 group/card flex flex-col">
+					<div class="gap-1 rounded-none px-4 grid auto-rows-min items-start">
+						<div class="text-lg font-medium">This is NOT Windows Copilot</div>
+					</div>
+					<div class="px-4">
+						<div class="grid grid-cols-2 gap-6 text-sm">
+							<div>
+								<p class="text-muted-foreground mb-2">What it is:</p>
+								<ul class="space-y-1">
+									<li>+ Local model (no cloud, no telemetry)</li>
+									<li>+ Specialized for recipe writing</li>
+									<li>+ Fully sandboxed to recipes folder</li>
+									<li>+ Automated package maintainer</li>
+								</ul>
+							</div>
+							<div>
+								<p class="text-muted-foreground mb-2">What it isn't:</p>
+								<ul class="space-y-1">
+									<li>- Not a general assistant</li>
+									<li>- Not watching your activity</li>
+									<li>- Not sending data anywhere</li>
+									<li>- Not integrated into the whole OS</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Installation Preview -->
+			<section class="container py-16">
+				<h2 class="text-2xl font-bold text-center mb-8">Quick Start</h2>
+				<div class="space-y-6">
+					<div>
+						<h3 class="font-semibold mb-2">1. Download the ISO</h3>
+						<CodeBlock code={`curl -LO https://releases.levitateos.org/latest/LevitateOS.iso
+sha256sum -c SHA256SUMS`} language="bash" />
+					</div>
+					<div>
+						<h3 class="font-semibold mb-2">2. Boot (USB or VM)</h3>
+						<CodeBlock code={`# USB
+sudo dd if=LevitateOS.iso of=/dev/sdX bs=4M status=progress
+
+# QEMU
+qemu-system-x86_64 -m 4G -enable-kvm -cdrom LevitateOS.iso`} language="bash" />
+					</div>
+					<div>
+						<h3 class="font-semibold mb-2">3. Install</h3>
+						<CodeBlock code={`# Partition, format, and install the base system
+# See docs/installation for full guide
+recipe bootstrap /dev/sda`} language="bash" />
+					</div>
+					<div>
+						<h3 class="font-semibold mb-2">4. You're done</h3>
+						<CodeBlock code={`# You're at a terminal. Install packages:
+recipe install ripgrep fd htop`} language="bash" />
+					</div>
+				</div>
+			</section>
+
+			<!-- Download Section -->
+			<section id="download" class="container py-16">
+				<div class="text-center">
+					<h2 class="text-2xl font-bold mb-3">Download</h2>
+					<p class="text-sm text-muted-foreground mb-4">x86_64, 2GB+ RAM, 10GB+ disk</p>
+					<div class="ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-none py-4 text-xs/relaxed ring-1 group/card flex flex-col inline-block text-left">
+						<div class="gap-1 rounded-none px-4 grid auto-rows-min items-start">
+							<div class="text-lg font-medium">LevitateOS 1.0</div>
+							<div class="text-muted-foreground text-xs/relaxed">
+								Coming soon. Star the repo to get notified.
+							</div>
+						</div>
+						<div class="px-4">
+							<a href="https://github.com/LevitateOS/LevitateOS" class="text-primary hover:underline text-sm">
+								github.com/LevitateOS/LevitateOS
+							</a>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</div>
+</BaseLayout>

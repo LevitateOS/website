@@ -1,0 +1,76 @@
+---
+import type { DocsContent, Section, ContentBlock, RichText } from "@levitate/docs-content"
+import DocsLayout from "../layout/DocsLayout.astro"
+import InlineContent from "./InlineContent.astro"
+import TextBlock from "./TextBlock.astro"
+import CommandBlockComponent from "./CommandBlock.astro"
+import TableBlock from "./TableBlock.astro"
+import ListBlock from "./ListBlock.astro"
+import ConversationBlock from "./ConversationBlock.astro"
+import InteractiveBlock from "./InteractiveBlock.astro"
+import QABlock from "./QABlock.astro"
+import CodeBlock from "../CodeBlock.astro"
+
+interface Props {
+	content: DocsContent
+	slug: string
+}
+
+const { content, slug } = Astro.props
+
+function toAnchor(title: string): string {
+	return title
+		.toLowerCase()
+		.replace(/[^a-z0-9\s-]/g, "")
+		.replace(/\s+/g, "-")
+}
+---
+
+<DocsLayout title={content.title} currentSlug={slug}>
+	<h1 class="text-3xl font-bold mb-6">{content.title}</h1>
+	{
+		content.intro && (
+			<p class="text-muted-foreground mb-8">
+				<InlineContent content={content.intro} />
+			</p>
+		)
+	}
+	{
+		content.sections.map((section: Section) => {
+			const level = section.level ?? 2
+			const anchor = toAnchor(section.title)
+
+			return (
+				<section id={anchor} class="mb-8 scroll-mt-20">
+					{level === 2 ? (
+						<h2 class="text-2xl font-semibold mb-4">{section.title}</h2>
+					) : (
+						<h3 class="text-xl font-medium mb-3">{section.title}</h3>
+					)}
+					{section.content.map((block: ContentBlock) => {
+						switch (block.type) {
+							case "text":
+								return <TextBlock content={block.content} />
+							case "code":
+								return <CodeBlock code={block.content} language={block.language} filename={block.filename} />
+							case "table":
+								return <TableBlock table={block} />
+							case "list":
+								return <ListBlock list={block} />
+							case "conversation":
+								return <ConversationBlock conversation={block} />
+							case "interactive":
+								return <InteractiveBlock block={block} />
+							case "command":
+								return <CommandBlockComponent block={block} />
+							case "qa":
+								return <QABlock block={block} />
+							default:
+								return null
+						}
+					})}
+				</section>
+			)
+		})
+	}
+</DocsLayout>

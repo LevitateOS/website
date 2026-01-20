@@ -1,0 +1,50 @@
+---
+const year = new Date().getFullYear()
+---
+
+<footer class="border-t bg-muted/40">
+	<div class="container flex flex-col gap-4 py-10 md:flex-row md:justify-between md:gap-0 px-4 md:px-6">
+		<div class="flex flex-col gap-2">
+			<span class="text-lg font-semibold font-logo">LevitateOS</span>
+			<p class="text-sm text-muted-foreground">Be your own package maintainer.</p>
+		</div>
+
+		<div class="grid grid-cols-2 gap-8 sm:grid-cols-3">
+			<div class="flex flex-col gap-2">
+				<span class="font-medium">Documentation</span>
+				<a href="/docs/getting-started" class="text-sm text-muted-foreground hover:text-foreground">
+					Getting Started
+				</a>
+				<a href="/docs/recipe-format" class="text-sm text-muted-foreground hover:text-foreground"> Recipe Format </a>
+				<a href="/docs/cli-reference" class="text-sm text-muted-foreground hover:text-foreground"> CLI Reference </a>
+			</div>
+
+			<div class="flex flex-col gap-2">
+				<span class="font-medium">Community</span>
+				<a href="https://github.com/LevitateOS/LevitateOS" class="text-sm text-muted-foreground hover:text-foreground">
+					GitHub
+				</a>
+				<a
+					href="https://github.com/LevitateOS/LevitateOS/issues"
+					class="text-sm text-muted-foreground hover:text-foreground"
+				>
+					Issues
+				</a>
+			</div>
+
+			<div class="flex flex-col gap-2">
+				<span class="font-medium">Legal</span>
+				<a
+					href="https://github.com/LevitateOS/LevitateOS/blob/master/LICENSE"
+					class="text-sm text-muted-foreground hover:text-foreground"
+				>
+					License (LGPL-2.1)
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container border-t py-4 px-4 md:px-6">
+		<p class="text-center text-sm text-muted-foreground">&copy; {year} LevitateOS. Built with Rust.</p>
+	</div>
+</footer>

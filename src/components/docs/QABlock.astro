@@ -1,0 +1,42 @@
+---
+import type { QABlock, ContentBlock } from "@levitate/docs-content"
+import InlineContent from "./InlineContent.astro"
+import TextBlock from "./TextBlock.astro"
+import CommandBlockComponent from "./CommandBlock.astro"
+import ListBlock from "./ListBlock.astro"
+import CodeBlock from "../CodeBlock.astro"
+
+interface Props {
+	block: QABlock
+}
+
+const { block } = Astro.props
+---
+
+<div class="space-y-6 mb-6">
+	{
+		block.items.map((item) => (
+			<div class="border-l-2 border-primary/30 pl-4">
+				<h4 class="font-semibold text-lg mb-3">
+					<InlineContent content={item.question} />
+				</h4>
+				<div class="space-y-3">
+					{item.answer.map((answerBlock: ContentBlock) => {
+						switch (answerBlock.type) {
+							case "text":
+								return <TextBlock content={answerBlock.content} />
+							case "code":
+								return <CodeBlock code={answerBlock.content} language={answerBlock.language} filename={answerBlock.filename} />
+							case "command":
+								return <CommandBlockComponent block={answerBlock} />
+							case "list":
+								return <ListBlock list={answerBlock} />
+							default:
+								return null
+						}
+					})}
+				</div>
+			</div>
+		))
+	}
+</div>

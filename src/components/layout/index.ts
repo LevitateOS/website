@@ -1,5 +1,0 @@
-export { Header } from "./Header"
-export { Footer } from "./Footer"
-export { Layout } from "./Layout"
-export { DocsSidebar } from "./DocsSidebar"
-export { DocsLayout } from "./DocsLayout"

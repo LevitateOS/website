@@ -1,0 +1,64 @@
+---
+import type { ListBlock, ListItem, RichText } from "@levitate/docs-content"
+import InlineContent from "./InlineContent.astro"
+
+interface Props {
+	list: ListBlock
+}
+
+const { list } = Astro.props
+
+function isListItem(item: string | RichText | ListItem): item is ListItem {
+	return typeof item === "object" && !Array.isArray(item) && "text" in item
+}
+---
+
+{
+	list.ordered ? (
+		<ol class="list-decimal list-inside space-y-1 text-muted-foreground mb-4">
+			{list.items.map((item) =>
+				isListItem(item) ? (
+					<li>
+						<InlineContent content={item.text} />
+						{item.children && (
+							<ul class="list-disc list-inside ml-4 mt-1">
+								{item.children.map((child) => (
+									<li>
+										<InlineContent content={child} />
+									</li>
+								))}
+							</ul>
+						)}
+					</li>
+				) : (
+					<li>
+						<InlineContent content={item} />
+					</li>
+				)
+			)}
+		</ol>
+	) : (
+		<ul class="list-disc list-inside space-y-1 text-muted-foreground mb-4">
+			{list.items.map((item) =>
+				isListItem(item) ? (
+					<li>
+						<InlineContent content={item.text} />
+						{item.children && (
+							<ul class="list-disc list-inside ml-4 mt-1">
+								{item.children.map((child) => (
+									<li>
+										<InlineContent content={child} />
+									</li>
+								))}
+							</ul>
+						)}
+					</li>
+				) : (
+					<li>
+						<InlineContent content={item} />
+					</li>
+				)
+			)}
+		</ul>
+	)
+}

@@ -1,0 +1,45 @@
+---
+import "../styles/global.css"
+
+interface Props {
+	title?: string
+}
+
+const { title = "LevitateOS - Be Your Own Maintainer" } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		<meta
+			name="description"
+			content="Linux where you maintain your own packages. Simple recipes, no upstream dependencies, self-sufficient package manager."
+		/>
+		<link rel="icon" href="/favicon.ico" />
+
+		<!-- Font preloading -->
+		<link
+			rel="preload"
+			href="/Google_Sans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf"
+			as="font"
+			type="font/ttf"
+			crossorigin
+		/>
+	</head>
+	<body>
+		<!-- Theme script: runs before body renders to prevent flash -->
+		<script is:inline>
+			;(function () {
+				const stored = localStorage.getItem("theme")
+				const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+				if (stored === "dark" || (!stored && prefersDark)) {
+					document.documentElement.classList.add("dark")
+				}
+			})()
+		</script>
+		<slot />
+	</body>
+</html>

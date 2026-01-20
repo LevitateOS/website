@@ -1,0 +1,21 @@
+---
+import { contentBySlug } from "@levitate/docs-content"
+import type { DocsContent } from "@levitate/docs-content"
+import DocsPage from "../../components/docs/DocsPage.astro"
+
+export function getStaticPaths() {
+	return Object.entries(contentBySlug).map(([slug, content]) => ({
+		params: { slug },
+		props: { content, slug },
+	}))
+}
+
+interface Props {
+	content: DocsContent
+	slug: string
+}
+
+const { content, slug } = Astro.props
+---
+
+<DocsPage content={content} slug={slug} />
