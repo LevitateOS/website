@@ -11,6 +11,8 @@ export type {
 	ListItem,
 	ConversationBlock,
 	ConversationMessage,
+	QABlock,
+	QAItem,
 	RichText,
 	InlineNode,
 	InlineLink,

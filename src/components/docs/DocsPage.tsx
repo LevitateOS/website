@@ -9,6 +9,7 @@ import { ListBlockRenderer } from "./ListBlock"
 import { ConversationBlockRenderer } from "./ConversationBlock"
 import { TextBlockRenderer } from "./TextBlock"
 import { InlineContentRenderer } from "./InlineContent"
+import { QABlockRenderer } from "./QABlock"
 
 interface DocsPageProps {
 	content: DocsContent
@@ -79,6 +80,8 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 			return <InteractiveBlockRenderer block={block} />
 		case "command":
 			return <CommandBlockRenderer block={block} />
+		case "qa":
+			return <QABlockRenderer block={block} />
 		default:
 			return null
 	}
