@@ -1,14 +1,29 @@
+# Dependencies
 node_modules
-.DS_Store
+
+# Build output
 dist
-*.local
-.env
+dist-ssr
+.output
 
 # Astro
 .astro
 
-# Build artifacts
-dist-ssr
-.output
+# Environment
+.env
+.env.*
+*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache
 .vite
 .turbo
+*.tsbuildinfo
