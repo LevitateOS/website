@@ -16,9 +16,7 @@ const { title, currentSlug } = Astro.props
 	<Header />
 	<div class="container flex gap-6 py-8">
 		<DocsSidebar currentSlug={currentSlug} />
-		<article
-			class="flex-1 min-w-0 prose prose-sm prose-invert prose-headings:font-semibold prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-pre:bg-muted"
-		>
+		<article class="flex-1 min-w-0">
 			<slot />
 		</article>
 	</div>

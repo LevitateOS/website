@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/jetbrains-mono";
 
 @font-face {
 	font-family: "Google Sans";
@@ -13,14 +15,6 @@
 	src: url("/Google_Sans/GoogleSans-Italic-VariableFont_GRAD,opsz,wght.ttf") format("truetype");
 	font-weight: 100 900;
 	font-style: italic;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "JetBrains Mono Variable";
-	src: url("https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjOVGaFg.woff2") format("woff2");
-	font-weight: 100 800;
-	font-style: normal;
 	font-display: swap;
 }
 
@@ -178,18 +172,3 @@
 	color: var(--shiki-dark) !important;
 }
 
-/* Animation keyframes for hero */
-@keyframes fade-in-up {
-	from {
-		opacity: 0;
-		transform: translateY(1rem);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-.animate-fade-in-up {
-	animation: fade-in-up 0.7s ease-out forwards;
-}

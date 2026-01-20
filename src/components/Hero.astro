@@ -14,7 +14,7 @@ const features = [
 >
 	<div class="container flex flex-col items-center">
 		<!-- Logo -->
-		<div class="animate-fade-in-up" style="animation-delay: 0ms;">
+		<div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
 			<picture>
 				<source srcset="/levitateos-dark.png" media="(prefers-color-scheme: dark)" />
 				<img
@@ -28,8 +28,7 @@ const features = [
 
 		<!-- Headline -->
 		<h1
-			class="animate-fade-in-up mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight"
-			style="animation-delay: 100ms; opacity: 0;"
+			class="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-backwards mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight"
 		>
 			Be your own
 			<br />
@@ -38,15 +37,14 @@ const features = [
 
 		<!-- Subheadline -->
 		<p
-			class="animate-fade-in-up mt-4 text-lg text-muted-foreground max-w-xl"
-			style="animation-delay: 200ms; opacity: 0;"
+			class="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-backwards mt-4 text-lg text-muted-foreground max-w-xl"
 		>
 			A Linux distribution where you control your packages. Write recipes, build from source, and never wait for
 			upstream again.
 		</p>
 
 		<!-- Terminal Preview -->
-		<div class="animate-fade-in-up mt-8 w-full max-w-md text-left" style="animation-delay: 300ms; opacity: 0;">
+		<div class="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-backwards mt-8 w-full max-w-md text-left">
 			<CodeBlock
 				code={`$ recipe install ripgrep
 Installing ripgrep@14.1.0...
@@ -57,8 +55,7 @@ Done in 2.3s`}
 
 		<!-- Features Grid -->
 		<div
-			class="animate-fade-in-up mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-lg"
-			style="animation-delay: 400ms; opacity: 0;"
+			class="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-400 fill-mode-backwards mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-lg"
 		>
 			{
 				features.map((feature) => (
@@ -73,10 +70,10 @@ Done in 2.3s`}
 		</div>
 
 		<!-- CTAs -->
-		<div class="animate-fade-in-up mt-8 flex flex-col sm:flex-row gap-4" style="animation-delay: 500ms; opacity: 0;">
+		<div class="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-backwards mt-8 flex flex-col sm:flex-row gap-4">
 			<a
 				href="/download"
-				class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+				class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
 			>
 				<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
 					<path
@@ -89,7 +86,7 @@ Done in 2.3s`}
 				href="https://github.com/LevitateOS/LevitateOS"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base border border-border bg-background hover:bg-muted transition-colors"
+				class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium border border-border bg-background hover:bg-muted transition-colors"
 			>
 				<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
 					<path
