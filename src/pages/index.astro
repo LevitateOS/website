@@ -112,37 +112,6 @@ recipe remove ripgrep`} language="bash" />
 				</div>
 			</section>
 
-			<!-- Installation Preview -->
-			<section class="container py-16">
-				<h2 class="text-2xl font-bold text-center mb-8">Quick Start</h2>
-				<div class="space-y-6">
-					<div>
-						<h3 class="font-semibold mb-2">1. Download the ISO</h3>
-						<CodeBlock code={`curl -LO https://releases.levitateos.org/latest/LevitateOS.iso
-sha256sum -c SHA256SUMS`} language="bash" />
-					</div>
-					<div>
-						<h3 class="font-semibold mb-2">2. Boot (USB or VM)</h3>
-						<CodeBlock code={`# USB
-sudo dd if=LevitateOS.iso of=/dev/sdX bs=4M status=progress
-
-# QEMU
-qemu-system-x86_64 -m 4G -enable-kvm -cdrom LevitateOS.iso`} language="bash" />
-					</div>
-					<div>
-						<h3 class="font-semibold mb-2">3. Install</h3>
-						<CodeBlock code={`# Partition, format, and install the base system
-# See docs/installation for full guide
-recipe bootstrap /dev/sda`} language="bash" />
-					</div>
-					<div>
-						<h3 class="font-semibold mb-2">4. You're done</h3>
-						<CodeBlock code={`# You're at a terminal. Install packages:
-recipe install ripgrep fd htop`} language="bash" />
-					</div>
-				</div>
-			</section>
-
 			<!-- Download Section -->
 			<section id="download" class="container py-16">
 				<div class="text-center">
