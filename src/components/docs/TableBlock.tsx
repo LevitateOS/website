@@ -7,6 +7,7 @@ import {
 	TableRow,
 } from "@/components/ui/table"
 import type { TableBlock } from "@levitate/docs-content"
+import { InlineContentRenderer } from "./InlineContent"
 
 export function TableBlockRenderer({ table }: { table: TableBlock }) {
 	return (
@@ -14,7 +15,9 @@ export function TableBlockRenderer({ table }: { table: TableBlock }) {
 			<TableHeader>
 				<TableRow>
 					{table.headers.map((header, i) => (
-						<TableHead key={i}>{header}</TableHead>
+						<TableHead key={i}>
+							<InlineContentRenderer content={header} />
+						</TableHead>
 					))}
 				</TableRow>
 			</TableHeader>
@@ -26,7 +29,7 @@ export function TableBlockRenderer({ table }: { table: TableBlock }) {
 								key={j}
 								className={j === table.monospaceCol ? "font-mono" : ""}
 							>
-								{cell}
+								<InlineContentRenderer content={cell} />
 							</TableCell>
 						))}
 					</TableRow>

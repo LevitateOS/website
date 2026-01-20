@@ -1,10 +1,13 @@
 import type { InteractiveBlock } from "@levitate/docs-content"
+import { InlineContentRenderer } from "./InlineContent"
 
 export function InteractiveBlockRenderer({ block }: { block: InteractiveBlock }) {
 	return (
 		<div className="mb-4 space-y-3">
 			{block.intro && (
-				<p className="text-muted-foreground">{block.intro}</p>
+				<p className="text-muted-foreground">
+					<InlineContentRenderer content={block.intro} />
+				</p>
 			)}
 			{block.steps.map((step, i) => (
 				<div key={i} className="flex items-start gap-3">
@@ -12,7 +15,7 @@ export function InteractiveBlockRenderer({ block }: { block: InteractiveBlock })
 						{step.command}
 					</code>
 					<span className="text-muted-foreground text-sm pt-1.5">
-						{step.description}
+						<InlineContentRenderer content={step.description} />
 					</span>
 				</div>
 			))}
