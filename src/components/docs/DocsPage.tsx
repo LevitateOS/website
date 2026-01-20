@@ -4,7 +4,6 @@ import type { DocsContent, Section, ContentBlock, RichText } from "@levitate/doc
 
 import { CommandBlockRenderer } from "./CommandBlock"
 import { InteractiveBlockRenderer } from "./InteractiveBlock"
-import { FileBlockRenderer } from "./FileBlock"
 import { TableBlockRenderer } from "./TableBlock"
 import { ListBlockRenderer } from "./ListBlock"
 import { ConversationBlockRenderer } from "./ConversationBlock"
@@ -65,9 +64,11 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 		case "text":
 			return <TextBlockRenderer content={block.content} />
 		case "code":
-			return <CodeBlock language={block.language}>{block.content}</CodeBlock>
-		case "file":
-			return <FileBlockRenderer file={block} />
+			return (
+				<CodeBlock language={block.language} filename={block.filename}>
+					{block.content}
+				</CodeBlock>
+			)
 		case "table":
 			return <TableBlockRenderer table={block} />
 		case "list":
