@@ -154,21 +154,66 @@
 	padding-right: 1.5rem;
 }
 
-/* Shiki syntax highlighting - dual theme support */
-.shiki {
-	background-color: transparent !important;
-}
-.shiki code {
+/* Shiki/Astro Code syntax highlighting - dual theme support */
+/* Astro's <Code> component uses .astro-code class, not .shiki */
+.shiki,
+.astro-code,
+.shiki code,
+.astro-code code {
 	background-color: transparent !important;
 }
 
 /* Light mode: use --shiki-light colors */
-.shiki span {
+.shiki span,
+.astro-code span {
 	color: var(--shiki-light) !important;
 }
 
 /* Dark mode: use --shiki-dark colors */
-.dark .shiki span {
+.dark .shiki span,
+.dark .astro-code span {
 	color: var(--shiki-dark) !important;
 }
 
+/* Force muted backgrounds in dark mode */
+/* This ensures code blocks and inline code have dark backgrounds regardless of Tailwind compilation */
+.dark .bg-\[var\(--muted\)\],
+.dark .bg-muted,
+.dark code.bg-\[var\(--muted\)\],
+.dark code.bg-muted {
+	background-color: oklch(0.3 0.02 300) !important;
+}
+
+/* Custom scrollbars - styled to match theme */
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--border);
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--muted-foreground);
+}
+
+/* Firefox scrollbar styling */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--border) transparent;
+}
+
+/* Utility class to hide scrollbar while keeping scrollability */
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}

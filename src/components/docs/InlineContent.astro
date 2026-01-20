@@ -52,7 +52,7 @@ function renderInlineNode(node: InlineNode): string {
 		case "bold":
 			return `<strong>${node.text}</strong>`
 		case "code":
-			return `<code class="bg-muted px-1.5 py-0.5">${node.text}</code>`
+			return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${node.text}</code>`
 		case "italic":
 			return `<em>${node.text}</em>`
 		default:
@@ -69,7 +69,7 @@ function renderContent(content: string | RichText): string {
 	return parts
 		.map((part) => {
 			if (part.type === "code") {
-				return `<code class="bg-muted px-1.5 py-0.5">${part.content}</code>`
+				return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${part.content}</code>`
 			}
 			if (part.type === "link") {
 				return `<a href="${part.href}" class="text-primary hover:underline">${part.content}</a>`

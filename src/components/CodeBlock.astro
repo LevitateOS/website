@@ -42,7 +42,7 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 {
 	filename ? (
 		<div class="mb-4 rounded overflow-hidden ring-1 ring-foreground/10">
-			<div class="flex items-center justify-between px-3 py-2 bg-muted text-xs text-muted-foreground">
+			<div class="flex items-center justify-between px-3 py-2 bg-[var(--muted)] text-xs text-muted-foreground">
 				<div class="flex items-center gap-2">
 					<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
 						<path d="M213.66 82.34l-56-56A8 8 0 0 0 152 24H56a16 16 0 0 0-16 16v176a16 16 0 0 0 16 16h144a16 16 0 0 0 16-16V88a8 8 0 0 0-2.34-5.66ZM160 51.31L188.69 80H160ZM200 216H56V40h88v48a8 8 0 0 0 8 8h48v120Z" />
@@ -67,13 +67,13 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 					</button>
 				</div>
 			</div>
-			<div class="bg-muted/30 [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm [&>pre]:font-mono">
+			<div class="bg-[var(--muted)]/30 [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm [&>pre]:font-mono">
 				<Code code={code} lang={resolvedLanguage} themes={{ light: "github-light", dark: "github-dark" }} />
 			</div>
 		</div>
 	) : (
 		<div class="relative mb-4">
-			<div class="absolute top-0 right-0 flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground bg-muted rounded-bl z-10">
+			<div class="absolute top-0 right-0 flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground bg-[var(--muted)] rounded-bl z-10">
 				{resolvedLanguage && <span>{resolvedLanguage}</span>}
 				{resolvedLanguage && <span class="text-muted-foreground/50">|</span>}
 				<button
@@ -90,7 +90,7 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 					<span class="copy-text">copy</span>
 				</button>
 			</div>
-			<div class="bg-muted rounded [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm">
+			<div class="bg-[var(--muted)] rounded [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm">
 				<Code code={code} lang={resolvedLanguage} themes={{ light: "github-light", dark: "github-dark" }} />
 			</div>
 		</div>
