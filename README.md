@@ -1,5 +1,7 @@
 # LevitateOS Website
 
+> **STOP. READ. THEN ACT.** Before writing code, read the existing components and pages. Before deleting anything, read it first.
+
 The official website for [LevitateOS](https://github.com/LevitateOS/LevitateOS), built with Astro.
 
 ## Tech Stack
