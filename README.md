@@ -42,7 +42,8 @@ src/
 ├── pages/
 │   ├── index.astro     # Homepage
 │   ├── download.astro  # Download page
-│   └── docs/[slug].astro
+│   └── docs/
+│       └── [slug].astro  # Dynamic docs pages (content from docs-content package)
 └── styles/
     └── global.css
 ```
