@@ -1,93 +1,55 @@
 # LevitateOS Website
 
-> **STOP. READ. THEN ACT.** Before writing code, read the existing components and pages. Before deleting anything, read it first.
-
-The official website for [LevitateOS](https://github.com/LevitateOS/LevitateOS), built with Astro.
+Static documentation site built with Astro. Renders content from `@levitate/docs-content` package.
 
 ## Status
 
-| Metric | Value |
-|--------|-------|
-| Stage | Beta |
-| Target | Static site (any web server) |
-| Last verified | 2026-01-23 |
+**Beta.** Builds and deploys. Content incomplete.
 
-### Works
+| Works | Not done |
+|-------|----------|
+| Static site builds | All documentation pages |
+| Dark/light theme toggle | Mobile navigation |
+| Syntax highlighting | Search |
 
-- Astro 5.7 static site generation
-- Tailwind 4 styling with dark/light themes
-- Documentation pages from @levitate/docs-content
-- Shiki syntax highlighting
-
-### Known Issues
-
-- See parent repo issues
-
----
-
-## Author
-
-<!-- HUMAN WRITTEN - DO NOT MODIFY -->
-
-[Waiting for human input]
-
-<!-- END HUMAN WRITTEN -->
-
----
-
-## Tech Stack
-
-- **[Astro](https://astro.build)** v5.7 - Static site generator
-- **[Tailwind CSS](https://tailwindcss.com)** v4.0 - Styling
-- **[Shiki](https://shiki.style)** - Syntax highlighting
-- **[Bun](https://bun.sh)** - Package manager & runtime
-
-## Getting Started
+## Usage
 
 ```bash
-# Install dependencies
-bun install
-
-# Start dev server (http://localhost:3000)
-bun run dev
-
-# Build for production
-bun run build
-
-# Preview production build
-bun run preview
-
-# Type check
-bun run typecheck
+bun install           # Install deps
+bun run dev           # Dev server at localhost:3000
+bun run build         # Production build to dist/
+bun run preview       # Preview production build
 ```
 
-## Project Structure
+## Stack
+
+- Astro 5.7
+- Tailwind CSS 4.0
+- Shiki (syntax highlighting)
+- Bun (package manager)
+
+## Structure
 
 ```
 src/
+├── pages/
+│   ├── index.astro      # Homepage
+│   ├── download.astro   # Download page
+│   └── docs/[slug].astro
 ├── components/
-│   ├── docs/           # Documentation block renderers
-│   └── layout/         # Header, Footer, Sidebar
+│   ├── layout/          # Header, Footer, Sidebar
+│   └── docs/            # Content block renderers
 ├── layouts/
 │   └── BaseLayout.astro
-├── pages/
-│   ├── index.astro     # Homepage
-│   ├── download.astro  # Download page
-│   └── docs/
-│       └── [slug].astro  # Dynamic docs pages (content from docs-content package)
 └── styles/
     └── global.css
 ```
 
-## Documentation Content
+## Content Source
 
-Documentation content is sourced from the `@levitate/docs-content` workspace package in the main monorepo. This keeps content separate from presentation.
+Documentation content comes from `@levitate/docs-content` workspace package. This README is about the website renderer, not the content.
 
-## Development
-
-### Adding a New Page
-
-Create a new `.astro` file in `src/pages/`:
+## Adding Pages
 
 ```astro
 ---
@@ -95,16 +57,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Page Title">
-  <main>
-    <!-- Content -->
-  </main>
+  <main>Content here</main>
 </BaseLayout>
 ```
 
-### Theme Support
+## Known Limitations
 
-The site supports light/dark themes via CSS custom properties and a theme toggle. Theme preference is persisted to localStorage.
+- No search functionality
+- Mobile navigation incomplete
+- Documentation content still being written
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
+MIT
