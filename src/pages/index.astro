@@ -15,7 +15,7 @@ import CodeBlock from "../components/CodeBlock.astro"
 			<Hero />
 
 			<!-- Features Section -->
-			<section class="container py-16">
+			<section id="features" class="container py-16">
 				<h2 class="text-2xl font-bold text-center mb-8">Features</h2>
 				<div class="grid gap-6 grid-cols-2">
 					<FeatureCard title="Your Own Packages" description="Write simple Rhai recipes. Be the maintainer. No waiting for upstream repos.">
@@ -43,72 +43,17 @@ recipe deps firefox
 recipe remove ripgrep`} language="bash" />
 					</FeatureCard>
 
-					<FeatureCard title="SmolLM3 Recipe Assistant" description="Optional local LLM (SmolLM3 from Hugging Face) helps draft recipes, suggest updates, and debug builds. Runs entirely on your machine.">
-						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
-							<path d="M248 124a56.11 56.11 0 0 0-32-50.61V72a48 48 0 0 0-88-26.49A48 48 0 0 0 40 72v1.39a56 56 0 0 0 0 101.2V176a48 48 0 0 0 88 26.49A48 48 0 0 0 216 176v-1.41A56.09 56.09 0 0 0 248 124ZM88 208a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 88 128h8v48a32 32 0 0 1-32 32Zm80-80h-8v-8a8 8 0 0 0-16 0v8h-8a56 56 0 0 0-31.19 9.45A40 40 0 0 1 72 124a40 40 0 0 1 40-40h32a40 40 0 0 1 40 40a40 40 0 0 1-16 32Zm32 48a32 32 0 0 1-32 32a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 168 128h8v48Z"/>
-						</svg>
-						<ChatMessage messages={[
-							{ role: "user", text: '"create a recipe for ripgrep"' },
-							{ role: "assistant", text: '"Here\'s a recipe using the latest binary release..."' },
-						]} />
-					</FeatureCard>
-
 					<FeatureCard title="Terminal First" description="Boots to a login prompt, like Arch. No desktop preinstalled. Install one if you want, or don't.">
 						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
 							<path d="M208 40H48a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 160H48V56h160v144ZM80 112a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm96 0a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm-60.27 60.27a40 40 0 0 0 44.54 0a8 8 0 0 1 8.9 13.32a56 56 0 0 1-62.34 0a8 8 0 0 1 8.9-13.32Z"/>
 						</svg>
 					</FeatureCard>
-				</div>
-			</section>
 
-			<!-- Local LLM Section -->
-			<section class="container py-16">
-				<h2 class="text-2xl font-bold text-center mb-8">Recipe Assistant</h2>
-				<p class="text-muted-foreground text-center mb-8">
-					Optional local LLM helps write and maintain recipes. Runs entirely on your machine.
-				</p>
-
-				<div class="bg-card text-card-foreground flex flex-col gap-4 overflow-hidden py-4 ring-1 ring-foreground/10 mb-8 max-w-lg mx-auto">
-					<div class="px-4 grid gap-1 auto-rows-min items-start">
-						<div class="text-lg font-medium">Recipe LoRA</div>
-						<div class="text-muted-foreground text-sm">
-							Sandboxed to the recipes folder. Can only create and edit .rhai recipe files. Cannot run commands or access anything else.
-						</div>
-					</div>
-					<div class="px-4">
-						<ChatMessage messages={[
-							{ role: "user", text: '"create a recipe for htop"' },
-							{ role: "assistant", text: "Writes: /recipes/htop.rhai", highlight: true },
-						]} />
-					</div>
-				</div>
-
-				<div class="bg-card text-card-foreground flex flex-col gap-4 overflow-hidden py-4 ring-1 ring-foreground/10">
-					<div class="px-4 grid gap-1 auto-rows-min items-start">
-						<div class="text-lg font-medium">This is NOT Windows Copilot</div>
-					</div>
-					<div class="px-4">
-						<div class="grid grid-cols-2 gap-6 text-sm">
-							<div>
-								<p class="text-muted-foreground mb-2">What it is:</p>
-								<ul class="space-y-1">
-									<li>+ Local model (no cloud, no telemetry)</li>
-									<li>+ Specialized for recipe writing</li>
-									<li>+ Fully sandboxed to recipes folder</li>
-									<li>+ Automated package maintainer</li>
-								</ul>
-							</div>
-							<div>
-								<p class="text-muted-foreground mb-2">What it isn't:</p>
-								<ul class="space-y-1">
-									<li>- Not a general assistant</li>
-									<li>- Not watching your activity</li>
-									<li>- Not sending data anywhere</li>
-									<li>- Not integrated into the whole OS</li>
-								</ul>
-							</div>
-						</div>
-					</div>
+					<FeatureCard title="Local Recipe Assistant" description="Optional local LLM for recipe drafting and maintenance. No cloud, no telemetry.">
+						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M248 124a56.11 56.11 0 0 0-32-50.61V72a48 48 0 0 0-88-26.49A48 48 0 0 0 40 72v1.39a56 56 0 0 0 0 101.2V176a48 48 0 0 0 88 26.49A48 48 0 0 0 216 176v-1.41A56.09 56.09 0 0 0 248 124ZM88 208a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 88 128h8v48a32 32 0 0 1-32 32Zm80-80h-8v-8a8 8 0 0 0-16 0v8h-8a56 56 0 0 0-31.19 9.45A40 40 0 0 1 72 124a40 40 0 0 1 40-40h32a40 40 0 0 1 40 40a40 40 0 0 1-16 32Zm32 48a32 32 0 0 1-32 32a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 168 128h8v48Z"/>
+						</svg>
+					</FeatureCard>
 				</div>
 			</section>
 
@@ -128,6 +73,23 @@ recipe remove ripgrep`} language="bash" />
 							<a href="https://github.com/LevitateOS/LevitateOS" class="text-primary hover:underline text-sm">
 								github.com/LevitateOS/LevitateOS
 							</a>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Thanks Section -->
+			<section id="thanks" class="container py-16">
+				<div class="text-center max-w-2xl mx-auto">
+					<h2 class="text-2xl font-bold mb-6">Standing on the Shoulders of Giants</h2>
+					<div class="grid gap-6 sm:grid-cols-2 text-left">
+						<div class="p-4 ring-1 ring-foreground/10 rounded">
+							<a href="https://archlinux.org" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Arch Linux</a>
+							<p class="text-sm text-muted-foreground mt-1">For the blueprint on how to build a minimal, user-controlled distribution and live ISO.</p>
+						</div>
+						<div class="p-4 ring-1 ring-foreground/10 rounded">
+							<a href="https://rockylinux.org" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Rocky Linux</a>
+							<p class="text-sm text-muted-foreground mt-1">For providing stable, battle-tested RPM packages that we extract and repackage.</p>
 						</div>
 					</div>
 				</div>

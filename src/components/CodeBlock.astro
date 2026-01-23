@@ -68,7 +68,7 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 				</div>
 			</div>
 			<div class="bg-[var(--muted)]/30 [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm [&>pre]:font-mono">
-				<Code code={code} lang={resolvedLanguage} themes={{ light: "github-light", dark: "github-dark" }} />
+				<Code code={code} lang={resolvedLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
 			</div>
 		</div>
 	) : (
@@ -91,7 +91,7 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 				</button>
 			</div>
 			<div class="bg-[var(--muted)] rounded [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:text-sm">
-				<Code code={code} lang={resolvedLanguage} themes={{ light: "github-light", dark: "github-dark" }} />
+				<Code code={code} lang={resolvedLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
 			</div>
 		</div>
 	)
