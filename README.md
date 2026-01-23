@@ -4,6 +4,37 @@
 
 The official website for [LevitateOS](https://github.com/LevitateOS/LevitateOS), built with Astro.
 
+## Status
+
+| Metric | Value |
+|--------|-------|
+| Stage | Beta |
+| Target | Static site (any web server) |
+| Last verified | 2026-01-23 |
+
+### Works
+
+- Astro 5.7 static site generation
+- Tailwind 4 styling with dark/light themes
+- Documentation pages from @levitate/docs-content
+- Shiki syntax highlighting
+
+### Known Issues
+
+- See parent repo issues
+
+---
+
+## Author
+
+<!-- HUMAN WRITTEN - DO NOT MODIFY -->
+
+[Waiting for human input]
+
+<!-- END HUMAN WRITTEN -->
+
+---
+
 ## Tech Stack
 
 - **[Astro](https://astro.build)** v5.7 - Static site generator
