@@ -2,85 +2,354 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
-import FeatureCard from "../components/FeatureCard.astro"
-import ChatMessage from "../components/ChatMessage.astro"
 import CodeBlock from "../components/CodeBlock.astro"
 import AnimatedSection from "../components/AnimatedSection.astro"
 import CheckList from "../components/CheckList.astro"
 import ScrollIndicator from "../components/ScrollIndicator.astro"
 
-const heroFeatures = [
-	"No upstream — you control updates directly",
-	"Recipes are code you can read and modify",
-	"No package database — state lives in recipes",
-	"Local LLM available to help with maintenance",
+const recipeAdvantages = [
+	"No dependency hell — you decide the version, you decide the flags",
+	"No mystery code — read the recipe in seconds",
+	"Need a patch? Add it yourself. No begging maintainers.",
+	"Full audit trail of exactly what's on your system",
+]
+
+const assistantFeatures = [
+	"Drafts .rhai recipes for any package you need",
+	"Reads build logs and suggests fixes when updates fail",
+	"Runs entirely local — no cloud, no telemetry",
+	"You verify, you execute — AI removes drudgery, not control",
 ]
 ---
 
-<BaseLayout title="LevitateOS - Be Your Own Maintainer">
+<BaseLayout title="LevitateOS - The Post-Repository Era">
 	<div class="flex min-h-screen flex-col">
 		<Header />
 		<main class="flex-1">
-			<!-- Hero Section -->
+			<!-- Hero: The Problem -->
 			<section
 				id="hero"
-				class="relative min-h-[80vh] flex flex-col items-center justify-center text-center py-16 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"
+				class="relative min-h-[90vh] flex flex-col items-center justify-center text-center py-16 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"
 			>
-				<div class="container flex flex-col items-center">
-					<!-- Logo -->
+				<div class="container flex flex-col items-center max-w-4xl">
 					<AnimatedSection>
-						<picture>
-							<source srcset="/levitateos-dark.png" media="(prefers-color-scheme: dark)" />
-							<img
-								id="hero-logo"
-								src="/levitateos-light.png"
-								alt="LevitateOS"
-								class="h-80 w-auto"
-							/>
-						</picture>
-					</AnimatedSection>
-
-					<!-- Headline -->
-					<AnimatedSection delay={100} class="mt-6">
-						<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-							Be your own
-							<br />
-							<span class="text-primary">package maintainer</span>
-						</h1>
-					</AnimatedSection>
-
-					<!-- Subheadline -->
-					<AnimatedSection delay={200} class="mt-4 max-w-xl">
-						<p class="text-lg text-muted-foreground">
-							No repo maintainers. No waiting for upstream. You write your own package recipes and control updates directly.
+						<p class="text-sm font-medium text-primary uppercase tracking-widest mb-4">
+							The End of "Blind Trust" Distribution
 						</p>
 					</AnimatedSection>
 
-					<!-- Terminal Preview -->
-					<AnimatedSection delay={300} class="mt-8 w-full max-w-md text-left">
-						<CodeBlock
-							code={`$ vim recipes/htop.rhai   # you write it
-$ recipe install htop     # you run it
-$ recipe llm "update htop to latest version"`}
-							language="bash"
-						/>
+					<AnimatedSection delay={100}>
+						<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+							You are <span class="text-primary">not</span> in control.
+						</h1>
 					</AnimatedSection>
 
-					<!-- Features Grid -->
-					<AnimatedSection delay={400} class="mt-8 max-w-lg">
-						<CheckList items={heroFeatures} />
+					<AnimatedSection delay={200} class="mt-6 max-w-2xl">
+						<p class="text-lg text-muted-foreground leading-relaxed">
+							You're waiting for a maintainer to package that update. Waiting for a repository to sync.
+							Trusting a chain of strangers not to break your dependencies or inject vulnerabilities into a generic binary blob.
+						</p>
 					</AnimatedSection>
 
-					<!-- CTAs -->
+					<AnimatedSection delay={300} class="mt-4 max-w-2xl">
+						<p class="text-lg text-muted-foreground leading-relaxed">
+							The "Centralized Repository" model was a necessary bridge for the bandwidth-starved internet of the 1990s.
+							<span class="text-foreground font-medium"> It is now a shackle.</span>
+						</p>
+					</AnimatedSection>
+
+					<AnimatedSection delay={400} class="mt-10">
+						<p class="text-xl font-semibold">
+							We're not here to reinvent the wheel.<br/>
+							We're here to give you the <span class="text-primary">steering wheel</span>.
+						</p>
+					</AnimatedSection>
+
 					<AnimatedSection delay={500} class="mt-8 flex flex-col sm:flex-row gap-4">
+						<a
+							href="#recipe"
+							class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+						>
+							See How It Works
+						</a>
+						<a
+							href="https://github.com/LevitateOS/LevitateOS"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium border border-border bg-background hover:bg-muted transition-colors"
+						>
+							<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M208.31 75.68A59.78 59.78 0 0 0 202.93 28a8 8 0 0 0-6.93-4a59.75 59.75 0 0 0-48 24h-24a59.75 59.75 0 0 0-48-24a8 8 0 0 0-6.93 4a59.78 59.78 0 0 0-5.38 47.68A58.14 58.14 0 0 0 56 104v8a56.06 56.06 0 0 0 48.44 55.47A39.8 39.8 0 0 0 96 192v8H72a24 24 0 0 1-24-24a40 40 0 0 0-40-40a8 8 0 0 0 0 16a24 24 0 0 1 24 24a40 40 0 0 0 40 40h24v16a8 8 0 0 0 16 0v-40a24 24 0 0 1 48 0v40a8 8 0 0 0 16 0v-40a39.8 39.8 0 0 0-8.44-24.53A56.06 56.06 0 0 0 216 112v-8a58.14 58.14 0 0 0-7.69-28.32ZM200 112a40 40 0 0 1-40 40h-48a40 40 0 0 1-40-40v-8a41.74 41.74 0 0 1 6.9-22.48a8 8 0 0 0 1.1-7.69a43.81 43.81 0 0 1 .79-33.58a43.88 43.88 0 0 1 32.32 20.06a8 8 0 0 0 6.71 3.69h32.35a8 8 0 0 0 6.74-3.69a43.87 43.87 0 0 1 32.32-20.06a43.81 43.81 0 0 1 .77 33.58a8.09 8.09 0 0 0 1 7.65a41.72 41.72 0 0 1 7 22.52Z"></path>
+							</svg>
+							GitHub
+						</a>
+					</AnimatedSection>
+				</div>
+
+				<ScrollIndicator />
+			</section>
+
+			<!-- Two Flavors -->
+			<section id="flavors" class="py-24 bg-muted/30">
+				<div class="container max-w-5xl">
+					<div class="text-center mb-12">
+						<h2 class="text-3xl sm:text-4xl font-bold mb-4">Two Foundations. One Philosophy.</h2>
+						<p class="text-muted-foreground max-w-2xl mx-auto">
+							Choose your base. Both share the same recipe system and tools.
+						</p>
+					</div>
+
+					<div class="grid md:grid-cols-2 gap-8">
+						<!-- LevitateOS -->
+						<div class="p-8 bg-background ring-1 ring-border rounded-lg">
+							<div class="flex items-center gap-3 mb-4">
+								<picture>
+									<source srcset="/levitateos-dark.png" media="(prefers-color-scheme: dark)" />
+									<img src="/levitateos-light.png" alt="LevitateOS" class="h-12 w-auto" />
+								</picture>
+								<div>
+									<h3 class="text-xl font-bold">LevitateOS</h3>
+									<p class="text-sm text-muted-foreground">glibc / systemd</p>
+								</div>
+							</div>
+							<p class="text-muted-foreground mb-4">
+								The rock-solid stability of a RHEL-compatible core, stripped of the bloat.
+								Maximum compatibility with existing Linux software.
+							</p>
+							<ul class="space-y-2 text-sm">
+								<li class="flex items-center gap-2">
+									<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+									</svg>
+									Binary compatibility with RHEL/Fedora
+								</li>
+								<li class="flex items-center gap-2">
+									<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+									</svg>
+									Full systemd integration
+								</li>
+								<li class="flex items-center gap-2">
+									<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+									</svg>
+									For workstations and servers
+								</li>
+							</ul>
+						</div>
+
+						<!-- AcornOS -->
+						<div class="p-8 bg-background ring-1 ring-border rounded-lg">
+							<div class="flex items-center gap-3 mb-4">
+								<picture>
+									<source srcset="/acornos-dark.png" media="(prefers-color-scheme: dark)" />
+									<img src="/acornos-light.png" alt="AcornOS" class="h-12 w-auto" />
+								</picture>
+								<div>
+									<h3 class="text-xl font-bold">AcornOS</h3>
+									<p class="text-sm text-muted-foreground">musl / OpenRC</p>
+								</div>
+							</div>
+							<p class="text-muted-foreground mb-4">
+								The relentless efficiency of Alpine, optimized for the minimalist.
+								Smaller footprint, faster boot, fewer moving parts.
+							</p>
+							<ul class="space-y-2 text-sm">
+								<li class="flex items-center gap-2">
+									<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+									</svg>
+									Musl libc — smaller, auditable
+								</li>
+								<li class="flex items-center gap-2">
+									<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+									</svg>
+									OpenRC — simple, fast init
+								</li>
+								<li class="flex items-center gap-2">
+									<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+									</svg>
+									For containers and embedded
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- The Repo is Dead -->
+			<section id="recipe" class="py-24">
+				<div class="container max-w-5xl">
+					<div class="grid lg:grid-cols-2 gap-12 items-center">
+						<div>
+							<p class="text-sm font-medium text-primary uppercase tracking-widest mb-2">
+								Section 1
+							</p>
+							<h2 class="text-3xl sm:text-4xl font-bold mb-4">
+								The "Repo" is Dead.<br/>
+								<span class="text-primary">Long Live the Recipe.</span>
+							</h2>
+							<p class="text-muted-foreground mb-4">
+								"Where is your repository? How do I get software?"
+							</p>
+							<p class="text-foreground mb-6">
+								<strong>There isn't one.</strong> You are the maintainer now.
+							</p>
+							<p class="text-muted-foreground mb-6">
+								We replaced <code class="text-sm bg-muted px-1.5 py-0.5 rounded">apt</code> and <code class="text-sm bg-muted px-1.5 py-0.5 rounded">dnf</code> with <code class="text-sm bg-muted px-1.5 py-0.5 rounded">recipe</code>.
+								It doesn't fetch a binary from our server. It reads a <code class="text-sm bg-muted px-1.5 py-0.5 rounded">.rhai</code> script —
+								a safe, readable Rust-based scripting language — that describes exactly how to acquire, build, and install your software.
+							</p>
+							<CheckList items={recipeAdvantages} />
+						</div>
+						<div>
+							<CodeBlock code={`// recipes/ripgrep.rhai
+let name = "ripgrep";
+let version = "14.1.0";
+
+fn acquire() {
+    // You control the source
+    download_tarball(
+        "https://github.com/BurntSushi/ripgrep/releases"
+    );
+}
+
+fn build() {
+    // You control the flags
+    run("cargo build --release");
+}
+
+fn install() {
+    // You control the destination
+    install_bin("target/release/rg");
+}`} language="rust" />
+							<p class="text-sm text-muted-foreground mt-4 text-center">
+								A recipe you can read in 30 seconds.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- AI Assistant -->
+			<section id="assistant" class="py-24 bg-muted/30">
+				<div class="container max-w-5xl">
+					<div class="grid lg:grid-cols-2 gap-12 items-center">
+						<div class="order-2 lg:order-1">
+							<CodeBlock code={`$ recipe llm "create a recipe for htop"
+
+Drafting recipe for htop...
+
+// recipes/htop.rhai
+let name = "htop";
+let version = "3.3.0";
+
+fn acquire() {
+    download_tarball(
+        "https://github.com/htop-dev/htop/releases"
+    );
+}
+
+fn build() {
+    run("./autogen.sh");
+    run("./configure --prefix=/usr");
+    run("make");
+}
+
+fn install() {
+    run("make install DESTDIR=$OUT");
+}
+
+Recipe saved. Review and run: recipe install htop`} language="bash" />
+						</div>
+						<div class="order-1 lg:order-2">
+							<p class="text-sm font-medium text-primary uppercase tracking-widest mb-2">
+								Section 2
+							</p>
+							<h2 class="text-3xl sm:text-4xl font-bold mb-4">
+								The Maintenance Burden?<br/>
+								<span class="text-primary">Solved by AI.</span>
+							</h2>
+							<p class="text-muted-foreground mb-4">
+								"I don't have time to write build scripts for every package."
+							</p>
+							<p class="text-foreground mb-6">
+								<strong>We agree.</strong> That's why we built the Local Recipe Assistant.
+							</p>
+							<p class="text-muted-foreground mb-6">
+								This is not a cloud-tethered gimmick. This is a local LLM that acts as your Junior Maintainer.
+								You remain the Senior Engineer. The AI drafts; you verify; you execute.
+							</p>
+							<CheckList items={assistantFeatures} />
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Documentation -->
+			<section id="docs" class="py-24">
+				<div class="container max-w-4xl text-center">
+					<p class="text-sm font-medium text-primary uppercase tracking-widest mb-2">
+						Section 3
+					</p>
+					<h2 class="text-3xl sm:text-4xl font-bold mb-4">
+						Documentation Where It Belongs
+					</h2>
+					<p class="text-muted-foreground max-w-2xl mx-auto mb-8">
+						We know the pain of "Tab-Switching Install Fatigue." LevitateOS and AcornOS install via a manual,
+						transparency-first process. But we don't leave you in the dark.
+					</p>
+					<div class="bg-muted/50 ring-1 ring-border rounded-lg p-8 text-left">
+						<p class="text-foreground mb-4">
+							We embed the documentation directly into a <strong>GUI pane alongside your shell</strong> via tmux.
+						</p>
+						<ul class="space-y-3 text-muted-foreground">
+							<li class="flex items-start gap-3">
+								<svg class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+								</svg>
+								<span>You see the <strong class="text-foreground">code</strong></span>
+							</li>
+							<li class="flex items-start gap-3">
+								<svg class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+								</svg>
+								<span>You see the <strong class="text-foreground">docs</strong></span>
+							</li>
+							<li class="flex items-start gap-3">
+								<svg class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+								</svg>
+								<span>You see exactly <strong class="text-foreground">what is happening to your disk</strong></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<!-- The Verdict -->
+			<section id="verdict" class="py-24 bg-muted/30">
+				<div class="container max-w-3xl text-center">
+					<h2 class="text-3xl sm:text-4xl font-bold mb-6">The Verdict</h2>
+					<p class="text-lg text-muted-foreground mb-4">
+						If you are happy trusting a black box, stick with the giants.
+					</p>
+					<p class="text-xl text-foreground font-medium mb-8">
+						But if you are ready to <span class="text-primary">own your system</span> — truly own it,
+						from the kernel to the user space — without the crushing weight of manual maintenance...
+					</p>
+					<p class="text-2xl font-bold text-primary mb-10">
+						Welcome to the Post-Repository Era.
+					</p>
+					<div class="flex flex-col sm:flex-row gap-4 justify-center">
 						<a
 							href="/download"
 							class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
 						>
 							<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
-								<path
-									d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"
-								></path>
+								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"></path>
 							</svg>
 							Download
 						</a>
@@ -91,94 +360,32 @@ $ recipe llm "update htop to latest version"`}
 							class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium border border-border bg-background hover:bg-muted transition-colors"
 						>
 							<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
-								<path
-									d="M208.31 75.68A59.78 59.78 0 0 0 202.93 28a8 8 0 0 0-6.93-4a59.75 59.75 0 0 0-48 24h-24a59.75 59.75 0 0 0-48-24a8 8 0 0 0-6.93 4a59.78 59.78 0 0 0-5.38 47.68A58.14 58.14 0 0 0 56 104v8a56.06 56.06 0 0 0 48.44 55.47A39.8 39.8 0 0 0 96 192v8H72a24 24 0 0 1-24-24a40 40 0 0 0-40-40a8 8 0 0 0 0 16a24 24 0 0 1 24 24a40 40 0 0 0 40 40h24v16a8 8 0 0 0 16 0v-40a24 24 0 0 1 48 0v40a8 8 0 0 0 16 0v-40a39.8 39.8 0 0 0-8.44-24.53A56.06 56.06 0 0 0 216 112v-8a58.14 58.14 0 0 0-7.69-28.32ZM200 112a40 40 0 0 1-40 40h-48a40 40 0 0 1-40-40v-8a41.74 41.74 0 0 1 6.9-22.48a8 8 0 0 0 1.1-7.69a43.81 43.81 0 0 1 .79-33.58a43.88 43.88 0 0 1 32.32 20.06a8 8 0 0 0 6.71 3.69h32.35a8 8 0 0 0 6.74-3.69a43.87 43.87 0 0 1 32.32-20.06a43.81 43.81 0 0 1 .77 33.58a8.09 8.09 0 0 0 1 7.65a41.72 41.72 0 0 1 7 22.52Z"
-								></path>
+								<path d="M208.31 75.68A59.78 59.78 0 0 0 202.93 28a8 8 0 0 0-6.93-4a59.75 59.75 0 0 0-48 24h-24a59.75 59.75 0 0 0-48-24a8 8 0 0 0-6.93 4a59.78 59.78 0 0 0-5.38 47.68A58.14 58.14 0 0 0 56 104v8a56.06 56.06 0 0 0 48.44 55.47A39.8 39.8 0 0 0 96 192v8H72a24 24 0 0 1-24-24a40 40 0 0 0-40-40a8 8 0 0 0 0 16a24 24 0 0 1 24 24a40 40 0 0 0 40 40h24v16a8 8 0 0 0 16 0v-40a24 24 0 0 1 48 0v40a8 8 0 0 0 16 0v-40a39.8 39.8 0 0 0-8.44-24.53A56.06 56.06 0 0 0 216 112v-8a58.14 58.14 0 0 0-7.69-28.32ZM200 112a40 40 0 0 1-40 40h-48a40 40 0 0 1-40-40v-8a41.74 41.74 0 0 1 6.9-22.48a8 8 0 0 0 1.1-7.69a43.81 43.81 0 0 1 .79-33.58a43.88 43.88 0 0 1 32.32 20.06a8 8 0 0 0 6.71 3.69h32.35a8 8 0 0 0 6.74-3.69a43.87 43.87 0 0 1 32.32-20.06a43.81 43.81 0 0 1 .77 33.58a8.09 8.09 0 0 0 1 7.65a41.72 41.72 0 0 1 7 22.52Z"></path>
 							</svg>
-							GitHub
+							View on GitHub
 						</a>
-					</AnimatedSection>
-				</div>
-
-				<ScrollIndicator />
-			</section>
-
-			<!-- Features Section -->
-			<section id="features" class="container py-16">
-				<h2 class="text-2xl font-bold text-center mb-8">Features</h2>
-				<div class="grid gap-6 grid-cols-2">
-					<FeatureCard title="Your Own Packages" description="Write simple Rhai recipes. Be the maintainer. No waiting for upstream repos.">
-						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
-							<path d="M223.68 66.15L135.68 18a15.88 15.88 0 0 0-15.36 0l-88 48.17a16 16 0 0 0-8.32 14v95.64a16 16 0 0 0 8.32 14l88 48.17a15.88 15.88 0 0 0 15.36 0l88-48.17a16 16 0 0 0 8.32-14V80.18a16 16 0 0 0-8.32-14.03ZM128 32l80.35 44L128 120L47.65 76ZM40 90l80 43.78v85.79l-80-43.75Zm96 129.57v-85.75L216 90v85.78Z"/>
-						</svg>
-						<CodeBlock code={`let name = "ripgrep";
-let version = "14.1.0";
-
-fn acquire() {
-    download_bin("rg", ARCH);
-}
-
-fn install() {
-    install_bin("rg");
-}`} language="rhai" />
-					</FeatureCard>
-
-					<FeatureCard title="recipe Package Manager" description="No apt, dnf, or pacman dependency. Full lifecycle from acquire to remove.">
-						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
-							<path d="M120 137V40a8 8 0 0 1 16 0v97a8 8 0 0 1-16 0Zm-8 71a8 8 0 1 0 8 8a8 8 0 0 0-8-8Zm106.78-64.25L160 200.53a40 40 0 0 1-64 0L37.22 143.75A60 60 0 0 1 136 65.19V116a8 8 0 0 0 16 0V65.19A60 60 0 0 1 218.78 143.75ZM203.24 135a44 44 0 0 0-75.24-31v0a44 44 0 0 0-75.24 31L108 188.74a24 24 0 0 0 40 0Z"/>
-						</svg>
-						<CodeBlock code={`recipe install ripgrep
-recipe deps firefox
-recipe remove ripgrep`} language="bash" />
-					</FeatureCard>
-
-					<FeatureCard title="Terminal First" description="Boots to a login prompt, like Arch. No desktop preinstalled. Install one if you want, or don't.">
-						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
-							<path d="M208 40H48a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 160H48V56h160v144ZM80 112a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm96 0a16 16 0 1 1 16 16a16 16 0 0 1-16-16Zm-60.27 60.27a40 40 0 0 0 44.54 0a8 8 0 0 1 8.9 13.32a56 56 0 0 1-62.34 0a8 8 0 0 1 8.9-13.32Z"/>
-						</svg>
-					</FeatureCard>
-
-					<FeatureCard title="Local Recipe Assistant" description="Optional local LLM for recipe drafting and maintenance. No cloud, no telemetry.">
-						<svg slot="icon" class="h-8 w-8" viewBox="0 0 256 256" fill="currentColor">
-							<path d="M248 124a56.11 56.11 0 0 0-32-50.61V72a48 48 0 0 0-88-26.49A48 48 0 0 0 40 72v1.39a56 56 0 0 0 0 101.2V176a48 48 0 0 0 88 26.49A48 48 0 0 0 216 176v-1.41A56.09 56.09 0 0 0 248 124ZM88 208a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 88 128h8v48a32 32 0 0 1-32 32Zm80-80h-8v-8a8 8 0 0 0-16 0v8h-8a56 56 0 0 0-31.19 9.45A40 40 0 0 1 72 124a40 40 0 0 1 40-40h32a40 40 0 0 1 40 40a40 40 0 0 1-16 32Zm32 48a32 32 0 0 1-32 32a32 32 0 0 1-31.81-28.56A56.1 56.1 0 0 0 168 128h8v48Z"/>
-						</svg>
-					</FeatureCard>
-				</div>
-			</section>
-
-			<!-- Download Section -->
-			<section id="download" class="container py-16">
-				<div class="text-center">
-					<h2 class="text-2xl font-bold mb-3">Download</h2>
-					<p class="text-sm text-muted-foreground mb-4">x86_64, 2GB+ RAM, 10GB+ disk</p>
-					<div class="bg-card text-card-foreground flex flex-col gap-4 overflow-hidden py-4 ring-1 ring-foreground/10 inline-block text-left">
-						<div class="px-4 grid gap-1 auto-rows-min items-start">
-							<div class="text-lg font-medium">LevitateOS 1.0</div>
-							<div class="text-muted-foreground text-sm">
-								Coming soon. Star the repo to get notified.
-							</div>
-						</div>
-						<div class="px-4">
-							<a href="https://github.com/LevitateOS/LevitateOS" class="text-primary hover:underline text-sm">
-								github.com/LevitateOS/LevitateOS
-							</a>
-						</div>
 					</div>
 				</div>
 			</section>
 
-			<!-- Thanks Section -->
-			<section id="thanks" class="container py-16">
-				<div class="text-center max-w-2xl mx-auto">
-					<h2 class="text-2xl font-bold mb-6">Standing on the Shoulders of Giants</h2>
-					<div class="grid gap-6 sm:grid-cols-2 text-left">
+			<!-- Standing on Giants -->
+			<section id="thanks" class="py-16">
+				<div class="container max-w-4xl">
+					<div class="text-center mb-8">
+						<h2 class="text-2xl font-bold">Standing on the Shoulders of Giants</h2>
+					</div>
+					<div class="grid gap-6 sm:grid-cols-3 text-left">
 						<div class="p-4 ring-1 ring-foreground/10 rounded">
 							<a href="https://archlinux.org" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Arch Linux</a>
-							<p class="text-sm text-muted-foreground mt-1">For the blueprint on how to build a minimal, user-controlled distribution and live ISO.</p>
+							<p class="text-sm text-muted-foreground mt-1">For the blueprint on user-controlled distributions and manual installation.</p>
 						</div>
 						<div class="p-4 ring-1 ring-foreground/10 rounded">
 							<a href="https://rockylinux.org" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Rocky Linux</a>
-							<p class="text-sm text-muted-foreground mt-1">For providing stable, battle-tested RPM packages that we extract and repackage.</p>
+							<p class="text-sm text-muted-foreground mt-1">For stable, battle-tested RPM packages that we extract and repackage.</p>
+						</div>
+						<div class="p-4 ring-1 ring-foreground/10 rounded">
+							<a href="https://alpinelinux.org" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Alpine Linux</a>
+							<p class="text-sm text-muted-foreground mt-1">For proving that musl and simplicity can power production systems.</p>
 						</div>
 					</div>
 				</div>
