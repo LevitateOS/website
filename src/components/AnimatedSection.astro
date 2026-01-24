@@ -1,0 +1,13 @@
+---
+interface Props {
+	delay?: number
+	class?: string
+}
+
+const { delay = 0, class: className = "" } = Astro.props
+const delayClass = delay > 0 ? `delay-${delay}` : ""
+---
+
+<div class:list={["animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-backwards", delayClass, className]}>
+	<slot />
+</div>

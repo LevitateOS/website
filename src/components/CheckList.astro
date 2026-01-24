@@ -1,0 +1,21 @@
+---
+interface Props {
+	items: string[]
+	class?: string
+}
+
+const { items, class: className = "" } = Astro.props
+---
+
+<div class:list={["grid grid-cols-1 sm:grid-cols-2 gap-3 text-left", className]}>
+	{
+		items.map((item) => (
+			<div class="flex items-center gap-2 text-sm text-muted-foreground">
+				<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+					<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+				</svg>
+				{item}
+			</div>
+		))
+	}
+</div>

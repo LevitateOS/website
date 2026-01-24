@@ -2,17 +2,106 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
-import Hero from "../components/Hero.astro"
 import FeatureCard from "../components/FeatureCard.astro"
 import ChatMessage from "../components/ChatMessage.astro"
 import CodeBlock from "../components/CodeBlock.astro"
+import AnimatedSection from "../components/AnimatedSection.astro"
+import CheckList from "../components/CheckList.astro"
+import ScrollIndicator from "../components/ScrollIndicator.astro"
+
+const heroFeatures = [
+	"No upstream — you control updates directly",
+	"Recipes are code you can read and modify",
+	"No package database — state lives in recipes",
+	"Local LLM available to help with maintenance",
+]
 ---
 
 <BaseLayout title="LevitateOS - Be Your Own Maintainer">
 	<div class="flex min-h-screen flex-col">
 		<Header />
 		<main class="flex-1">
-			<Hero />
+			<!-- Hero Section -->
+			<section
+				id="hero"
+				class="relative min-h-[80vh] flex flex-col items-center justify-center text-center py-16 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"
+			>
+				<div class="container flex flex-col items-center">
+					<!-- Logo -->
+					<AnimatedSection>
+						<picture>
+							<source srcset="/levitateos-dark.png" media="(prefers-color-scheme: dark)" />
+							<img
+								id="hero-logo"
+								src="/levitateos-light.png"
+								alt="LevitateOS"
+								class="h-80 w-auto"
+							/>
+						</picture>
+					</AnimatedSection>
+
+					<!-- Headline -->
+					<AnimatedSection delay={100} class="mt-6">
+						<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+							Be your own
+							<br />
+							<span class="text-primary">package maintainer</span>
+						</h1>
+					</AnimatedSection>
+
+					<!-- Subheadline -->
+					<AnimatedSection delay={200} class="mt-4 max-w-xl">
+						<p class="text-lg text-muted-foreground">
+							No repo maintainers. No waiting for upstream. You write your own package recipes and control updates directly.
+						</p>
+					</AnimatedSection>
+
+					<!-- Terminal Preview -->
+					<AnimatedSection delay={300} class="mt-8 w-full max-w-md text-left">
+						<CodeBlock
+							code={`$ vim recipes/htop.rhai   # you write it
+$ recipe install htop     # you run it
+$ recipe llm "update htop to latest version"`}
+							language="bash"
+						/>
+					</AnimatedSection>
+
+					<!-- Features Grid -->
+					<AnimatedSection delay={400} class="mt-8 max-w-lg">
+						<CheckList items={heroFeatures} />
+					</AnimatedSection>
+
+					<!-- CTAs -->
+					<AnimatedSection delay={500} class="mt-8 flex flex-col sm:flex-row gap-4">
+						<a
+							href="/download"
+							class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+						>
+							<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+								<path
+									d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"
+								></path>
+							</svg>
+							Download
+						</a>
+						<a
+							href="https://github.com/LevitateOS/LevitateOS"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center justify-center gap-1.5 h-9 px-8 py-6 text-base font-medium border border-border bg-background hover:bg-muted transition-colors"
+						>
+							<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+								<path
+									d="M208.31 75.68A59.78 59.78 0 0 0 202.93 28a8 8 0 0 0-6.93-4a59.75 59.75 0 0 0-48 24h-24a59.75 59.75 0 0 0-48-24a8 8 0 0 0-6.93 4a59.78 59.78 0 0 0-5.38 47.68A58.14 58.14 0 0 0 56 104v8a56.06 56.06 0 0 0 48.44 55.47A39.8 39.8 0 0 0 96 192v8H72a24 24 0 0 1-24-24a40 40 0 0 0-40-40a8 8 0 0 0 0 16a24 24 0 0 1 24 24a40 40 0 0 0 40 40h24v16a8 8 0 0 0 16 0v-40a24 24 0 0 1 48 0v40a8 8 0 0 0 16 0v-40a39.8 39.8 0 0 0-8.44-24.53A56.06 56.06 0 0 0 216 112v-8a58.14 58.14 0 0 0-7.69-28.32ZM200 112a40 40 0 0 1-40 40h-48a40 40 0 0 1-40-40v-8a41.74 41.74 0 0 1 6.9-22.48a8 8 0 0 0 1.1-7.69a43.81 43.81 0 0 1 .79-33.58a43.88 43.88 0 0 1 32.32 20.06a8 8 0 0 0 6.71 3.69h32.35a8 8 0 0 0 6.74-3.69a43.87 43.87 0 0 1 32.32-20.06a43.81 43.81 0 0 1 .77 33.58a8.09 8.09 0 0 0 1 7.65a41.72 41.72 0 0 1 7 22.52Z"
+								></path>
+							</svg>
+							GitHub
+						</a>
+					</AnimatedSection>
+				</div>
+
+				<ScrollIndicator />
+			</section>
 
 			<!-- Features Section -->
 			<section id="features" class="container py-16">
@@ -98,3 +187,21 @@ recipe remove ripgrep`} language="bash" />
 		<Footer />
 	</div>
 </BaseLayout>
+
+<script>
+	// Update logo based on theme
+	function updateLogo() {
+		const logo = document.getElementById("hero-logo") as HTMLImageElement
+		if (logo) {
+			const isDark = document.documentElement.classList.contains("dark")
+			logo.src = isDark ? "/levitateos-dark.png" : "/levitateos-light.png"
+		}
+	}
+
+	// Update on theme toggle
+	const observer = new MutationObserver(updateLogo)
+	observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+
+	// Initial update
+	updateLogo()
+</script>
