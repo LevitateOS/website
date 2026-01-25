@@ -1,0 +1,20 @@
+---
+interface Props {
+	reverse?: boolean
+	class?: string
+}
+
+const { reverse = false, class: className = "" } = Astro.props
+
+const firstColumnClass = reverse ? "order-2 lg:order-1" : ""
+const secondColumnClass = reverse ? "order-1 lg:order-2" : ""
+---
+
+<div class:list={["grid md:grid-cols-2 gap-12 items-center", className]}>
+	<div class={firstColumnClass}>
+		{reverse ? <slot name="demo" /> : <slot />}
+	</div>
+	<div class={secondColumnClass}>
+		{reverse ? <slot /> : <slot name="demo" />}
+	</div>
+</div>

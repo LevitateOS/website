@@ -1,0 +1,28 @@
+---
+interface Props {
+	label?: string
+	title: string
+	highlight?: string
+	centered?: boolean
+	class?: string
+}
+
+const { label, title, highlight, centered = false, class: className = "" } = Astro.props
+---
+
+<div class:list={[{ "text-center": centered }, className]}>
+	{label && (
+		<p class="text-sm font-medium text-primary uppercase tracking-widest mb-2">
+			{label}
+		</p>
+	)}
+	<h2 class="text-3xl sm:text-4xl font-bold mb-4">
+		{title}
+		{highlight && (
+			<>
+				<br />
+				<span class="text-primary">{highlight}</span>
+			</>
+		)}
+	</h2>
+</div>

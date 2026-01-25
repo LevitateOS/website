@@ -1,0 +1,38 @@
+---
+interface Props {
+	name: string
+	stack: string
+	description: string
+	features: string[]
+	logoLight: string
+	logoDark: string
+}
+
+const { name, stack, description, features, logoLight, logoDark } = Astro.props
+---
+
+<div class="p-8 bg-background ring-1 ring-border rounded-lg h-full flex flex-col">
+	<div class="flex items-center gap-3 mb-4">
+		<picture>
+			<source srcset={logoDark} media="(prefers-color-scheme: dark)" />
+			<img src={logoLight} alt={name} class="h-12 w-auto" />
+		</picture>
+		<div>
+			<h3 class="text-xl font-bold">{name}</h3>
+			<p class="text-sm text-muted-foreground">{stack}</p>
+		</div>
+	</div>
+	<p class="text-muted-foreground mb-4 flex-grow">
+		{description}
+	</p>
+	<ul class="space-y-2 text-sm mt-auto">
+		{features.map((feature) => (
+			<li class="flex items-center gap-2">
+				<svg class="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 256 256" fill="currentColor">
+					<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+				</svg>
+				{feature}
+			</li>
+		))}
+	</ul>
+</div>
