@@ -1,0 +1,15 @@
+---
+interface Props {
+	question: string
+	answer: string
+}
+
+const { question, answer } = Astro.props
+---
+
+<p class="text-muted-foreground mb-4">
+	"{question}"
+</p>
+<p class="text-foreground mb-6">
+	<strong>{answer}</strong>
+</p>
