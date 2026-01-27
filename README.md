@@ -4,13 +4,16 @@ Static documentation site built with Astro. Renders content from `@levitate/docs
 
 ## Status
 
-**Beta.** Builds and deploys. Content incomplete.
+**Beta.** Builds and deploys. Mobile-first responsive design complete.
 
 | Works | Not done |
 |-------|----------|
 | Static site builds | All documentation pages |
-| Dark/light theme toggle | Mobile navigation |
-| Syntax highlighting | Search |
+| Dark/light theme toggle | Search |
+| Syntax highlighting | |
+| Mobile-first responsive design | |
+| Mobile hamburger navigation | |
+| Mobile docs navigation dropdown | |
 
 ## Usage
 
@@ -20,6 +23,28 @@ bun run dev           # Dev server at localhost:3000
 bun run build         # Production build to dist/
 bun run preview       # Preview production build
 ```
+
+## Deployment
+
+Deployed to Cloudflare Pages as `levitateos-docs`.
+
+**Production URL:** https://www.levitateos.org
+
+```bash
+bun run deploy    # Build and deploy to production
+```
+
+Prerequisites:
+- Must be logged into Wrangler (`bunx wrangler login`)
+- Account: vincepaul.liem@gmail.com
+
+## Design Targets
+
+| Viewport | Size | Notes |
+|----------|------|-------|
+| Desktop (primary) | 960x1080 | Main target for design/testing |
+| iPhone | 393x852 | iPhone 15/16 Pro |
+| Android | 412x915 | Pixel 8 / Galaxy S24 |
 
 ## Stack
 
@@ -64,8 +89,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ## Known Limitations
 
 - No search functionality
-- Mobile navigation incomplete
 - Documentation content still being written
+
+## Mobile Responsiveness
+
+The site follows **mobile-first design principles**:
+
+- Base styles target mobile devices
+- Progressive enhancement via `sm:`, `md:`, `lg:` breakpoints
+- Hamburger menu for mobile header navigation
+- Dropdown navigation for docs pages on mobile
+- Horizontally scrollable code blocks
+- Responsive download cards and requirements table
 
 ## License
 
