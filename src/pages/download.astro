@@ -63,21 +63,25 @@ const variants: DownloadCardProps[] = [
 				</p>
 
 				<!-- Global requirements -->
-				<div class="bg-muted/30 border border-border p-4 mb-8">
-					<h2 class="font-semibold mb-3">Requirements (all variants)</h2>
-					<div class="grid grid-cols-3 gap-4 text-sm">
-						<div>
-							<div class="text-muted-foreground mb-1">CPU</div>
-							<div>Intel Core 4th gen+ (Haswell)</div>
-							<div>AMD Ryzen 1000+ (Zen)</div>
+				<div class="bg-muted/30 border border-border rounded-lg p-4 sm:p-6 mb-8">
+					<h2 class="font-semibold mb-4">Requirements (all variants)</h2>
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+						<div class="flex sm:block gap-3">
+							<div class="text-muted-foreground mb-1 w-20 sm:w-auto shrink-0">CPU</div>
+							<div>
+								<div>Intel Core 4th gen+ (Haswell)</div>
+								<div>AMD Ryzen 1000+ (Zen)</div>
+							</div>
 						</div>
-						<div>
-							<div class="text-muted-foreground mb-1">Boot</div>
-							<div>UEFI required</div>
-							<div>Secure Boot disabled</div>
+						<div class="flex sm:block gap-3">
+							<div class="text-muted-foreground mb-1 w-20 sm:w-auto shrink-0">Boot</div>
+							<div>
+								<div>UEFI required</div>
+								<div>Secure Boot disabled</div>
+							</div>
 						</div>
-						<div>
-							<div class="text-muted-foreground mb-1">Architecture</div>
+						<div class="flex sm:block gap-3">
+							<div class="text-muted-foreground mb-1 w-20 sm:w-auto shrink-0">Arch</div>
 							<div>x86_64 only</div>
 						</div>
 					</div>

@@ -141,6 +141,7 @@
 	}
 	html {
 		@apply font-sans;
+		overflow-x: hidden;
 	}
 }
 
@@ -163,11 +164,7 @@
 	background-color: transparent !important;
 }
 
-/* Light mode: use --shiki-light colors */
-.shiki span,
-.astro-code span {
-	color: var(--shiki-light) !important;
-}
+/* Light mode: use the inline color value from Shiki (no override needed) */
 
 /* Dark mode: use --shiki-dark colors */
 .dark .shiki span,
@@ -216,4 +213,48 @@
 }
 .no-scrollbar::-webkit-scrollbar {
 	display: none;
+}
+
+/* Mobile-friendly code blocks */
+pre {
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Ensure code block containers don't overflow on mobile */
+.container pre,
+.container .astro-code,
+.container .shiki {
+	max-width: calc(100vw - 3rem);
+}
+
+@media (max-width: 768px) {
+	.container pre,
+	.container .astro-code,
+	.container .shiki {
+		max-width: calc(100vw - 2rem);
+	}
+
+	/* Make code blocks visually indicate scrollability */
+	pre {
+		position: relative;
+	}
+
+	pre::after {
+		content: "";
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: 24px;
+		background: linear-gradient(to right, transparent, var(--muted));
+		pointer-events: none;
+		opacity: 0.7;
+	}
+
+	/* Hide gradient when scrolled to end */
+	pre:not(:has(code)) {
+		overflow-x: auto;
+	}
 }

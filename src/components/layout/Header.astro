@@ -10,6 +10,7 @@ import ThemeToggle from "../ThemeToggle.astro"
 			<span class="text-xl font-bold font-logo">LevitateOS</span>
 		</a>
 
+		<!-- Desktop navigation -->
 		<nav class="hidden md:flex items-center gap-6">
 			<a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
 				Home
@@ -46,6 +47,57 @@ import ThemeToggle from "../ThemeToggle.astro"
 				</svg>
 				<span class="sr-only">GitHub</span>
 			</a>
+			<!-- Mobile hamburger button -->
+			<button
+				type="button"
+				id="mobile-menu-btn"
+				class="md:hidden inline-flex items-center justify-center size-8 rounded-md hover:bg-muted transition-colors"
+				aria-label="Open menu"
+				aria-expanded="false"
+			>
+				<svg class="hamburger-icon h-5 w-5" viewBox="0 0 256 256" fill="currentColor">
+					<path d="M224 128a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h176a8 8 0 0 1 8 8ZM40 72h176a8 8 0 0 0 0-16H40a8 8 0 0 0 0 16Zm176 112H40a8 8 0 0 0 0 16h176a8 8 0 0 0 0-16Z" />
+				</svg>
+				<svg class="close-icon hidden h-5 w-5" viewBox="0 0 256 256" fill="currentColor">
+					<path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z" />
+				</svg>
+			</button>
 		</div>
 	</div>
+
+	<!-- Mobile navigation menu -->
+	<nav
+		id="mobile-menu"
+		class="hidden md:hidden border-t bg-background"
+	>
+		<div class="container px-4 py-4 flex flex-col gap-4">
+			<a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+				Home
+			</a>
+			<a href="/download" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+				Download
+			</a>
+			<a href="/docs/getting-started" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+				Docs
+			</a>
+			<a href="/docs/recipe-format" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+				Recipes
+			</a>
+		</div>
+	</nav>
 </header>
+
+<script>
+	const menuBtn = document.getElementById("mobile-menu-btn")
+	const mobileMenu = document.getElementById("mobile-menu")
+	const hamburgerIcon = menuBtn?.querySelector(".hamburger-icon")
+	const closeIcon = menuBtn?.querySelector(".close-icon")
+
+	menuBtn?.addEventListener("click", () => {
+		const isOpen = mobileMenu?.classList.contains("hidden") === false
+		mobileMenu?.classList.toggle("hidden")
+		hamburgerIcon?.classList.toggle("hidden")
+		closeIcon?.classList.toggle("hidden")
+		menuBtn.setAttribute("aria-expanded", String(!isOpen))
+	})
+</script>
