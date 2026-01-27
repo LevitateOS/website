@@ -43,10 +43,10 @@ const description = extractPlainText(content.intro)
 ---
 
 <DocsLayout title={content.title} currentSlug={slug} description={description}>
-	<h1 class="text-3xl font-bold mb-6">{content.title}</h1>
+	<h1 class="text-2xl font-medium mb-4">{content.title}</h1>
 	{
 		content.intro && (
-			<p class="text-muted-foreground mb-8">
+			<p class="text-muted-foreground text-sm leading-relaxed mb-6">
 				<InlineContent content={content.intro} />
 			</p>
 		)
@@ -57,11 +57,11 @@ const description = extractPlainText(content.intro)
 			const anchor = toAnchor(section.title)
 
 			return (
-				<section id={anchor} class="mb-8 scroll-mt-20">
+				<section id={anchor} class="mb-6 scroll-mt-16">
 					{level === 2 ? (
-						<h2 class="text-2xl font-semibold mb-4">{section.title}</h2>
+						<h2 class="text-lg font-medium mb-3">{section.title}</h2>
 					) : (
-						<h3 class="text-xl font-medium mb-3">{section.title}</h3>
+						<h3 class="text-base font-medium mb-2">{section.title}</h3>
 					)}
 					{section.content.map((block: ContentBlock) => {
 						switch (block.type) {

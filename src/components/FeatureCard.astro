@@ -8,20 +8,20 @@ const { title, description } = Astro.props
 ---
 
 <div
-	class="bg-card text-card-foreground flex flex-col gap-4 overflow-hidden py-4 ring-1 ring-foreground/10 h-full"
+	class="bg-card text-card-foreground flex flex-col gap-3 overflow-hidden py-5 ring-1 ring-foreground/10 h-full text-sm"
 >
-	<div class="px-4 grid gap-1 auto-rows-min items-start">
-		<div class="flex items-center gap-3">
-			<div class="text-primary">
+	<div class="px-5 grid gap-2 auto-rows-min items-start">
+		<div class="flex items-center gap-2">
+			<div class="text-primary [&_svg]:size-5">
 				<slot name="icon" />
 			</div>
-			<div class="text-lg font-medium">{title}</div>
+			<div class="text-base font-medium">{title}</div>
 		</div>
-		<div class="text-muted-foreground text-sm">{description}</div>
+		<div class="text-muted-foreground">{description}</div>
 	</div>
 	{
 		Astro.slots.has("default") && (
-			<div class="px-4">
+			<div class="px-5">
 				<slot />
 			</div>
 		)

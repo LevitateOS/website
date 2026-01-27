@@ -10,9 +10,9 @@ const { conversation } = Astro.props
 ---
 
 <div
-	class="ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-none py-4 text-xs/relaxed ring-1 group/card flex flex-col mb-4"
+	class="ring-foreground/10 bg-card text-card-foreground gap-3 overflow-hidden py-5 text-sm leading-relaxed ring-1 group/card flex flex-col mb-4"
 >
-	<div class="px-4 space-y-3 text-sm">
+	<div class="px-5 space-y-2">
 		{
 			conversation.messages.map((msg) => (
 				<div>

@@ -6,6 +6,6 @@ interface Props {
 const { class: className = "" } = Astro.props
 ---
 
-<div class:list={["bg-muted/50 ring-1 ring-border rounded-lg p-8", className]}>
+<div class:list={["bg-muted/50 ring-1 ring-border p-6", className]}>
 	<slot />
 </div>

@@ -10,12 +10,12 @@ const { table } = Astro.props
 ---
 
 <div class="relative w-full overflow-x-auto mb-4">
-	<table class="w-full caption-bottom text-xs">
+	<table class="w-full caption-bottom text-sm">
 		<thead class="[&_tr]:border-b">
 			<tr class="hover:bg-muted/50 border-b transition-colors">
 				{
 					table.headers.map((header) => (
-						<th class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap">
+						<th class="text-foreground h-10 px-3 text-left align-middle font-medium whitespace-nowrap">
 							<InlineContent content={header} />
 						</th>
 					))
@@ -27,7 +27,7 @@ const { table } = Astro.props
 				table.rows.map((row) => (
 					<tr class="hover:bg-muted/50 border-b transition-colors">
 						{row.map((cell, j) => (
-							<td class={`p-2 align-middle whitespace-nowrap ${j === table.monospaceCol ? "font-mono" : ""}`}>
+							<td class={`px-3 py-2 align-middle whitespace-nowrap ${j === table.monospaceCol ? "font-mono" : ""}`}>
 								<InlineContent content={cell} />
 							</td>
 						))}

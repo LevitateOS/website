@@ -15,7 +15,7 @@ function isListItem(item: string | RichText | ListItem): item is ListItem {
 
 {
 	list.ordered ? (
-		<ol class="list-decimal list-inside space-y-1 text-muted-foreground mb-4">
+		<ol class="list-decimal list-inside space-y-1 text-muted-foreground text-sm leading-relaxed mb-3">
 			{list.items.map((item) =>
 				isListItem(item) ? (
 					<li>
@@ -38,7 +38,7 @@ function isListItem(item: string | RichText | ListItem): item is ListItem {
 			)}
 		</ol>
 	) : (
-		<ul class="list-disc list-inside space-y-1 text-muted-foreground mb-4">
+		<ul class="list-disc list-inside space-y-1 text-muted-foreground text-sm leading-relaxed mb-3">
 			{list.items.map((item) =>
 				isListItem(item) ? (
 					<li>

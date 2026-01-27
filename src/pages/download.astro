@@ -59,48 +59,48 @@ const variants: DownloadCardProps[] = [
 	<div class="flex min-h-screen flex-col">
 		<Header />
 		<main class="flex-1">
-			<div class="container py-12">
-				<h1 class="text-3xl font-bold mb-3">Download</h1>
-				<p class="text-lg text-muted-foreground mb-6">
+			<div class="container py-8">
+				<h1 class="text-2xl font-medium mb-3">Download</h1>
+				<p class="text-sm text-muted-foreground mb-6">
 					Two variants, same philosophy: base system you build up yourself.
 				</p>
 
 				<!-- Global requirements -->
-				<div class="bg-muted/30 border border-border rounded-lg p-4 sm:p-6 mb-8">
-					<h2 class="font-semibold mb-4">Requirements (all variants)</h2>
+				<div class="bg-muted/30 border border-border px-5 py-4 mb-6">
+					<h2 class="font-medium text-sm mb-3">Requirements (all variants)</h2>
 					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-						<div class="flex sm:block gap-3">
-							<div class="text-muted-foreground mb-1 w-20 sm:w-auto shrink-0">CPU</div>
+						<div class="flex sm:block gap-2">
+							<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">CPU</div>
 							<div>
 								<div>Intel Core 4th gen+ (Haswell)</div>
 								<div>AMD Ryzen 1000+ (Zen)</div>
 							</div>
 						</div>
-						<div class="flex sm:block gap-3">
-							<div class="text-muted-foreground mb-1 w-20 sm:w-auto shrink-0">Boot</div>
+						<div class="flex sm:block gap-2">
+							<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">Boot</div>
 							<div>
 								<div>UEFI required</div>
 								<div>Secure Boot disabled</div>
 							</div>
 						</div>
-						<div class="flex sm:block gap-3">
-							<div class="text-muted-foreground mb-1 w-20 sm:w-auto shrink-0">Arch</div>
+						<div class="flex sm:block gap-2">
+							<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">Arch</div>
 							<div>x86_64 only</div>
 						</div>
 					</div>
 				</div>
 
 				<!-- Variant cards -->
-				<div class="flex flex-col gap-6 mb-8">
+				<div class="flex flex-col gap-4 mb-6">
 					{variants.map((variant) => (
 						<DownloadCard {...variant} />
 					))}
 				</div>
 
 				<!-- Security disclaimer -->
-				<div class="bg-muted/30 border border-border p-4">
-					<h2 class="font-semibold mb-2 flex items-center gap-2">
-						<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+				<div class="bg-muted/30 border border-border px-5 py-4">
+					<h2 class="font-medium text-sm mb-2 flex items-center gap-2">
+						<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
 							<path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88Zm-8-80V80a8 8 0 0 1 16 0v56a8 8 0 0 1-16 0Zm20 36a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z"/>
 						</svg>
 						Before Installing
@@ -115,14 +115,14 @@ const variants: DownloadCardProps[] = [
 				</div>
 
 				<!-- Installation -->
-				<div class="bg-card border p-4 mb-8">
-					<h2 class="font-semibold mb-2">Installation</h2>
+				<div class="bg-card border px-5 py-4 mt-6 mb-6">
+					<h2 class="font-medium text-sm mb-2">Installation</h2>
 					<p class="text-sm text-muted-foreground mb-3">
 						The live ISO boots into a split-screen tmux session: shell on the left, docs on the right.
 						Follow the <a href="/docs/installation" class="text-primary hover:underline">Installation Guide</a> step-by-step.
 						Similar to Arch Linux: partition, extract with recstrap, configure, install bootloader.
 					</p>
-					<div class="text-xs text-muted-foreground font-mono">
+					<div class="text-sm text-muted-foreground font-mono">
 						Shift+Tab: switch panes | Ctrl+←/→: resize | j/k: scroll docs
 					</div>
 				</div>

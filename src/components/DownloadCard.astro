@@ -30,34 +30,34 @@ const {
 } = Astro.props
 ---
 
-<div class="bg-card border rounded-lg overflow-hidden">
+<div class="bg-card border overflow-hidden text-sm">
 	<div class="flex flex-col sm:flex-row">
 		<!-- OS Info -->
-		<div class="p-4 sm:p-6 flex flex-col flex-1">
+		<div class="px-5 py-5 flex flex-col flex-1">
 			<div class="flex items-center gap-3 mb-2">
-				<img src={logo} alt={title} width="40" height="40" loading="lazy" class="h-10 w-10" />
-				<h3 class="text-xl font-semibold">{title}</h3>
+				<img src={logo} alt={title} width="40" height="40" loading="lazy" class="size-10" />
+				<h3 class="text-lg font-medium">{title}</h3>
 			</div>
 
-			<p class="text-xs font-mono text-muted-foreground mb-2">{stack}</p>
-			<p class="text-sm text-muted-foreground mb-4">{description}</p>
+			<p class="font-mono text-muted-foreground mb-2">{stack}</p>
+			<p class="text-muted-foreground mb-3">{description}</p>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 				<!-- Pros -->
-				<ul class="space-y-1 text-xs">
+				<ul class="space-y-1">
 					{pros.map((pro) => (
-						<li class="flex items-start gap-1.5">
-							<span class="text-green-500 flex-shrink-0">+</span>
+						<li class="flex items-start gap-2">
+							<span class="text-green-500 shrink-0">+</span>
 							<span>{pro}</span>
 						</li>
 					))}
 				</ul>
 
 				<!-- Cons -->
-				<ul class="space-y-1 text-xs">
+				<ul class="space-y-1">
 					{cons.map((con) => (
-						<li class="flex items-start gap-1.5">
-							<span class="text-red-400 flex-shrink-0">−</span>
+						<li class="flex items-start gap-2">
+							<span class="text-red-400 shrink-0">−</span>
 							<span>{con}</span>
 						</li>
 					))}
@@ -66,27 +66,27 @@ const {
 		</div>
 
 		<!-- Download -->
-		<div class="bg-black/20 p-4 sm:p-6 flex flex-col sm:w-56 sm:shrink-0">
-			<h4 class="font-semibold mb-3 text-sm">Download</h4>
-			<div class="text-xs text-muted-foreground mb-4">
+		<div class="bg-black/20 px-5 py-5 flex flex-col sm:w-52 sm:shrink-0">
+			<h4 class="font-medium mb-3">Download</h4>
+			<div class="text-muted-foreground mb-3">
 				<table class="w-full sm:w-auto">
 					<thead>
 						<tr class="text-muted-foreground/70">
 							<td></td>
-							<td class="text-right pb-1 pl-4">Min</td>
-							<td class="text-right pb-1 pl-4">Rec</td>
+							<td class="text-right pb-0.5 pl-3">Min</td>
+							<td class="text-right pb-0.5 pl-3">Rec</td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td class="font-medium">RAM</td>
-							<td class="text-right pl-4">{minRam}</td>
-							<td class="text-right pl-4">{recRam}</td>
+							<td class="text-right pl-3">{minRam}</td>
+							<td class="text-right pl-3">{recRam}</td>
 						</tr>
 						<tr>
 							<td class="font-medium">Disk</td>
-							<td class="text-right pl-4">{minDisk}</td>
-							<td class="text-right pl-4">{recDisk}</td>
+							<td class="text-right pl-3">{minDisk}</td>
+							<td class="text-right pl-3">{recDisk}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -95,20 +95,20 @@ const {
 			{status === "available" ? (
 				<a
 					href={downloadUrl}
-					class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded hover:bg-primary/90 transition-colors text-sm mt-auto"
+					class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors mt-auto select-none"
 				>
-					<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+					<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
 						<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
 					</svg>
 					Download ISO
 				</a>
 			) : status === "coming-soon" ? (
-				<span class="flex flex-col items-center justify-center bg-muted text-muted-foreground px-4 py-2.5 rounded text-sm mt-auto text-center">
+				<span class="flex flex-col items-center justify-center bg-muted text-muted-foreground h-10 px-4 mt-auto text-center">
 					<span>Coming Soon</span>
 					<span class="text-xs">(Feb/Mar 2026)</span>
 				</span>
 			) : (
-				<span class="flex flex-col items-center justify-center bg-muted text-muted-foreground px-4 py-2.5 rounded text-sm mt-auto text-center">
+				<span class="flex flex-col items-center justify-center bg-muted text-muted-foreground h-10 px-4 mt-auto text-center">
 					<span>Coming Soon</span>
 					<span class="text-xs">(Mar/May 2026)</span>
 				</span>
