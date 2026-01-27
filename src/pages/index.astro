@@ -92,36 +92,45 @@ const docsFeatures = [
 			>
 				<div class="container flex flex-col items-center max-w-4xl">
 					<AnimatedSection>
+						<img
+							id="hero-logo"
+							src="/levitateos-light.png"
+							alt="LevitateOS"
+							class="w-40 sm:w-48 lg:w-56 h-auto mb-6"
+						/>
+					</AnimatedSection>
+
+					<AnimatedSection delay={50}>
 						<p class="text-sm font-medium text-primary uppercase tracking-widest mb-4">
 							A Daily-Driver Linux Distribution
 						</p>
 					</AnimatedSection>
 
-					<AnimatedSection delay={100}>
+					<AnimatedSection delay={150}>
 						<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
 							Build your system <span class="text-primary">your way</span>.
 						</h1>
 					</AnimatedSection>
 
-					<AnimatedSection delay={200} class="mt-6 max-w-2xl">
+					<AnimatedSection delay={250} class="mt-6 max-w-2xl">
 						<p class="text-lg text-muted-foreground leading-relaxed">
 							LevitateOS gives you a clean foundation and simple tools. You write readable scripts called "recipes" that fetch, build, and install software exactly how you want it.
 						</p>
 					</AnimatedSection>
 
-					<AnimatedSection delay={300} class="mt-4 max-w-2xl">
+					<AnimatedSection delay={350} class="mt-4 max-w-2xl">
 						<p class="text-lg text-muted-foreground leading-relaxed">
 							No waiting on package maintainers. No mystery binaries. Just you, your recipes, and a system you understand completely.
 						</p>
 					</AnimatedSection>
 
-					<AnimatedSection delay={400} class="mt-10">
+					<AnimatedSection delay={450} class="mt-10">
 						<p class="text-xl font-semibold">
 							Manual install. Full control. <span class="text-primary">AI-assisted packaging</span>.
 						</p>
 					</AnimatedSection>
 
-					<AnimatedSection delay={500} class="mt-8">
+					<AnimatedSection delay={550} class="mt-8">
 						<CTAButtons
 							primaryHref="#recipe"
 							primaryText="See How It Works"
@@ -295,6 +304,10 @@ const docsFeatures = [
 						<div class="p-4 ring-1 ring-foreground/10 rounded">
 							<a href="https://claude.ai/claude-code" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Claude Code</a>
 							<p class="text-sm text-muted-foreground mt-1">For AI-assisted development that accelerated this project.</p>
+						</div>
+						<div class="p-4 ring-1 ring-foreground/10 rounded">
+							<a href="https://huggingface.co" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Hugging Face</a>
+							<p class="text-sm text-muted-foreground mt-1">For SmolLM3, the local LLM powering the recipe assistant.</p>
 						</div>
 						<div class="p-4 ring-1 ring-foreground/10 rounded">
 							<a href="https://rust-lang.org" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-primary hover:underline">Rust</a>

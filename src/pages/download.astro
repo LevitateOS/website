@@ -8,43 +8,46 @@ interface VariantCardProps {
 	stack: string
 	description: string
 	features: string[]
-	hasLLM: boolean
-	available: boolean
+	status: "available" | "coming-soon" | "planned"
 	downloadUrl?: string
+	minRam: string
+	recRam: string
+	minDisk: string
+	recDisk: string
 }
 
 const variants: VariantCardProps[] = [
 	{
-		title: "Standard",
+		title: "LevitateOS",
 		stack: "systemd + glibc + GNU",
-		description: "Traditional Linux stack. Maximum compatibility.",
-		features: ["systemd service management", "glibc for compatibility", "Manual installation"],
-		hasLLM: false,
-		available: false,
+		description: "Traditional Linux stack built on Rocky Linux packages. Maximum compatibility with existing software.",
+		features: [
+			"systemd service management",
+			"glibc for maximum compatibility",
+			"GNU coreutils",
+			"bash shell",
+		],
+		status: "coming-soon",
+		minRam: "8 GB",
+		recRam: "16 GB",
+		minDisk: "64 GB",
+		recDisk: "256 GB",
 	},
 	{
-		title: "Standard + LLM",
-		stack: "systemd + glibc + GNU + SmolLM3",
-		description: "Traditional stack with AI installer.",
-		features: ["Everything in Standard", "Natural language installer", "LLM recipe assistant"],
-		hasLLM: true,
-		available: false,
-	},
-	{
-		title: "Minimal",
-		stack: "runit + musl + GNU",
-		description: "Lightweight stack. Smaller footprint.",
-		features: ["runit simple init", "musl libc (~1MB)", "Manual installation"],
-		hasLLM: false,
-		available: false,
-	},
-	{
-		title: "Minimal + LLM",
-		stack: "runit + musl + GNU + SmolLM3",
-		description: "Lightweight stack with AI installer.",
-		features: ["Everything in Minimal", "Natural language installer", "LLM recipe assistant"],
-		hasLLM: true,
-		available: false,
+		title: "AcornOS",
+		stack: "OpenRC + musl + busybox",
+		description: "Alternative stack built on Alpine Linux packages. Smaller attack surface, simpler init.",
+		features: [
+			"OpenRC init system",
+			"musl libc",
+			"busybox coreutils",
+			"ash shell",
+		],
+		status: "planned",
+		minRam: "4 GB",
+		recRam: "8 GB",
+		minDisk: "32 GB",
+		recDisk: "128 GB",
 	},
 ]
 ---
@@ -54,38 +57,30 @@ const variants: VariantCardProps[] = [
 		<Header />
 		<main class="flex-1">
 			<div class="container py-12">
-				<h1 class="text-3xl font-bold mb-3">Download LevitateOS</h1>
+				<h1 class="text-3xl font-bold mb-3">Download</h1>
 				<p class="text-lg text-muted-foreground mb-8">
-					Choose your variant based on init system and LLM preference.
+					Choose your variant. Both are daily-driver desktops competing with Arch Linux.
 				</p>
 
 				<!-- Variant explanation -->
 				<div class="bg-muted/50 p-4 mb-8">
-					<h2 class="font-semibold mb-3">Understanding the Variants</h2>
+					<h2 class="font-semibold mb-3">Two Variants, Same Philosophy</h2>
+					<p class="text-sm text-muted-foreground mb-3">
+						Both LevitateOS and AcornOS follow Arch's philosophy: minimal base system that you build up yourself.
+						The difference is the underlying toolchain.
+					</p>
 					<div class="grid grid-cols-2 gap-4 text-sm">
 						<div>
-							<h3 class="font-medium flex items-center gap-2 mb-1">
-								<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M152 96a8 8 0 0 1-8 8h-32a8 8 0 0 1 0-16h32a8 8 0 0 1 8 8Zm-8 24h-32a8 8 0 0 0 0 16h32a8 8 0 0 0 0-16Zm96-16v96a24 24 0 0 1-24 24h-8v16a8 8 0 0 1-16 0v-16H64v16a8 8 0 0 1-16 0v-16h-8a24 24 0 0 1-24-24V56a24 24 0 0 1 24-24h176a24 24 0 0 1 24 24v48Zm-16 0V56a8 8 0 0 0-8-8H40a8 8 0 0 0-8 8v144a8 8 0 0 0 8 8h176a8 8 0 0 0 8-8v-96Z"/>
-								</svg>
-								Init System
-							</h3>
-							<ul class="space-y-0.5 text-muted-foreground text-xs">
-								<li><strong>systemd + glibc:</strong> Traditional</li>
-								<li><strong>runit + musl:</strong> Minimal</li>
-							</ul>
+							<h3 class="font-medium mb-1">LevitateOS</h3>
+							<p class="text-xs text-muted-foreground">
+								Choose for maximum compatibility. Uses the same stack as Fedora/RHEL.
+							</p>
 						</div>
 						<div>
-							<h3 class="font-medium flex items-center gap-2 mb-1">
-								<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M200 48H136V16a8 8 0 0 0-16 0v32H56a32 32 0 0 0-32 32v32a32 32 0 0 0 32 32h6.73A111.84 111.84 0 0 0 32 216a8 8 0 0 0 8 8h64a8 8 0 0 0 0-16H49.23a96.14 96.14 0 0 1 58.53-63.48a32 32 0 0 0 40.48 0A96.14 96.14 0 0 1 206.77 208H152a8 8 0 0 0 0 16h64a8 8 0 0 0 8-8a111.84 111.84 0 0 0-30.73-75.48A32 32 0 0 0 232 112V80a32 32 0 0 0-32-32Zm-72 80a16 16 0 1 1 16-16a16 16 0 0 1-16 16Zm88-16a16 16 0 0 1-16 16h-9.52a32 32 0 0 0 1.52-10V96a32.05 32.05 0 0 0-26.61-31.47A16 16 0 0 1 200 80v32Zm-160 0V80a16 16 0 0 1 16-16h112a16 16 0 0 1 16 16v22a32 32 0 0 0 0 20v10a16 16 0 0 1-16 16H72a16 16 0 0 1-16-16Z"/>
-								</svg>
-								LLM Assistant
-							</h3>
-							<ul class="space-y-0.5 text-muted-foreground text-xs">
-								<li><strong>With:</strong> AI installer + recipe helper</li>
-								<li><strong>Without:</strong> Manual, smaller ISO</li>
-							</ul>
+							<h3 class="font-medium mb-1">AcornOS</h3>
+							<p class="text-xs text-muted-foreground">
+								Choose for a smaller footprint. Uses the same stack as Alpine Linux.
+							</p>
 						</div>
 					</div>
 				</div>
@@ -95,22 +90,13 @@ const variants: VariantCardProps[] = [
 					{variants.map((variant) => (
 						<div class="bg-card border p-4 flex flex-col">
 							<div class="flex items-center gap-2 mb-2">
-								{variant.hasLLM ? (
-									<svg class="h-5 w-5 text-primary" viewBox="0 0 256 256" fill="currentColor">
-										<path d="M200 48H136V16a8 8 0 0 0-16 0v32H56a32 32 0 0 0-32 32v32a32 32 0 0 0 32 32h6.73A111.84 111.84 0 0 0 32 216a8 8 0 0 0 8 8h64a8 8 0 0 0 0-16H49.23a96.14 96.14 0 0 1 58.53-63.48a32 32 0 0 0 40.48 0A96.14 96.14 0 0 1 206.77 208H152a8 8 0 0 0 0 16h64a8 8 0 0 0 8-8a111.84 111.84 0 0 0-30.73-75.48A32 32 0 0 0 232 112V80a32 32 0 0 0-32-32Zm-72 80a16 16 0 1 1 16-16a16 16 0 0 1-16 16Zm88-16a16 16 0 0 1-16 16h-9.52a32 32 0 0 0 1.52-10V96a32.05 32.05 0 0 0-26.61-31.47A16 16 0 0 1 200 80v32Zm-160 0V80a16 16 0 0 1 16-16h112a16 16 0 0 1 16 16v22a32 32 0 0 0 0 20v10a16 16 0 0 1-16 16H72a16 16 0 0 1-16-16Z"/>
-									</svg>
-								) : (
-									<svg class="h-5 w-5 text-muted-foreground" viewBox="0 0 256 256" fill="currentColor">
-										<path d="M120 137V40a8 8 0 0 1 16 0v97a8 8 0 0 1-16 0Zm-8 71a8 8 0 1 0 8 8a8 8 0 0 0-8-8Zm106.78-64.25L160 200.53a40 40 0 0 1-64 0L37.22 143.75A60 60 0 0 1 136 65.19V116a8 8 0 0 0 16 0V65.19A60 60 0 0 1 218.78 143.75ZM203.24 135a44 44 0 0 0-75.24-31v0a44 44 0 0 0-75.24 31L108 188.74a24 24 0 0 0 40 0Z"/>
-									</svg>
-								)}
 								<h3 class="font-semibold">{variant.title}</h3>
 							</div>
 
 							<p class="text-xs font-mono text-muted-foreground mb-2">{variant.stack}</p>
 							<p class="text-sm text-muted-foreground mb-3">{variant.description}</p>
 
-							<ul class="space-y-0.5 text-xs mb-4 flex-1">
+							<ul class="space-y-0.5 text-xs mb-4">
 								{variant.features.map((feature) => (
 									<li class="flex items-start gap-1.5">
 										<span class="text-primary">+</span>
@@ -119,69 +105,98 @@ const variants: VariantCardProps[] = [
 								))}
 							</ul>
 
-							{variant.available ? (
+							<!-- Requirements -->
+							<div class="text-xs text-muted-foreground mb-4 border-t pt-3">
+								<div class="grid grid-cols-2 gap-2">
+									<div>
+										<span class="font-medium">Min RAM:</span> {variant.minRam}
+									</div>
+									<div>
+										<span class="font-medium">Rec RAM:</span> {variant.recRam}
+									</div>
+									<div>
+										<span class="font-medium">Min Disk:</span> {variant.minDisk}
+									</div>
+									<div>
+										<span class="font-medium">Rec Disk:</span> {variant.recDisk}
+									</div>
+								</div>
+							</div>
+
+							{variant.status === "available" ? (
 								<a
 									href={variant.downloadUrl}
-									class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 hover:bg-primary/90 transition-colors text-sm"
+									class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 hover:bg-primary/90 transition-colors text-sm mt-auto"
 								>
 									<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
 										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
 									</svg>
-									Download
+									Download ISO
 								</a>
-							) : (
-								<span class="inline-flex items-center justify-center gap-2 bg-muted text-muted-foreground px-3 py-1.5 text-sm">
+							) : variant.status === "coming-soon" ? (
+								<span class="inline-flex items-center justify-center gap-2 bg-muted text-muted-foreground px-3 py-1.5 text-sm mt-auto">
 									Coming Soon
+								</span>
+							) : (
+								<span class="inline-flex items-center justify-center gap-2 bg-muted text-muted-foreground/60 px-3 py-1.5 text-sm mt-auto">
+									Planned
 								</span>
 							)}
 						</div>
 					))}
 				</div>
 
-				<!-- Manual installation note -->
+				<!-- Guided installation -->
+				<div class="bg-card border p-4 mb-8">
+					<h2 class="font-semibold mb-2 flex items-center gap-2">
+						<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+							<path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 160H40V56h176v144ZM80 96a8 8 0 0 1 8-8h24a8 8 0 0 1 0 16H88a8 8 0 0 1-8-8Zm0 32a8 8 0 0 1 8-8h24a8 8 0 0 1 0 16H88a8 8 0 0 1-8-8Zm0 32a8 8 0 0 1 8-8h24a8 8 0 0 1 0 16H88a8 8 0 0 1-8-8Zm88-64a8 8 0 0 1 8-8h24a8 8 0 0 1 0 16h-24a8 8 0 0 1-8-8Zm0 32a8 8 0 0 1 8-8h24a8 8 0 0 1 0 16h-24a8 8 0 0 1-8-8Zm0 32a8 8 0 0 1 8-8h24a8 8 0 0 1 0 16h-24a8 8 0 0 1-8-8Z"/>
+						</svg>
+						Guided Installation
+					</h2>
+					<p class="text-sm text-muted-foreground">
+						The live ISO boots into a split-screen tmux session: shell on the left, documentation TUI on the right.
+						Follow the installation guide step-by-step while running commands in the adjacent pane.
+					</p>
+					<div class="mt-2 text-xs text-muted-foreground font-mono">
+						Shift+Tab: switch panes | Ctrl+←/→: resize | ↑↓: navigate docs | j/k: scroll
+					</div>
+				</div>
+
+				<!-- Installation guide link -->
 				<div class="bg-card border p-4 mb-8">
 					<h2 class="font-semibold mb-2 flex items-center gap-2">
 						<svg class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
 							<path d="M223.68 66.15L135.68 18a15.88 15.88 0 0 0-15.36 0l-88 48.17a16 16 0 0 0-8.32 14v95.64a16 16 0 0 0 8.32 14l88 48.17a15.88 15.88 0 0 0 15.36 0l88-48.17a16 16 0 0 0 8.32-14V80.18a16 16 0 0 0-8.32-14.03ZM128 32l80.35 44L128 120L47.65 76ZM40 90l80 43.78v85.79l-80-43.75Zm96 129.57v-85.75L216 90v85.78Z"/>
 						</svg>
-						Installing Without LLM
+						Installation
 					</h2>
 					<p class="text-sm text-muted-foreground">
-						Without the LLM assistant, follow the <a href="/docs/installation" class="text-primary hover:underline">Installation Guide</a>.
+						Follow the <a href="/docs/installation" class="text-primary hover:underline">Installation Guide</a> to install LevitateOS manually.
+						The process is similar to Arch Linux: partition, extract with recstrap, configure, install bootloader.
 					</p>
 				</div>
 
-				<!-- Requirements -->
+				<!-- Common requirements -->
 				<div>
-					<h2 class="text-xl font-semibold mb-3">System Requirements</h2>
+					<h2 class="text-xl font-semibold mb-3">Common Requirements</h2>
 					<table class="w-full text-sm">
-						<thead>
-							<tr class="border-b">
-								<th class="text-left py-1.5 pr-4">Component</th>
-								<th class="text-left py-1.5 pr-4">Without LLM</th>
-								<th class="text-left py-1.5">With LLM</th>
-							</tr>
-						</thead>
 						<tbody class="text-muted-foreground">
 							<tr class="border-b">
-								<td class="py-1.5 pr-4">Architecture</td>
-								<td class="py-1.5 pr-4">x86_64</td>
-								<td class="py-1.5">x86_64</td>
+								<td class="py-1.5 pr-4 font-medium">Architecture</td>
+								<td class="py-1.5">x86_64 (x86-64-v3: Haswell / Zen or newer)</td>
 							</tr>
 							<tr class="border-b">
-								<td class="py-1.5 pr-4">RAM</td>
-								<td class="py-1.5 pr-4">2GB</td>
-								<td class="py-1.5">8GB (or 6GB VRAM)</td>
+								<td class="py-1.5 pr-4 font-medium">Boot</td>
+								<td class="py-1.5">UEFI required (Secure Boot must be disabled)</td>
 							</tr>
 							<tr class="border-b">
-								<td class="py-1.5 pr-4">Disk</td>
-								<td class="py-1.5 pr-4">10GB</td>
-								<td class="py-1.5">20GB</td>
+								<td class="py-1.5 pr-4 font-medium">CPU</td>
+								<td class="py-1.5">AMD Ryzen / Intel Core (2013+) with AVX2</td>
 							</tr>
 							<tr>
-								<td class="py-1.5 pr-4">ISO Size</td>
-								<td class="py-1.5 pr-4">~500MB</td>
-								<td class="py-1.5">~3GB</td>
+								<td class="py-1.5 pr-4 font-medium">GPU</td>
+								<td class="py-1.5">AMD, NVIDIA, or Intel (discrete or integrated)</td>
 							</tr>
 						</tbody>
 					</table>
