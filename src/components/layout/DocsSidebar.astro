@@ -140,25 +140,16 @@ const currentTitle = docsNav
 		docsNavToggle.setAttribute("aria-expanded", String(!isOpen))
 	})
 
-	// Desktop sidebar subsections toggle
-	document.querySelectorAll('a[data-active="true"]').forEach((link) => {
+	// Desktop sidebar: toggle subsections when clicking active page link
+	document.querySelectorAll<HTMLAnchorElement>('aside a[data-active="true"]').forEach((link) => {
 		link.addEventListener("click", (e) => {
 			const subsections = link.parentElement?.querySelector(".sidebar-subsections")
 			if (subsections) {
 				e.preventDefault()
 				subsections.classList.toggle("hidden")
-			}
-		})
-	})
-</script>
-
-<script>
-	document.querySelectorAll('a[data-active="true"]').forEach((link) => {
-		link.addEventListener("click", (e) => {
-			const subsections = link.parentElement?.querySelector(".sidebar-subsections")
-			if (subsections) {
-				e.preventDefault()
-				subsections.classList.toggle("hidden")
+				// Toggle chevron indicator if present
+				const chevron = link.querySelector(".subsection-chevron")
+				chevron?.classList.toggle("rotate-180")
 			}
 		})
 	})
