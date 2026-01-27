@@ -24,9 +24,25 @@ function toAnchor(title: string): string {
 		.replace(/[^a-z0-9\s-]/g, "")
 		.replace(/\s+/g, "-")
 }
+
+// Extract plain text description from intro for meta tags
+function extractPlainText(intro: any): string | undefined {
+	if (!intro) return undefined
+	if (typeof intro === "string") return intro
+	if (Array.isArray(intro)) {
+		return intro
+			.filter((item: any) => typeof item === "string" || item.type === "text")
+			.map((item: any) => (typeof item === "string" ? item : item.text))
+			.join(" ")
+			.slice(0, 160)
+	}
+	return undefined
+}
+
+const description = extractPlainText(content.intro)
 ---
 
-<DocsLayout title={content.title} currentSlug={slug}>
+<DocsLayout title={content.title} currentSlug={slug} description={description}>
 	<h1 class="text-3xl font-bold mb-6">{content.title}</h1>
 	{
 		content.intro && (

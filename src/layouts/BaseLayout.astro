@@ -3,9 +3,17 @@ import "../styles/global.css"
 
 interface Props {
 	title?: string
+	description?: string
 }
 
-const { title = "LevitateOS - Be Your Own Maintainer" } = Astro.props
+const {
+	title = "LevitateOS - Be Your Own Maintainer",
+	description = "Linux where you maintain your own packages. Simple recipes, no upstream dependencies, self-sufficient package manager."
+} = Astro.props
+
+const siteBase = Astro.site || new URL("https://levitateos.org")
+const canonicalURL = new URL(Astro.url.pathname, siteBase)
+const ogImageURL = new URL("/og-image.png", siteBase)
 ---
 
 <!doctype html>
@@ -14,10 +22,26 @@ const { title = "LevitateOS - Be Your Own Maintainer" } = Astro.props
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{title}</title>
-		<meta
-			name="description"
-			content="Linux where you maintain your own packages. Simple recipes, no upstream dependencies, self-sufficient package manager."
-		/>
+		<meta name="description" content={description} />
+
+		<!-- Canonical URL -->
+		<link rel="canonical" href={canonicalURL} />
+
+		<!-- Open Graph -->
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImageURL} />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="LevitateOS" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImageURL} />
+
+		<!-- Favicons -->
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -31,6 +55,25 @@ const { title = "LevitateOS - Be Your Own Maintainer" } = Astro.props
 			type="font/ttf"
 			crossorigin
 		/>
+
+		<!-- Preconnect to external domains -->
+		<link rel="preconnect" href="https://github.com" />
+
+		<!-- JSON-LD Structured Data -->
+		<script type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "SoftwareApplication",
+			"name": "LevitateOS",
+			"applicationCategory": "OperatingSystem",
+			"operatingSystem": "Linux",
+			"description": "A Linux distribution where you maintain your own packages using simple Rhai recipes.",
+			"license": "https://opensource.org/licenses/MIT",
+			"url": "https://levitateos.org",
+			"author": {
+				"@type": "Organization",
+				"name": "LevitateOS"
+			}
+		})} />
 	</head>
 	<body>
 		<!-- Theme script: runs before body renders to prevent flash -->

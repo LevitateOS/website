@@ -1,0 +1,55 @@
+# LevitateOS
+
+> LevitateOS is a Linux distribution where users maintain their own packages using Rhai scripts called "recipes." Instead of relying on centralized repositories, you write recipes that declare how to acquire, build, and install software. A local LLM (SmolLM3) assists with recipe generation and dependency resolution.
+
+LevitateOS targets power users who want full control over their system. It follows the Arch Linux philosophy of manual installation and user-built configuration, but replaces traditional package managers with a recipe-based system.
+
+Two variants exist:
+- **LevitateOS**: glibc, systemd, GNU toolchain - maximum compatibility
+- **AcornOS**: musl, OpenRC, busybox - minimal and fast
+
+## Getting Started
+
+- [Getting Started](/docs/getting-started): Download and create bootable installation media
+- [Installation Overview](/docs/installation): Step-by-step installation process
+- [Disk Partitioning](/docs/installation-disk): UEFI partition layout with GPT
+- [Base System](/docs/installation-base): Extract rootfs with recstrap
+- [System Configuration](/docs/installation-config): Timezone, locale, hostname, users
+- [Bootloader](/docs/installation-boot): systemd-boot EFI stub installation
+- [Post-Installation](/docs/post-installation): Desktop environment, drivers, networking
+- [Troubleshooting](/docs/troubleshooting): Common issues and solutions
+
+## Package Manager
+
+- [CLI Reference](/docs/cli-reference): recipe install, build, search, llm commands
+- [Recipe Format](/docs/recipe-format): Rhai script structure with ctx map and lifecycle functions
+
+## Rhai Helper Functions
+
+- [Helpers Overview](/docs/helpers-overview): Available functions in recipe scripts
+- [Acquire Helpers](/docs/helpers-acquire): github_download_release, git_clone, curl_download
+- [Build Helpers](/docs/helpers-build): shell, shell_in, make, cargo_build, meson
+- [Install Helpers](/docs/helpers-install): install_bin, install_lib, install_config
+- [Filesystem Helpers](/docs/helpers-filesystem): is_file, is_dir, mkdir, copy, symlink
+- [Environment Helpers](/docs/helpers-environment): getenv, setenv, BUILD_DIR, OUT_DIR
+- [Command Helpers](/docs/helpers-commands): shell, shell_in, which, run_silent
+- [HTTP Helpers](/docs/helpers-http): http_get, http_download, curl_download
+- [Path Helpers](/docs/helpers-paths): join_path, basename, dirname, with_extension
+- [LLM Helpers](/docs/helpers-llm): llm_query, llm_suggest_fix, llm_explain_error
+
+## Architecture
+
+- [FAQ](/docs/faq): Frequently asked questions about design decisions
+- [How We Compare](/docs/how-we-compare): Comparison with Arch, NixOS, Gentoo, Alpine
+
+## Installation Tools
+
+- [Tools Overview](/docs/installation-tools-overview): recstrap, recfstab, recchroot
+- [recstrap](/docs/recstrap): Extract LevitateOS rootfs to target directory (like pacstrap)
+- [recfstab](/docs/recfstab): Generate fstab from mounted filesystems (like genfstab)
+- [recchroot](/docs/recchroot): Enter chroot with proper mount bindings (like arch-chroot)
+
+## Optional
+
+- [Download Page](/download): ISO downloads and system requirements
+- [Privacy Policy](/privacy): No tracking, no cookies, no data collection

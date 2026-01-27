@@ -15,7 +15,7 @@ const { name, stack, description, features, logoLight, logoDark } = Astro.props
 	<div class="flex items-center gap-3 mb-4">
 		<picture>
 			<source srcset={logoDark} media="(prefers-color-scheme: dark)" />
-			<img src={logoLight} alt={name} class="h-12 w-auto" />
+			<img src={logoLight} alt={name} width="48" height="48" loading="lazy" class="h-12 w-auto" />
 		</picture>
 		<div>
 			<h3 class="text-xl font-bold">{name}</h3>

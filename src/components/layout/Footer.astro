@@ -3,48 +3,52 @@ const year = new Date().getFullYear()
 ---
 
 <footer class="border-t bg-muted/40">
-	<div class="container flex flex-col gap-4 py-10 md:flex-row md:justify-between md:gap-0 px-4 md:px-6">
-		<div class="flex flex-col gap-2">
-			<span class="text-lg font-semibold font-logo">LevitateOS</span>
-			<p class="text-sm text-muted-foreground">Be your own package maintainer.</p>
-		</div>
-
-		<div class="grid grid-cols-2 gap-8 sm:grid-cols-3">
-			<div class="flex flex-col gap-2">
-				<span class="font-medium">Documentation</span>
-				<a href="/docs/getting-started" class="text-sm text-muted-foreground hover:text-foreground">
-					Getting Started
-				</a>
-				<a href="/docs/recipe-format" class="text-sm text-muted-foreground hover:text-foreground"> Recipe Format </a>
-				<a href="/docs/cli-reference" class="text-sm text-muted-foreground hover:text-foreground"> CLI Reference </a>
+	<div class="container py-10 px-4 md:px-6">
+		<div class="grid grid-cols-2 gap-8 md:grid-cols-4">
+			<div class="col-span-2 md:col-span-1 flex flex-col gap-2">
+				<span class="text-lg font-semibold font-logo">LevitateOS</span>
+				<p class="text-sm text-muted-foreground">Be your own package maintainer.</p>
+				<div class="flex gap-3 mt-2">
+					<a href="https://github.com/LevitateOS/LevitateOS" class="text-muted-foreground hover:text-foreground" aria-label="GitHub">
+						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+					</a>
+				</div>
 			</div>
 
 			<div class="flex flex-col gap-2">
-				<span class="font-medium">Community</span>
-				<a href="https://github.com/LevitateOS/LevitateOS" class="text-sm text-muted-foreground hover:text-foreground">
-					GitHub
-				</a>
-				<a
-					href="https://github.com/LevitateOS/LevitateOS/issues"
-					class="text-sm text-muted-foreground hover:text-foreground"
-				>
-					Issues
-				</a>
+				<span class="font-medium">Getting Started</span>
+				<a href="/docs/getting-started" class="text-sm text-muted-foreground hover:text-foreground">Overview</a>
+				<a href="/docs/installation" class="text-sm text-muted-foreground hover:text-foreground">Installation Guide</a>
+				<a href="/docs/post-installation" class="text-sm text-muted-foreground hover:text-foreground">Post-Install</a>
+				<a href="/docs/troubleshooting" class="text-sm text-muted-foreground hover:text-foreground">Troubleshooting</a>
 			</div>
 
 			<div class="flex flex-col gap-2">
-				<span class="font-medium">Legal</span>
-				<a
-					href="https://github.com/LevitateOS/LevitateOS/blob/master/LICENSE"
-					class="text-sm text-muted-foreground hover:text-foreground"
-				>
-					License (LGPL-2.1)
-				</a>
+				<span class="font-medium">Package Manager</span>
+				<a href="/docs/cli-reference" class="text-sm text-muted-foreground hover:text-foreground">CLI Reference</a>
+				<a href="/docs/recipe-format" class="text-sm text-muted-foreground hover:text-foreground">Recipe Format</a>
+				<a href="/docs/helpers-overview" class="text-sm text-muted-foreground hover:text-foreground">Rhai Helpers</a>
+				<a href="/docs/llm" class="text-sm text-muted-foreground hover:text-foreground">LLM Integration</a>
+			</div>
+
+			<div class="flex flex-col gap-2">
+				<span class="font-medium">Tools</span>
+				<a href="/docs/recstrap" class="text-sm text-muted-foreground hover:text-foreground">recstrap</a>
+				<a href="/docs/recfstab" class="text-sm text-muted-foreground hover:text-foreground">recfstab</a>
+				<a href="/docs/recchroot" class="text-sm text-muted-foreground hover:text-foreground">recchroot</a>
+				<a href="/docs/installation-tools-overview" class="text-sm text-muted-foreground hover:text-foreground">All Tools</a>
 			</div>
 		</div>
 	</div>
 
 	<div class="container border-t py-4 px-4 md:px-6">
-		<p class="text-center text-sm text-muted-foreground">&copy; {year} LevitateOS. Built with Rust.</p>
+		<div class="flex flex-col md:flex-row md:justify-between gap-2 text-sm text-muted-foreground">
+			<p>&copy; {year} LevitateOS. Built with Rust.</p>
+			<div class="flex gap-4">
+				<a href="/privacy" class="hover:text-foreground">Privacy</a>
+				<a href="https://github.com/LevitateOS/LevitateOS/issues" class="hover:text-foreground">Report Issue</a>
+				<a href="https://github.com/LevitateOS/LevitateOS/blob/master/LICENSE" class="hover:text-foreground">MIT / Apache-2.0</a>
+			</div>
+		</div>
 	</div>
 </footer>

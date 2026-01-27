@@ -1,0 +1,196 @@
+# LevitateOS
+
+> LevitateOS is a Linux distribution where users maintain their own packages using Rhai scripts called "recipes." Instead of relying on centralized repositories, you write recipes that declare how to acquire, build, and install software. A local LLM (SmolLM3) assists with recipe generation and dependency resolution.
+
+LevitateOS targets power users who want full control over their system. It follows the Arch Linux philosophy of manual installation and user-built configuration, but replaces traditional package managers with a recipe-based system.
+
+Two variants exist:
+- **LevitateOS**: glibc, systemd, GNU toolchain - maximum compatibility
+- **AcornOS**: musl, OpenRC, busybox - minimal and fast
+
+---
+
+## Core Concepts
+
+### What is a Recipe?
+
+A recipe is a `.rhai` script that defines how to acquire, build, and install a package. Rhai is a safe, sandboxed scripting language embedded in Rust. Recipes are readable, auditable, and impossible to hide malicious code in.
+
+### Recipe Structure
+
+Every recipe has a context map (`ctx`) and paired lifecycle functions:
+
+```rhai
+let ctx = #{
+    name: "ripgrep",
+    version: "14.1.0",
+    repo: "BurntSushi/ripgrep",
+};
+
+fn is_acquired(ctx) {
+    // Check if source exists, return ctx or throw
+    is_file(join_path(BUILD_DIR, "rg/Cargo.toml"))
+}
+
+fn acquire(ctx) {
+    let tarball = github_download_release(ctx.repo, ctx.version, "*.tar.gz");
+    extract(tarball, BUILD_DIR);
+}
+
+fn is_built(ctx) {
+    is_file(join_path(BUILD_DIR, "rg/target/release/rg"))
+}
+
+fn build(ctx) {
+    shell_in(BUILD_DIR + "/rg", "cargo build --release");
+}
+
+fn is_installed(ctx) {
+    is_file("/usr/bin/rg")
+}
+
+fn install(ctx) {
+    let bin = BUILD_DIR + "/rg/target/release/rg";
+    shell("install -Dm755 " + bin + " $OUT/usr/bin/rg");
+}
+```
+
+### Lifecycle Phases
+
+1. **Acquire**: Download source code (tarball, git clone, etc.)
+2. **Build**: Compile the software (make, cargo, meson, etc.)
+3. **Install**: Copy files to `$OUT` staging directory
+
+Each phase has an `is_*` check function that returns true if already complete.
+
+### Key Environment Variables
+
+- `BUILD_DIR`: Temporary build directory (cleaned between builds)
+- `OUT_DIR` / `$OUT`: Staging directory for installed files
+- `RECIPE_DIR`: Directory containing the recipe file
+
+---
+
+## Installation Process
+
+LevitateOS installs manually like Arch Linux:
+
+1. Boot the live ISO (split tmux: shell left, docs right)
+2. Partition disk (UEFI GPT: EFI + root, optional swap/home)
+3. Format and mount partitions
+4. Extract rootfs with `recstrap /mnt`
+5. Generate fstab with `recfstab /mnt > /mnt/etc/fstab`
+6. Chroot with `recchroot /mnt`
+7. Configure timezone, locale, hostname, users
+8. Install bootloader (systemd-boot)
+9. Exit chroot, unmount, reboot
+
+### System Requirements
+
+- CPU: x86_64, Intel Haswell (2013) or AMD Zen (2017) or newer
+- RAM: 16GB minimum, 32GB+ recommended for local LLM
+- Storage: 512GB NVMe SSD minimum
+- GPU: NVIDIA RTX 3060+ (12GB VRAM) for LLM acceleration, or CPU-only with 32GB+ RAM
+- Boot: UEFI required (Secure Boot disabled)
+
+---
+
+## Package Manager Commands
+
+```bash
+recipe install <name>      # Install a package from recipe
+recipe build <name>        # Build without installing
+recipe remove <name>       # Remove installed package
+recipe search <query>      # Search available recipes
+recipe list                # List installed packages
+recipe update              # Rebuild all packages
+recipe llm "<prompt>"      # Generate recipe with AI assistance
+recipe llm fix <name>      # AI suggests fixes for failed build
+```
+
+---
+
+## Helper Functions Reference
+
+### Acquire Helpers
+- `github_download_release(repo, tag, pattern)` - Download from GitHub releases
+- `git_clone(url, dest)` - Clone git repository
+- `curl_download(url, dest)` - Download file via HTTP
+- `extract(archive, dest)` - Extract tar/zip archives
+
+### Build Helpers
+- `shell(cmd)` - Run shell command
+- `shell_in(dir, cmd)` - Run command in directory
+- `make(args)` - Run make with arguments
+- `cargo_build(args)` - Run cargo build
+- `meson(args)` - Run meson build system
+
+### Install Helpers
+- `install_bin(src, name)` - Install binary to /usr/bin
+- `install_lib(src, name)` - Install library to /usr/lib
+- `install_config(src, dest)` - Install config file
+
+### Filesystem Helpers
+- `is_file(path)` - Check if file exists
+- `is_dir(path)` - Check if directory exists
+- `mkdir(path)` - Create directory
+- `copy(src, dest)` - Copy file
+- `symlink(target, link)` - Create symbolic link
+
+### Path Helpers
+- `join_path(a, b)` - Join path components
+- `basename(path)` - Get filename from path
+- `dirname(path)` - Get directory from path
+- `with_extension(path, ext)` - Change file extension
+
+### LLM Helpers
+- `llm_query(prompt)` - Query local LLM
+- `llm_suggest_fix(error)` - Get fix suggestion for build error
+- `llm_explain_error(log)` - Explain error in build log
+
+---
+
+## Documentation Links
+
+### Getting Started
+- [Getting Started](/docs/getting-started): Download and create bootable installation media
+- [Installation Overview](/docs/installation): Step-by-step installation process
+- [Disk Partitioning](/docs/installation-disk): UEFI partition layout with GPT
+- [Base System](/docs/installation-base): Extract rootfs with recstrap
+- [System Configuration](/docs/installation-config): Timezone, locale, hostname, users
+- [Bootloader](/docs/installation-boot): systemd-boot EFI stub installation
+- [Post-Installation](/docs/post-installation): Desktop environment, drivers, networking
+- [Troubleshooting](/docs/troubleshooting): Common issues and solutions
+
+### Package Manager
+- [CLI Reference](/docs/cli-reference): recipe install, build, search, llm commands
+- [Recipe Format](/docs/recipe-format): Rhai script structure with ctx map and lifecycle functions
+
+### Rhai Helper Functions
+- [Helpers Overview](/docs/helpers-overview): Available functions in recipe scripts
+- [Acquire Helpers](/docs/helpers-acquire): github_download_release, git_clone, curl_download
+- [Build Helpers](/docs/helpers-build): shell, shell_in, make, cargo_build, meson
+- [Install Helpers](/docs/helpers-install): install_bin, install_lib, install_config
+- [Filesystem Helpers](/docs/helpers-filesystem): is_file, is_dir, mkdir, copy, symlink
+- [Environment Helpers](/docs/helpers-environment): getenv, setenv, BUILD_DIR, OUT_DIR
+- [Command Helpers](/docs/helpers-commands): shell, shell_in, which, run_silent
+- [HTTP Helpers](/docs/helpers-http): http_get, http_download, curl_download
+- [Path Helpers](/docs/helpers-paths): join_path, basename, dirname, with_extension
+- [LLM Helpers](/docs/helpers-llm): llm_query, llm_suggest_fix, llm_explain_error
+
+### Architecture
+- [FAQ](/docs/faq): Frequently asked questions about design decisions
+- [How We Compare](/docs/how-we-compare): Comparison with Arch, NixOS, Gentoo, Alpine
+
+### Installation Tools
+- [Tools Overview](/docs/installation-tools-overview): recstrap, recfstab, recchroot
+- [recstrap](/docs/recstrap): Extract LevitateOS rootfs to target directory (like pacstrap)
+- [recfstab](/docs/recfstab): Generate fstab from mounted filesystems (like genfstab)
+- [recchroot](/docs/recchroot): Enter chroot with proper mount bindings (like arch-chroot)
+
+---
+
+## Source Code
+
+- GitHub: https://github.com/LevitateOS/LevitateOS
+- License: MIT / Apache-2.0

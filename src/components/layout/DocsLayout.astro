@@ -7,12 +7,14 @@ import BaseLayout from "../../layouts/BaseLayout.astro"
 interface Props {
 	title: string
 	currentSlug: string
+	description?: string
 }
 
-const { title, currentSlug } = Astro.props
+const { title, currentSlug, description } = Astro.props
+const pageDescription = description || `${title} - LevitateOS documentation. Learn how to install, configure, and use LevitateOS.`
 ---
 
-<BaseLayout title={`${title} - LevitateOS Docs`}>
+<BaseLayout title={`${title} - LevitateOS Docs`} description={pageDescription}>
 	<Header />
 	<div class="container py-8">
 		<div class="md:flex md:gap-6">
