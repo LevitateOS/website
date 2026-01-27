@@ -28,24 +28,31 @@ const assistantFeatures = [
 ]
 
 const recipeCode = `// recipes/ripgrep.rhai
-let name = "ripgrep";
-let version = "14.1.0";
+let ctx = #{
+    name: "ripgrep",
+    version: "14.1.0",
+    repo: "BurntSushi/ripgrep",
+};
 
-fn acquire() {
-    // You control the source
-    download_tarball(
-        "https://github.com/BurntSushi/ripgrep/releases"
+fn is_acquired(ctx) {
+    is_file(join_path(BUILD_DIR, "rg/Cargo.toml"))
+}
+
+fn acquire(ctx) {
+    let tarball = github_download_release(
+        ctx.repo, ctx.version, "*.tar.gz"
     );
+    extract(tarball, BUILD_DIR);
 }
 
-fn build() {
-    // You control the flags
-    run("cargo build --release");
+fn build(ctx) {
+    shell_in(BUILD_DIR + "/rg",
+        "cargo build --release");
 }
 
-fn install() {
-    // You control the destination
-    install_bin("target/release/rg");
+fn install(ctx) {
+    let bin = BUILD_DIR + "/rg/target/release/rg";
+    shell("install -Dm755 " + bin + " $OUT/usr/bin/rg");
 }`
 
 const assistantCode = `$ recipe llm "create a recipe for htop"
@@ -53,23 +60,30 @@ const assistantCode = `$ recipe llm "create a recipe for htop"
 Drafting recipe for htop...
 
 // recipes/htop.rhai
-let name = "htop";
-let version = "3.3.0";
+let ctx = #{
+    name: "htop",
+    version: "3.3.0",
+    repo: "htop-dev/htop",
+};
 
-fn acquire() {
-    download_tarball(
-        "https://github.com/htop-dev/htop/releases"
+fn is_acquired(ctx) {
+    is_file(join_path(BUILD_DIR, "htop/configure.ac"))
+}
+
+fn acquire(ctx) {
+    let tarball = github_download_release(
+        ctx.repo, ctx.version, "*.tar.xz"
     );
+    extract(tarball, BUILD_DIR);
 }
 
-fn build() {
-    run("./autogen.sh");
-    run("./configure --prefix=/usr");
-    run("make");
+fn build(ctx) {
+    let src = BUILD_DIR + "/htop";
+    shell_in(src, "./autogen.sh && ./configure && make");
 }
 
-fn install() {
-    run("make install DESTDIR=$OUT");
+fn install(ctx) {
+    shell_in(BUILD_DIR + "/htop", "make install DESTDIR=$OUT");
 }
 
 Recipe saved. Review and run: recipe install htop`
@@ -102,25 +116,25 @@ const docsFeatures = [
 
 					<AnimatedSection delay={50}>
 						<p class="text-sm font-medium text-primary uppercase tracking-widest mb-4">
-							A Daily-Driver Linux Distribution
+							The first vibe-coded Linux Distribution
 						</p>
 					</AnimatedSection>
 
 					<AnimatedSection delay={150}>
 						<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-							Build your system <span class="text-primary">your way</span>.
+							Customization from the <span class="text-primary">package level</span>.
 						</h1>
 					</AnimatedSection>
 
 					<AnimatedSection delay={250} class="mt-6 max-w-2xl">
 						<p class="text-lg text-muted-foreground leading-relaxed">
-							LevitateOS gives you a clean foundation and simple tools. You write readable scripts called "recipes" that fetch, build, and install software exactly how you want it.
+						Make your own package repository. While other Linux distributions rely on centralized repositories, here we take the slow route. You write your own packages named "recipes": declaring how to acquire, build and install each piece of software.
 						</p>
 					</AnimatedSection>
 
 					<AnimatedSection delay={350} class="mt-4 max-w-2xl">
 						<p class="text-lg text-muted-foreground leading-relaxed">
-							No waiting on package maintainers. No mystery binaries. Just you, your recipes, and a system you understand completely.
+							Too slow? No worries. This is designed with a locally running LLM (SmolLM3) that generates, customizes and maintains your recipes and handles dependencies.
 						</p>
 					</AnimatedSection>
 
@@ -157,18 +171,18 @@ const docsFeatures = [
 					<div class="grid md:grid-cols-2 gap-8">
 						<OSCard
 							name="LevitateOS"
-							stack="glibc / systemd"
+							stack="glibc / systemd / GNU"
 							description="Maximum software compatibility. If it runs on Linux, it runs here. Systemd handles services, timers, and boot."
-							features={["Broadest package compatibility", "Comprehensive service management", "Familiar to most Linux users"]}
+							features={["Broadest package compatibility", "Comprehensive service management", "Rocky 10 RPMs for dependencies", "Familiar to most Linux users"]}
 							logoLight="/levitateos-light.png"
 							logoDark="/levitateos-dark.png"
 						/>
 
 						<OSCard
 							name="AcornOS"
-							stack="musl / OpenRC"
+							stack="musl / OpenRC / busybox"
 							description="Smaller binaries, faster boot, simpler init. For those who prefer knowing exactly what's running on their system."
-							features={["Leaner compiled binaries", "Straightforward init scripts", "Less complexity under the hood"]}
+							features={["Leaner compiled binaries", "Straightforward init scripts", "Alpine Linux PKGs for dependencies", "Less complexity under the hood"]}
 							logoLight="/acornos-light.png"
 							logoDark="/acornos-dark.png"
 						/>
@@ -187,7 +201,7 @@ const docsFeatures = [
 							Instead of <code class="text-sm bg-muted px-1.5 py-0.5 rounded">apt</code> or <code class="text-sm bg-muted px-1.5 py-0.5 rounded">dnf</code>, LevitateOS uses <code class="text-sm bg-muted px-1.5 py-0.5 rounded">recipe</code>.
 						</p>
 						<p class="text-muted-foreground mb-6">
-							A recipe is a short <code class="text-sm bg-muted px-1.5 py-0.5 rounded">.rhai</code> script that describes how to acquire, build, and install a package. Rhai is a safe, sandboxed scripting language embedded in Rust — readable in seconds, impossible to hide malicious code in.
+							A recipe is an elaborate <code class="text-sm bg-muted px-1.5 py-0.5 rounded">.rhai</code> script that describes how to acquire, build, and install a package. Rhai is a safe, sandboxed scripting language embedded in Rust — readable in seconds, impossible to hide malicious code in.
 						</p>
 						<CheckList items={recipeAdvantages} />
 						<Fragment slot="demo">
