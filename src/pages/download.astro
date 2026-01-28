@@ -22,6 +22,8 @@ const variants: DownloadCardProps[] = [
 			"More RAM usage",
 		],
 		status: "coming-soon",
+		x86_64Date: "Feb/Mar 2026",
+		aarch64Date: "Mar/Apr 2026",
 		minRam: "8 GB",
 		recRam: "16 GB",
 		minDisk: "64 GB",
@@ -44,6 +46,8 @@ const variants: DownloadCardProps[] = [
 			"Less documentation online",
 		],
 		status: "planned",
+		x86_64Date: "Mar/May 2026",
+		aarch64Date: "Apr/Jun 2026",
 		minRam: "4 GB",
 		recRam: "8 GB",
 		minDisk: "32 GB",
@@ -85,7 +89,10 @@ const variants: DownloadCardProps[] = [
 						</div>
 						<div class="flex sm:block gap-2">
 							<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">Arch</div>
-							<div>x86_64 only</div>
+							<div>
+								<div>x86_64</div>
+								<div>AArch64</div>
+							</div>
 						</div>
 					</div>
 				</div>

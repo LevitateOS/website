@@ -1,4 +1,12 @@
 ---
+import Tabs from "./ui/Tabs.astro"
+import TabContent from "./ui/TabContent.astro"
+
+export interface ArchUrls {
+	isoUrl?: string
+	qcow2Url?: string
+}
+
 export interface Props {
 	title: string
 	logo: string
@@ -7,7 +15,10 @@ export interface Props {
 	pros: string[]
 	cons: string[]
 	status: "available" | "coming-soon" | "planned"
-	downloadUrl?: string
+	x86_64?: ArchUrls
+	aarch64?: ArchUrls
+	x86_64Date: string
+	aarch64Date: string
 	minRam: string
 	recRam: string
 	minDisk: string
@@ -22,12 +33,21 @@ const {
 	pros,
 	cons,
 	status,
-	downloadUrl,
+	x86_64,
+	aarch64,
+	x86_64Date,
+	aarch64Date,
 	minRam,
 	recRam,
 	minDisk,
 	recDisk,
 } = Astro.props
+
+const cardId = title.toLowerCase().replace(/\s+/g, '-')
+const archTabs = [
+	{ id: "x86_64", label: "x86_64" },
+	{ id: "aarch64", label: "AArch64" },
+]
 ---
 
 <div class="bg-card border overflow-hidden text-sm">
@@ -66,10 +86,10 @@ const {
 		</div>
 
 		<!-- Download -->
-		<div class="bg-black/20 px-5 py-5 flex flex-col sm:w-52 sm:shrink-0">
-			<h4 class="font-medium mb-3">Download</h4>
+		<div class="bg-black/20 px-5 py-5 flex flex-col sm:w-56 sm:shrink-0">
+			<h4 class="font-medium mb-3">Download {title}</h4>
 			<div class="text-muted-foreground mb-3">
-				<table class="w-full sm:w-auto">
+				<table class="w-full">
 					<thead>
 						<tr class="text-muted-foreground/70">
 							<td></td>
@@ -92,27 +112,80 @@ const {
 				</table>
 			</div>
 
-			{status === "available" ? (
-				<a
-					href={downloadUrl}
-					class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors mt-auto select-none"
-				>
-					<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-						<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-					</svg>
-					Download ISO
-				</a>
-			) : status === "coming-soon" ? (
-				<span class="flex flex-col items-center justify-center bg-muted text-muted-foreground h-10 px-4 mt-auto text-center">
-					<span>Coming Soon</span>
-					<span class="text-xs">(Feb/Mar 2026)</span>
-				</span>
-			) : (
-				<span class="flex flex-col items-center justify-center bg-muted text-muted-foreground h-10 px-4 mt-auto text-center">
-					<span>Coming Soon</span>
-					<span class="text-xs">(Mar/May 2026)</span>
-				</span>
-			)}
+				<!-- Arch tabs -->
+			<Tabs tabs={archTabs} name={cardId} defaultTab="x86_64" class="mt-auto mb-3" />
+
+			<!-- x86_64 downloads -->
+			<TabContent name={cardId} tabId="x86_64" default class="flex flex-col gap-2">
+				{status === "available" && x86_64 ? (
+					<>
+						<a
+							href={x86_64.isoUrl}
+							class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
+						>
+							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+							</svg>
+							ISO
+						</a>
+						<a
+							href={x86_64.qcow2Url}
+							class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+						>
+							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+							</svg>
+							QCOW2
+						</a>
+					</>
+				) : (
+					<>
+						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+							ISO
+						</span>
+						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+							QCOW2
+						</span>
+						<span class="text-xs text-muted-foreground text-center">{x86_64Date}</span>
+					</>
+				)}
+			</TabContent>
+
+			<!-- AArch64 downloads -->
+			<TabContent name={cardId} tabId="aarch64" class="flex flex-col gap-2">
+				{status === "available" && aarch64 ? (
+					<>
+						<a
+							href={aarch64.isoUrl}
+							class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
+						>
+							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+							</svg>
+							ISO
+						</a>
+						<a
+							href={aarch64.qcow2Url}
+							class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+						>
+							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+							</svg>
+							QCOW2
+						</a>
+					</>
+				) : (
+					<>
+						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+							ISO
+						</span>
+						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+							QCOW2
+						</span>
+						<span class="text-xs text-muted-foreground text-center">{aarch64Date}</span>
+					</>
+				)}
+			</TabContent>
 		</div>
 	</div>
 </div>

@@ -1,0 +1,25 @@
+---
+export interface Props {
+	name: string
+	tabId: string
+	default?: boolean
+	class?: string
+}
+
+const { name, tabId, default: isDefault, class: className } = Astro.props
+---
+
+<div
+	class:list={[className]}
+	data-tab-content={name}
+	data-tab-id={tabId}
+	data-hidden={isDefault ? undefined : ""}
+>
+	<slot />
+</div>
+
+<style>
+	[data-hidden] {
+		display: none;
+	}
+</style>

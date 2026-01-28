@@ -1,0 +1,62 @@
+---
+export interface Tab {
+	id: string
+	label: string
+}
+
+export interface Props {
+	tabs: Tab[]
+	defaultTab?: string
+	name: string
+	class?: string
+}
+
+const { tabs, defaultTab, name, class: className } = Astro.props
+const activeTab = defaultTab || tabs[0]?.id
+---
+
+<div class:list={["w-full", className]} data-tabs={name}>
+	<div class="bg-muted p-[3px] flex h-8 items-center w-full">
+		{tabs.map((tab) => (
+			<button
+				type="button"
+				class:list={[
+					"flex-1 h-[calc(100%-1px)] px-2.5 text-xs font-medium transition-colors select-none",
+					"text-muted-foreground hover:text-foreground",
+					"data-[active]:bg-background data-[active]:text-foreground",
+				]}
+				data-tab-trigger={tab.id}
+				data-active={tab.id === activeTab ? "" : undefined}
+			>
+				{tab.label}
+			</button>
+		))}
+	</div>
+</div>
+
+<script>
+	document.querySelectorAll('[data-tabs]').forEach((tabsContainer) => {
+		const name = tabsContainer.getAttribute('data-tabs')
+		const triggers = tabsContainer.querySelectorAll('[data-tab-trigger]')
+		const contents = document.querySelectorAll(`[data-tab-content="${name}"]`)
+
+		triggers.forEach((trigger) => {
+			trigger.addEventListener('click', () => {
+				const tabId = trigger.getAttribute('data-tab-trigger')
+
+				// Update triggers
+				triggers.forEach((t) => t.removeAttribute('data-active'))
+				trigger.setAttribute('data-active', '')
+
+				// Update content panels
+				contents.forEach((content) => {
+					if (content.getAttribute('data-tab-id') === tabId) {
+						content.removeAttribute('data-hidden')
+					} else {
+						content.setAttribute('data-hidden', '')
+					}
+				})
+			})
+		})
+	})
+</script>
