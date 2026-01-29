@@ -6,9 +6,11 @@ interface Props {
 	features: string[]
 	logoLight: string
 	logoDark: string
+	builder?: string
+	builderDescription?: string
 }
 
-const { name, stack, description, features, logoLight, logoDark } = Astro.props
+const { name, stack, description, features, logoLight, logoDark, builder, builderDescription } = Astro.props
 ---
 
 <div class="p-5 bg-background ring-1 ring-border h-full flex flex-col">
@@ -25,7 +27,7 @@ const { name, stack, description, features, logoLight, logoDark } = Astro.props
 	<p class="text-sm text-muted-foreground mb-4 flex-grow">
 		{description}
 	</p>
-	<ul class="space-y-1.5 mt-auto text-sm">
+	<ul class="space-y-1.5 text-sm">
 		{features.map((feature) => (
 			<li class="flex items-center gap-2">
 				<svg class="size-4 text-primary shrink-0" viewBox="0 0 256 256" fill="currentColor">
@@ -35,4 +37,11 @@ const { name, stack, description, features, logoLight, logoDark } = Astro.props
 			</li>
 		))}
 	</ul>
+	{builderDescription && (
+		<div class="mt-4 pt-4 border-t border-border">
+			<p class="text-xs text-muted-foreground">
+				{builderDescription}
+			</p>
+		</div>
+	)}
 </div>

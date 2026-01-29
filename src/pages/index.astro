@@ -174,23 +174,25 @@ const docsFeatures = [
 					</div>
 
 					<div class="grid md:grid-cols-2 gap-6">
-						<OSCard
-							name="LevitateOS"
-							stack="glibc / systemd / GNU"
-							description="Maximum software compatibility. If it runs on Linux, it runs here. Systemd handles services, timers, and boot."
-							features={["Broadest package compatibility", "Comprehensive service management", "Rocky 10 RPMs for dependencies", "Familiar to most Linux users"]}
-							logoLight="/levitateos-light.png"
-							logoDark="/levitateos-dark.png"
-						/>
+					<OSCard
+						name="LevitateOS"
+						stack="glibc / systemd / GNU"
+						description="Maximum software compatibility. If it runs on Linux, it runs here. Systemd handles services, timers, and boot."
+						features={["Broadest package compatibility", "Comprehensive service management", "Rocky 10 RPMs for dependencies", "Familiar to most Linux users"]}
+						logoLight="/levitateos-light.png"
+						logoDark="/levitateos-dark.png"
+						builderDescription="ISO builder made by Claude Opus 4.5"
+					/>
 
-						<OSCard
-							name="AcornOS"
-							stack="musl / OpenRC / busybox"
-							description="Smaller binaries, faster boot, simpler init. For those who prefer knowing exactly what's running on their system."
-							features={["Leaner compiled binaries", "Straightforward init scripts", "Alpine Linux PKGs for dependencies", "Less complexity under the hood"]}
-							logoLight="/acornos-light.png"
-							logoDark="/acornos-dark.png"
-						/>
+					<OSCard
+						name="AcornOS"
+						stack="musl / OpenRC / busybox"
+						description="A mirror build of LevitateOS with a different toolchain. Smaller binaries, faster boot, simpler init. For those who prefer knowing exactly what's running on their system."
+						features={["Leaner compiled binaries", "Straightforward init scripts", "Alpine Linux PKGs for dependencies", "Less complexity under the hood"]}
+						logoLight="/acornos-light.png"
+						logoDark="/acornos-dark.png"
+						builderDescription="ISO builder built by experimental coding Agents"
+					/>
 					</div>
 				</div>
 			</section>
