@@ -30,6 +30,31 @@ const variants: DownloadCardProps[] = [
 		recDisk: "256 GB",
 	},
 	{
+		title: "RalphOS",
+		logo: "/ralphos.svg",
+		stack: "Ralph4Days Sandbox",
+		description:
+			"Agent-only appliance OS for running ralphd and isolated automation sandboxes. Designed to boot, provision, and run unattended.",
+		pros: [
+			"Immutable-only (no mutable mode)",
+			"Atomic A/B updates + rollback",
+			"Disk images first (qcow2 + .img)",
+			"Provision-and-go (SSH key)",
+		],
+		cons: [
+			"Not a desktop OS",
+			"Not intended for interactive live repair",
+			"Stricter defaults (locked down by design)",
+		],
+		status: "planned",
+		x86_64Date: "Apr/Jun 2026",
+		aarch64Date: "May/Jul 2026",
+		minRam: "4 GB",
+		recRam: "8 GB",
+		minDisk: "32 GB",
+		recDisk: "128 GB",
+	},
+	{
 		title: "AcornOS",
 		logo: "/acornos-dark.png",
 		stack: "musl / OpenRC / busybox",
@@ -58,7 +83,7 @@ const variants: DownloadCardProps[] = [
 
 <BaseLayout
 	title="Download - LevitateOS"
-	description="Download the LevitateOS ISO. Choose between glibc/systemd or musl/OpenRC variants. Manual installation, full control over your system."
+	description="Download LevitateOS variants. Desktops ship as live ISOs; appliances ship as disk images. A/B immutable by default, mutable optional."
 >
 	<div class="flex min-h-screen flex-col">
 		<Header />
@@ -66,7 +91,7 @@ const variants: DownloadCardProps[] = [
 			<div class="container py-8">
 				<h1 class="text-2xl font-medium mb-3">Download</h1>
 				<p class="text-sm text-muted-foreground mb-6">
-					Two variants, same philosophy: base system you build up yourself.
+					Variants, same philosophy: recipe-built systems with atomic A/B updates by default.
 				</p>
 
 				<!-- Global requirements -->
@@ -117,7 +142,7 @@ const variants: DownloadCardProps[] = [
 						<strong class="text-foreground">Back up important data.</strong>
 						No telemetry collected.
 						<a href="/docs/getting-started#download" class="text-primary hover:underline">Verify checksums</a> before installing.
-						<a href="https://github.com/AshKetchupsern/LevitateOS" target="_blank" rel="noopener" class="text-primary hover:underline">Source on GitHub</a>.
+						<a href="https://github.com/LevitateOS/LevitateOS" target="_blank" rel="noopener" class="text-primary hover:underline">Source on GitHub</a>.
 					</p>
 				</div>
 
@@ -125,9 +150,9 @@ const variants: DownloadCardProps[] = [
 				<div class="bg-card border px-5 py-4 mt-6 mb-6">
 					<h2 class="font-medium text-sm mb-2">Installation</h2>
 					<p class="text-sm text-muted-foreground mb-3">
-						The live ISO boots into a split-screen tmux session: shell on the left, docs on the right.
+						Desktop variants ship as a live ISO that boots into a split-screen tmux session: shell on the left, docs on the right.
 						Follow the <a href="/docs/installation" class="text-primary hover:underline">Installation Guide</a> step-by-step.
-						Similar to Arch Linux: partition, extract with recstrap, configure, install bootloader.
+						Partition, extract with recstrap, configure, install systemd-boot. A/B is the default layout.
 					</p>
 					<div class="text-sm text-muted-foreground font-mono">
 						Shift+Tab: switch panes | Ctrl+←/→: resize | j/k: scroll docs

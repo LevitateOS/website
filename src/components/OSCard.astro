@@ -6,11 +6,10 @@ interface Props {
 	features: string[]
 	logoLight: string
 	logoDark: string
-	builder?: string
 	builderDescription?: string
 }
 
-const { name, stack, description, features, logoLight, logoDark, builder, builderDescription } = Astro.props
+const { name, stack, description, features, logoLight, logoDark, builderDescription } = Astro.props
 ---
 
 <div class="p-5 bg-background ring-1 ring-border h-full flex flex-col">

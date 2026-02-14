@@ -5,6 +5,7 @@ import TabContent from "./ui/TabContent.astro"
 export interface ArchUrls {
 	isoUrl?: string
 	qcow2Url?: string
+	imgUrl?: string
 }
 
 export interface Props {
@@ -119,24 +120,53 @@ const archTabs = [
 			<TabContent name={cardId} tabId="x86_64" default class="flex flex-col gap-2">
 				{status === "available" && x86_64 ? (
 					<>
-						<a
-							href={x86_64.isoUrl}
-							class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
-						>
-							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-							</svg>
-							ISO
-						</a>
-						<a
-							href={x86_64.qcow2Url}
-							class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
-						>
-							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-							</svg>
-							QCOW2
-						</a>
+						{x86_64.isoUrl ? (
+							<a
+								href={x86_64.isoUrl}
+								class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
+							>
+								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+								</svg>
+								ISO
+							</a>
+						) : (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								ISO
+							</span>
+						)}
+
+						{x86_64.qcow2Url ? (
+							<a
+								href={x86_64.qcow2Url}
+								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+							>
+								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+								</svg>
+								QCOW2
+							</a>
+						) : (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								QCOW2
+							</span>
+						)}
+
+						{x86_64.imgUrl ? (
+							<a
+								href={x86_64.imgUrl}
+								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+							>
+								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+								</svg>
+								IMG
+							</a>
+						) : (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								IMG
+							</span>
+						)}
 					</>
 				) : (
 					<>
@@ -145,6 +175,9 @@ const archTabs = [
 						</span>
 						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
 							QCOW2
+						</span>
+						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+							IMG
 						</span>
 						<span class="text-xs text-muted-foreground text-center">{x86_64Date}</span>
 					</>
@@ -155,24 +188,53 @@ const archTabs = [
 			<TabContent name={cardId} tabId="aarch64" class="flex flex-col gap-2">
 				{status === "available" && aarch64 ? (
 					<>
-						<a
-							href={aarch64.isoUrl}
-							class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
-						>
-							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-							</svg>
-							ISO
-						</a>
-						<a
-							href={aarch64.qcow2Url}
-							class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
-						>
-							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-								<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-							</svg>
-							QCOW2
-						</a>
+						{aarch64.isoUrl ? (
+							<a
+								href={aarch64.isoUrl}
+								class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
+							>
+								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+								</svg>
+								ISO
+							</a>
+						) : (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								ISO
+							</span>
+						)}
+
+						{aarch64.qcow2Url ? (
+							<a
+								href={aarch64.qcow2Url}
+								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+							>
+								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+								</svg>
+								QCOW2
+							</a>
+						) : (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								QCOW2
+							</span>
+						)}
+
+						{aarch64.imgUrl ? (
+							<a
+								href={aarch64.imgUrl}
+								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+							>
+								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+								</svg>
+								IMG
+							</a>
+						) : (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								IMG
+							</span>
+						)}
 					</>
 				) : (
 					<>
@@ -181,6 +243,9 @@ const archTabs = [
 						</span>
 						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
 							QCOW2
+						</span>
+						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+							IMG
 						</span>
 						<span class="text-xs text-muted-foreground text-center">{aarch64Date}</span>
 					</>

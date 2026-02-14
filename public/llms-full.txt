@@ -1,12 +1,13 @@
 # LevitateOS
 
-> LevitateOS is a Linux distribution where users maintain their own packages using Rhai scripts called "recipes." Instead of relying on centralized repositories, you write recipes that declare how to acquire, build, and install software. A local LLM (SmolLM3) assists with recipe generation and dependency resolution.
+> LevitateOS is a Linux distribution where users maintain their own packages using Rhai scripts called "recipes." Instead of relying on centralized repositories, you write recipes that declare how to acquire, build, and install software. A local LLM (SmolLM3) assists with recipe generation and dependency resolution. By default, systems are A/B immutable: changes are composed into an inactive slot and activated via trial boot + commit.
 
 LevitateOS targets power users who want full control over their system. It follows the Arch Linux philosophy of manual installation and user-built configuration, but replaces traditional package managers with a recipe-based system.
 
-Two variants exist:
-- **LevitateOS**: glibc, systemd, GNU toolchain - maximum compatibility
-- **AcornOS**: musl, OpenRC, busybox - minimal and fast
+Variants:
+- **LevitateOS**: glibc, systemd, GNU toolchain - daily-driver desktop, maximum compatibility
+- **AcornOS**: musl, OpenRC, busybox - daily-driver desktop, minimal and fast
+- **RalphOS**: headless agent appliance - immutable-only, disk images first (qcow2 + .img)
 
 ---
 
@@ -76,7 +77,7 @@ Each phase has an `is_*` check function that returns true if already complete.
 LevitateOS installs manually like Arch Linux:
 
 1. Boot the live ISO (split tmux: shell left, docs right)
-2. Partition disk (UEFI GPT: EFI + root, optional swap/home)
+2. Partition disk (UEFI GPT: EFI + system-a + system-b + var)
 3. Format and mount partitions
 4. Extract rootfs with `recstrap /mnt`
 5. Generate fstab with `recfstab /mnt > /mnt/etc/fstab`

@@ -62,14 +62,14 @@ const ogImageURL = new URL("/og-image.png", siteBase)
 		/>
 
 		<!-- Preconnect to external domains -->
-		<link rel="preconnect" href="https://github.com" />
+			<link rel="preconnect" href="https://github.com" />
 
-		<!-- JSON-LD Structured Data -->
-		<script type="application/ld+json" set:html={JSON.stringify({
-			"@context": "https://schema.org",
-			"@type": "SoftwareApplication",
-			"name": "LevitateOS",
-			"applicationCategory": "OperatingSystem",
+			<!-- JSON-LD Structured Data -->
+			<script is:inline type="application/ld+json" set:html={JSON.stringify({
+				"@context": "https://schema.org",
+				"@type": "SoftwareApplication",
+				"name": "LevitateOS",
+				"applicationCategory": "OperatingSystem",
 			"operatingSystem": "Linux",
 			"description": "A Linux distribution where you maintain your own packages using simple Rhai recipes.",
 			"license": "https://opensource.org/licenses/MIT",

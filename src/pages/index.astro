@@ -9,7 +9,6 @@ import ScrollIndicator from "../components/ScrollIndicator.astro"
 import SectionHeader from "../components/SectionHeader.astro"
 import OSCard from "../components/OSCard.astro"
 import SplitSection from "../components/SplitSection.astro"
-import SkepticQuote from "../components/SkepticQuote.astro"
 import CTAButtons from "../components/CTAButtons.astro"
 import HighlightBox from "../components/HighlightBox.astro"
 
@@ -97,7 +96,7 @@ const docsFeatures = [
 
 <BaseLayout
 	title="LevitateOS - A Linux Distribution You Actually Control"
-	description="Linux where you maintain your own packages. Write simple Rhai recipes, build from source, with local AI assistance. Full control, no upstream dependencies."
+	description="Linux you control end-to-end: recipe-built packages, atomic A/B updates by default, rollback in one reboot. Mutable mode exists for daredevils."
 >
 	<div class="flex min-h-screen flex-col">
 		<Header />
@@ -137,6 +136,12 @@ const docsFeatures = [
 						</p>
 					</AnimatedSection>
 
+					<AnimatedSection delay={300} class="mt-3 max-w-2xl">
+						<p class="text-sm text-muted-foreground leading-relaxed">
+							Atomic A/B updates by default. Build the next system in slot B, boot it once, then commit. Roll back by rebooting.
+						</p>
+					</AnimatedSection>
+
 					<AnimatedSection delay={350} class="mt-3 max-w-2xl">
 						<p class="text-sm text-muted-foreground leading-relaxed">
 							Too slow? No worries. This is designed with a locally running LLM (SmolLM3) that generates, customizes and maintains your recipes and handles dependencies.
@@ -145,7 +150,7 @@ const docsFeatures = [
 
 					<AnimatedSection delay={450} class="mt-6">
 						<p class="text-lg font-medium">
-							Manual install. Full control. <span class="text-primary">AI-assisted packaging</span>.
+							Immutable by default. Full control. <span class="text-primary">AI-assisted packaging</span>.
 						</p>
 					</AnimatedSection>
 
@@ -163,17 +168,17 @@ const docsFeatures = [
 				<ScrollIndicator />
 			</section>
 
-			<!-- Two Flavors -->
+			<!-- Variants -->
 			<section id="flavors" class="py-16 bg-muted/30">
 				<div class="container max-w-4xl">
 					<div class="text-center mb-8">
-						<h2 class="text-2xl sm:text-3xl font-medium mb-3">Two Foundations. One Philosophy.</h2>
+						<h2 class="text-2xl sm:text-3xl font-medium mb-3">Three Variants. One Recipe System.</h2>
 						<p class="text-muted-foreground text-sm max-w-2xl mx-auto">
-							Choose your base. Both share the same recipe system and tools.
+							Desktops and appliances built from the same pipeline. A/B immutable by default. Mutable mode is optional.
 						</p>
 					</div>
 
-					<div class="grid md:grid-cols-2 gap-6">
+					<div class="grid md:grid-cols-3 gap-6">
 					<OSCard
 						name="LevitateOS"
 						stack="glibc / systemd / GNU"
@@ -182,6 +187,16 @@ const docsFeatures = [
 						logoLight="/levitateos-light.png"
 						logoDark="/levitateos-dark.png"
 						builderDescription="ISO builder made by Claude Opus 4.5"
+					/>
+
+					<OSCard
+						name="RalphOS"
+						stack="Ralph4Days Sandbox"
+						description="Agent-only appliance OS. Ships as preinstalled disk images to host ralphd and isolated automation sandboxes."
+						features={["Atomic slot updates + rollback", "Disk images first (qcow2 + .img)", "Provision-and-go (SSH key)", "Immutable-only by design"]}
+						logoLight="/ralphos.svg"
+						logoDark="/ralphos.svg"
+						builderDescription="Agent appliance variant (disk images first)"
 					/>
 
 					<OSCard
@@ -209,6 +224,9 @@ const docsFeatures = [
 						</p>
 						<p class="text-muted-foreground text-sm mb-4">
 							A recipe is an elaborate <code class="bg-muted px-1.5 py-0.5">.rhai</code> script that describes how to acquire, build, and install a package. Rhai is a safe, sandboxed scripting language embedded in Rust — readable in seconds, impossible to hide malicious code in.
+						</p>
+						<p class="text-muted-foreground text-sm mb-4">
+							On immutable systems, recipe changes are applied to the inactive slot (B) first. You trial-boot, then commit. Mutable mode exists, but it is explicitly unsafe.
 						</p>
 						<CheckList items={recipeAdvantages} />
 						<Fragment slot="demo">
