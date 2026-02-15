@@ -8,6 +8,8 @@ export interface ArchUrls {
 	imgUrl?: string
 }
 
+export type DownloadFormat = "iso" | "qcow2" | "img"
+
 export interface Props {
 	title: string
 	logo: string
@@ -16,6 +18,7 @@ export interface Props {
 	pros: string[]
 	cons: string[]
 	status: "available" | "coming-soon" | "planned"
+	formats?: DownloadFormat[]
 	x86_64?: ArchUrls
 	aarch64?: ArchUrls
 	x86_64Date: string
@@ -34,6 +37,7 @@ const {
 	pros,
 	cons,
 	status,
+	formats,
 	x86_64,
 	aarch64,
 	x86_64Date,
@@ -49,6 +53,33 @@ const archTabs = [
 	{ id: "x86_64", label: "x86_64" },
 	{ id: "aarch64", label: "AArch64" },
 ]
+
+const downloadFormats: DownloadFormat[] = formats?.length
+	? formats
+	: (["iso", "qcow2", "img"] as DownloadFormat[])
+const primaryFormat: DownloadFormat = downloadFormats[0] ?? "qcow2"
+
+function formatLabel(kind: DownloadFormat): string {
+	switch (kind) {
+		case "iso":
+			return "ISO"
+		case "qcow2":
+			return "QCOW2"
+		case "img":
+			return "IMG"
+	}
+}
+
+function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | undefined {
+	switch (kind) {
+		case "iso":
+			return arch?.isoUrl
+		case "qcow2":
+			return arch?.qcow2Url
+		case "img":
+			return arch?.imgUrl
+	}
+}
 ---
 
 <div class="bg-card border overflow-hidden text-sm">
@@ -120,65 +151,35 @@ const archTabs = [
 			<TabContent name={cardId} tabId="x86_64" default class="flex flex-col gap-2">
 				{status === "available" && x86_64 ? (
 					<>
-						{x86_64.isoUrl ? (
-							<a
-								href={x86_64.isoUrl}
-								class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
-							>
-								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-								</svg>
-								ISO
-							</a>
-						) : (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								ISO
-							</span>
-						)}
+						{downloadFormats.map((kind) => {
+							const label = formatLabel(kind)
+							const url = getUrl(x86_64, kind)
+							const isPrimary = kind === primaryFormat
+							const klass = isPrimary
+								? "inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
+								: "inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
 
-						{x86_64.qcow2Url ? (
-							<a
-								href={x86_64.qcow2Url}
-								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
-							>
-								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-								</svg>
-								QCOW2
-							</a>
-						) : (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								QCOW2
-							</span>
-						)}
-
-						{x86_64.imgUrl ? (
-							<a
-								href={x86_64.imgUrl}
-								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
-							>
-								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-								</svg>
-								IMG
-							</a>
-						) : (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								IMG
-							</span>
-						)}
+							return url ? (
+								<a href={url} class={klass}>
+									<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+									</svg>
+									{label}
+								</a>
+							) : (
+								<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+									{label}
+								</span>
+							)
+						})}
 					</>
 				) : (
 					<>
-						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-							ISO
-						</span>
-						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-							QCOW2
-						</span>
-						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-							IMG
-						</span>
+						{downloadFormats.map((kind) => (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								{formatLabel(kind)}
+							</span>
+						))}
 						<span class="text-xs text-muted-foreground text-center">{x86_64Date}</span>
 					</>
 				)}
@@ -188,65 +189,35 @@ const archTabs = [
 			<TabContent name={cardId} tabId="aarch64" class="flex flex-col gap-2">
 				{status === "available" && aarch64 ? (
 					<>
-						{aarch64.isoUrl ? (
-							<a
-								href={aarch64.isoUrl}
-								class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
-							>
-								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-								</svg>
-								ISO
-							</a>
-						) : (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								ISO
-							</span>
-						)}
+						{downloadFormats.map((kind) => {
+							const label = formatLabel(kind)
+							const url = getUrl(aarch64, kind)
+							const isPrimary = kind === primaryFormat
+							const klass = isPrimary
+								? "inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
+								: "inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
 
-						{aarch64.qcow2Url ? (
-							<a
-								href={aarch64.qcow2Url}
-								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
-							>
-								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-								</svg>
-								QCOW2
-							</a>
-						) : (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								QCOW2
-							</span>
-						)}
-
-						{aarch64.imgUrl ? (
-							<a
-								href={aarch64.imgUrl}
-								class="inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
-							>
-								<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-									<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
-								</svg>
-								IMG
-							</a>
-						) : (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								IMG
-							</span>
-						)}
+							return url ? (
+								<a href={url} class={klass}>
+									<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
+										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+									</svg>
+									{label}
+								</a>
+							) : (
+								<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+									{label}
+								</span>
+							)
+						})}
 					</>
 				) : (
 					<>
-						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-							ISO
-						</span>
-						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-							QCOW2
-						</span>
-						<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-							IMG
-						</span>
+						{downloadFormats.map((kind) => (
+							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
+								{formatLabel(kind)}
+							</span>
+						))}
 						<span class="text-xs text-muted-foreground text-center">{aarch64Date}</span>
 					</>
 				)}

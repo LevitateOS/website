@@ -8,7 +8,7 @@ interface Props {
 
 const {
 	title = "LevitateOS - Be Your Own Maintainer",
-	description = "Linux where you maintain your own packages. Simple recipes, no upstream dependencies, self-sufficient package manager."
+	description = "Linux where you maintain your own packages. Simple recipes, atomic A/B updates by default, rollback in one reboot. Mutable mode exists for daredevils."
 } = Astro.props
 
 const siteBase = Astro.site || new URL("https://levitateos.org")
@@ -71,7 +71,7 @@ const ogImageURL = new URL("/og-image.png", siteBase)
 				"name": "LevitateOS",
 				"applicationCategory": "OperatingSystem",
 			"operatingSystem": "Linux",
-			"description": "A Linux distribution where you maintain your own packages using simple Rhai recipes.",
+			"description": "A Linux distribution where you maintain your own packages using simple Rhai recipes, with atomic A/B updates by default and rollback.",
 			"license": "https://opensource.org/licenses/MIT",
 			"url": "https://levitateos.org",
 			"author": {

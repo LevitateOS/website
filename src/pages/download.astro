@@ -38,7 +38,7 @@ const variants: DownloadCardProps[] = [
 		pros: [
 			"Immutable-only (no mutable mode)",
 			"Atomic A/B updates + rollback",
-			"Disk images first (qcow2 + .img)",
+			"QCOW2-only (preinstalled disk image)",
 			"Provision-and-go (SSH key)",
 		],
 		cons: [
@@ -53,6 +53,7 @@ const variants: DownloadCardProps[] = [
 		recRam: "8 GB",
 		minDisk: "32 GB",
 		recDisk: "128 GB",
+		formats: ["qcow2"],
 	},
 	{
 		title: "AcornOS",

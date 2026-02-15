@@ -1,13 +1,13 @@
 # LevitateOS
 
-> LevitateOS is a Linux distribution where users maintain their own packages using Rhai scripts called "recipes." Instead of relying on centralized repositories, you write recipes that declare how to acquire, build, and install software. A local LLM (SmolLM3) assists with recipe generation and dependency resolution. By default, systems are A/B immutable: changes are composed into an inactive slot and activated via trial boot + commit.
+> LevitateOS is a Linux distribution where users maintain their own packages using Rhai scripts called "recipes." Instead of relying on centralized repositories, you write recipes that declare how to acquire, build, and install software. A local LLM (SmolLM3) assists with recipe generation and dependency resolution. By default, systems are A/B immutable: changes are composed into an inactive slot and activated via trial boot + commit. Mutable mode exists as an explicit opt-in for daredevils; it's unsafe if you let an LLM author recipes without review.
 
 LevitateOS targets power users who want full control over their system. It follows the Arch Linux philosophy of manual installation and user-built configuration, but replaces traditional package managers with a recipe-based system.
 
 Variants:
 - **LevitateOS**: glibc, systemd, GNU toolchain - daily-driver desktop, maximum compatibility
 - **AcornOS**: musl, OpenRC, busybox - daily-driver desktop, minimal and fast
-- **RalphOS**: headless agent appliance - immutable-only, disk images first (qcow2 + .img)
+- **RalphOS**: headless agent appliance - immutable-only, QCOW2-only disk image
 
 ---
 
