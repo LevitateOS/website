@@ -3,9 +3,16 @@ import ThemeToggle from "../ThemeToggle.astro"
 import LevitateTextLogo from "../brand/LevitateTextLogo.astro"
 
 const path = Astro.url.pathname
+function normalizePath(input: string): string {
+	if (input === "/") return "/"
+	return input.endsWith("/") ? input.slice(0, -1) : input
+}
+
 function active(href: string): boolean {
-	if (href === "/") return path === "/"
-	return path === href || path.startsWith(`${href}/`)
+	const normalizedPath = normalizePath(path)
+	const normalizedHref = normalizePath(href)
+	if (normalizedHref === "/") return normalizedPath === "/"
+	return normalizedPath === normalizedHref || normalizedPath.startsWith(`${normalizedHref}/`)
 }
 ---
 
@@ -30,25 +37,25 @@ function active(href: string): boolean {
 				Home
 			</a>
 			<a
-				href="/ralph4days"
+				href="/ralph4days/"
 				class:list={[
 					"text-sm font-medium transition-colors",
-					active("/ralph4days") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+					active("/ralph4days/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
 				]}
 			>
 				Ralph4days
 			</a>
 			<a
-				href="/download"
+				href="/download/"
 				class:list={[
 					"text-sm font-medium transition-colors",
-					active("/download") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+					active("/download/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
 				]}
 			>
 				Download
 			</a>
 			<a
-				href="/docs/getting-started"
+				href="/docs/getting-started/"
 				class:list={[
 					"text-sm font-medium transition-colors",
 					active("/docs") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
@@ -57,10 +64,10 @@ function active(href: string): boolean {
 				Docs
 			</a>
 			<a
-				href="/docs/recipe-format"
+				href="/docs/recipe-format/"
 				class:list={[
 					"text-sm font-medium transition-colors",
-					active("/docs/recipe-format") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+					active("/docs/recipe-format/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
 				]}
 			>
 				Recipes
@@ -116,25 +123,25 @@ function active(href: string): boolean {
 				Home
 			</a>
 			<a
-				href="/ralph4days"
+				href="/ralph4days/"
 				class:list={[
 					"text-sm font-medium transition-colors py-2",
-					active("/ralph4days") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+					active("/ralph4days/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
 				]}
 			>
 				Ralph4days
 			</a>
 			<a
-				href="/download"
+				href="/download/"
 				class:list={[
 					"text-sm font-medium transition-colors py-2",
-					active("/download") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+					active("/download/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
 				]}
 			>
 				Download
 			</a>
 			<a
-				href="/docs/getting-started"
+				href="/docs/getting-started/"
 				class:list={[
 					"text-sm font-medium transition-colors py-2",
 					active("/docs") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
@@ -143,10 +150,10 @@ function active(href: string): boolean {
 				Docs
 			</a>
 			<a
-				href="/docs/recipe-format"
+				href="/docs/recipe-format/"
 				class:list={[
 					"text-sm font-medium transition-colors py-2",
-					active("/docs/recipe-format") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+					active("/docs/recipe-format/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
 				]}
 			>
 				Recipes
