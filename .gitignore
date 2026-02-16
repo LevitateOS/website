@@ -27,3 +27,6 @@ Thumbs.db
 .vite
 .turbo
 *.tsbuildinfo
+
+# Local image backups (generated during asset iteration)
+public/*_logo.bak-*.png

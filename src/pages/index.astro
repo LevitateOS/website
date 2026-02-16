@@ -11,6 +11,7 @@ import OSCard from "../components/OSCard.astro"
 import SplitSection from "../components/SplitSection.astro"
 import CTAButtons from "../components/CTAButtons.astro"
 import HighlightBox from "../components/HighlightBox.astro"
+import LevitateTextLogo from "../components/brand/LevitateTextLogo.astro"
 
 const recipeAdvantages = [
 	"Pin exact versions — your system stays reproducible",
@@ -110,12 +111,16 @@ const docsFeatures = [
 					<AnimatedSection>
 						<img
 							id="hero-logo"
-							src="/levitateos-light.png"
+							src="/levitateos_logo.png"
 							alt="LevitateOS"
 							width="192"
 							height="192"
 							class="w-36 sm:w-40 lg:w-48 h-auto mb-6"
 						/>
+					</AnimatedSection>
+
+					<AnimatedSection delay={25}>
+						<LevitateTextLogo className="text-3xl sm:text-4xl mb-4" />
 					</AnimatedSection>
 
 					<AnimatedSection delay={50}>
@@ -180,32 +185,32 @@ const docsFeatures = [
 
 					<div class="grid md:grid-cols-3 gap-6">
 					<OSCard
+						variant="levitate"
 						name="LevitateOS"
 						stack="glibc / systemd / GNU"
 						description="Maximum software compatibility. If it runs on Linux, it runs here. Systemd handles services, timers, and boot."
 						features={["Broadest package compatibility", "Comprehensive service management", "Rocky 10 RPMs for dependencies", "Familiar to most Linux users"]}
-						logoLight="/levitateos-light.png"
-						logoDark="/levitateos-dark.png"
+						logo="/levitateos_logo.png"
 						builderDescription="ISO builder made by Claude Opus 4.5"
 					/>
 
 					<OSCard
+						variant="ralph"
 						name="RalphOS"
 						stack="Ralph4Days Sandbox"
 						description="Agent-only appliance OS. Ships as a preinstalled QCOW2 disk image to host ralphd and isolated automation sandboxes."
 						features={["Atomic slot updates + rollback", "QCOW2-only disk image", "Provision-and-go (SSH key)", "Immutable-only by design"]}
-						logoLight="/ralphos.svg"
-						logoDark="/ralphos.svg"
+						logo="/ralphos_logo.png"
 						builderDescription="Agent appliance variant (QCOW2-only)"
 					/>
 
 					<OSCard
+						variant="acorn"
 						name="AcornOS"
 						stack="musl / OpenRC / busybox"
 						description="A mirror build of LevitateOS with a different toolchain. Smaller binaries, faster boot, simpler init. For those who prefer knowing exactly what's running on their system."
 						features={["Leaner compiled binaries", "Straightforward init scripts", "Alpine Linux PKGs for dependencies", "Less complexity under the hood"]}
-						logoLight="/acornos-light.png"
-						logoDark="/acornos-dark.png"
+						logo="/acornos_logo.png"
 						builderDescription="ISO builder built by experimental coding Agents"
 					/>
 					</div>
@@ -359,21 +364,3 @@ const docsFeatures = [
 		<Footer />
 	</div>
 </BaseLayout>
-
-<script>
-	// Update logo based on theme
-	function updateLogo() {
-		const logo = document.getElementById("hero-logo") as HTMLImageElement
-		if (logo) {
-			const isDark = document.documentElement.classList.contains("dark")
-			logo.src = isDark ? "/levitateos-dark.png" : "/levitateos-light.png"
-		}
-	}
-
-	// Update on theme toggle
-	const observer = new MutationObserver(updateLogo)
-	observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
-
-	// Initial update
-	updateLogo()
-</script>

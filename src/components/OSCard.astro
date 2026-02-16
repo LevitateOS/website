@@ -1,25 +1,41 @@
 ---
+import LevitateTextLogo from "./brand/LevitateTextLogo.astro"
+import RalphTextLogo from "./brand/RalphTextLogo.astro"
+import AcornTextLogo from "./brand/AcornTextLogo.astro"
+
 interface Props {
+	variant: "levitate" | "ralph" | "acorn"
 	name: string
 	stack: string
 	description: string
 	features: string[]
-	logoLight: string
-	logoDark: string
+	logo: string
 	builderDescription?: string
 }
 
-const { name, stack, description, features, logoLight, logoDark, builderDescription } = Astro.props
+const { variant, name, stack, description, features, logo, builderDescription } = Astro.props
 ---
 
 <div class="p-5 bg-background ring-1 ring-border h-full flex flex-col">
 	<div class="flex items-center gap-3 mb-3">
-		<picture>
-			<source srcset={logoDark} media="(prefers-color-scheme: dark)" />
-			<img src={logoLight} alt={name} width="40" height="40" loading="lazy" class="size-10" />
-		</picture>
+		<div class="size-10 shrink-0 grid place-items-center">
+			<img
+				src={logo}
+				alt={name}
+				loading="lazy"
+				class="w-full h-full object-contain"
+			/>
+		</div>
 		<div>
-			<h3 class="text-base font-medium">{name}</h3>
+			<h3 class="text-base font-medium">
+				{variant === "levitate" ? (
+					<LevitateTextLogo />
+				) : variant === "ralph" ? (
+					<RalphTextLogo />
+				) : (
+					<AcornTextLogo />
+				)}
+			</h3>
 			<p class="text-sm text-muted-foreground">{stack}</p>
 		</div>
 	</div>

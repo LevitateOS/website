@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from "../ThemeToggle.astro"
+import LevitateTextLogo from "../brand/LevitateTextLogo.astro"
 ---
 
 <header
@@ -7,13 +8,16 @@ import ThemeToggle from "../ThemeToggle.astro"
 >
 	<div class="container flex h-14 items-center justify-between px-4">
 		<a href="/" class="flex items-center gap-2">
-			<span class="text-base font-medium font-logo">LevitateOS</span>
+			<LevitateTextLogo className="text-base" />
 		</a>
 
 		<!-- Desktop navigation -->
 		<nav class="hidden md:flex items-center gap-6">
 			<a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
 				Home
+			</a>
+			<a href="/ralph4days" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+				Ralph4days
 			</a>
 			<a href="/download" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
 				Download
@@ -73,6 +77,9 @@ import ThemeToggle from "../ThemeToggle.astro"
 		<div class="container px-4 py-3 flex flex-col gap-2">
 			<a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
 				Home
+			</a>
+			<a href="/ralph4days" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+				Ralph4days
 			</a>
 			<a href="/download" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
 				Download

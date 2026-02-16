@@ -1,6 +1,9 @@
 ---
 import Tabs from "./ui/Tabs.astro"
 import TabContent from "./ui/TabContent.astro"
+import LevitateTextLogo from "./brand/LevitateTextLogo.astro"
+import RalphTextLogo from "./brand/RalphTextLogo.astro"
+import AcornTextLogo from "./brand/AcornTextLogo.astro"
 
 export interface ArchUrls {
 	isoUrl?: string
@@ -11,6 +14,7 @@ export interface ArchUrls {
 export type DownloadFormat = "iso" | "qcow2" | "img"
 
 export interface Props {
+	variant: "levitate" | "ralph" | "acorn"
 	title: string
 	logo: string
 	stack: string
@@ -30,6 +34,7 @@ export interface Props {
 }
 
 const {
+	variant,
 	title,
 	logo,
 	stack,
@@ -87,8 +92,23 @@ function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | unde
 		<!-- OS Info -->
 		<div class="px-5 py-5 flex flex-col flex-1">
 			<div class="flex items-center gap-3 mb-2">
-				<img src={logo} alt={title} width="40" height="40" loading="lazy" class="size-10" />
-				<h3 class="text-lg font-medium">{title}</h3>
+				<div class="size-10 shrink-0 grid place-items-center">
+					<img
+						src={logo}
+						alt={title}
+						loading="lazy"
+						class="w-full h-full object-contain"
+					/>
+				</div>
+				<h3 class="text-lg font-medium">
+					{variant === "levitate" ? (
+						<LevitateTextLogo className="text-lg" />
+					) : variant === "ralph" ? (
+						<RalphTextLogo className="text-lg" />
+					) : (
+						<AcornTextLogo className="text-lg" />
+					)}
+				</h3>
 			</div>
 
 			<p class="font-mono text-muted-foreground mb-2">{stack}</p>
@@ -119,7 +139,16 @@ function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | unde
 
 		<!-- Download -->
 		<div class="bg-black/20 px-5 py-5 flex flex-col sm:w-56 sm:shrink-0">
-			<h4 class="font-medium mb-3">Download {title}</h4>
+			<h4 class="font-medium mb-3">
+				Download{" "}
+				{variant === "levitate" ? (
+					<LevitateTextLogo />
+				) : variant === "ralph" ? (
+					<RalphTextLogo />
+				) : (
+					<AcornTextLogo />
+				)}
+			</h4>
 			<div class="text-muted-foreground mb-3">
 				<table class="w-full">
 					<thead>

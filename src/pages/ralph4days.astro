@@ -1,0 +1,362 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Header from "../components/layout/Header.astro"
+import Footer from "../components/layout/Footer.astro"
+import AnimatedSection from "../components/AnimatedSection.astro"
+import SectionHeader from "../components/SectionHeader.astro"
+import SplitSection from "../components/SplitSection.astro"
+import FeatureCard from "../components/FeatureCard.astro"
+import HighlightBox from "../components/HighlightBox.astro"
+import CTAButtons from "../components/CTAButtons.astro"
+import Tabs from "../components/ui/Tabs.astro"
+import TabContent from "../components/ui/TabContent.astro"
+import RalphTextLogo from "../components/brand/RalphTextLogo.astro"
+import LevitateTextLogo from "../components/brand/LevitateTextLogo.astro"
+import Ralph4daysTextLogo from "../components/brand/Ralph4daysTextLogo.astro"
+
+const githubUrl = "https://github.com/veighnsche/ralph4days"
+
+const modelTabs = [
+	{ id: "disciplines", label: "Disciplines" },
+	{ id: "subsystems", label: "Subsystems" },
+	{ id: "tasks", label: "Tasks" },
+	{ id: "signals", label: "Signals" },
+]
+
+const corePromises = [
+	{
+		title: "Roster, not a chatbot",
+		description:
+			"R4D treats agents like employees: each one has a role, a toolbelt, and a work history that compounds over time.",
+		icon: "users",
+	},
+	{
+		title: "Deterministic orchestration",
+		description:
+			"R4D is the system around the AI: it assembles prompts, launches sessions, and keeps state. The intelligence is in the employees, not the glue.",
+		icon: "cog",
+	},
+	{
+		title: "Local-first memory",
+		description:
+			"Every signal becomes a durable receipt. Store it locally, index it, and retrieve it later via semantic search (RAG).",
+		icon: "database",
+	},
+]
+---
+
+<BaseLayout
+	title="Ralph4days - AI Employee Roster for Shipping Software"
+	description="Ralph4days (R4D) is a desktop workspace for running a roster of AI employees over a local task graph: disciplines, subsystems, tasks, and durable signals with RAG memory. Runs great inside RalphOS."
+>
+	<div class="flex min-h-screen flex-col">
+		<Header />
+		<main class="flex-1">
+			<!-- Hero -->
+			<section
+				id="r4d-hero"
+				class="relative overflow-hidden py-14 sm:py-20 bg-[radial-gradient(ellipse_at_top,_rgba(11,60,255,0.14),_transparent_55%),radial-gradient(ellipse_at_bottom,_rgba(255,138,61,0.10),_transparent_60%)]"
+			>
+				<div class="container">
+					<SplitSection class="items-start">
+						<div>
+							<AnimatedSection>
+								<p class="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+									A roster of AI employees, on a local task graph
+								</p>
+							</AnimatedSection>
+
+							<AnimatedSection delay={60}>
+								<h1 class="mt-3 text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight">
+									<Ralph4daysTextLogo className="text-3xl sm:text-4xl lg:text-5xl" />
+								</h1>
+							</AnimatedSection>
+
+							<AnimatedSection delay={120}>
+								<p class="mt-5 text-sm text-muted-foreground leading-relaxed max-w-prose">
+									R4D is a desktop command center for building software with agents.
+									You don&apos;t run one assistant. You run a whole team: each employee is
+									specialized, accountable, and leaves behind durable signals the next employee can use.
+									Bring employees from anywhere: Claude CLI today, OpenClaw-style "workstation" agents tomorrow,
+									or local models when you want full control. R4D is intentionally opinionated about the
+									work artifacts that matter: tasks, receipts, and memory.
+								</p>
+							</AnimatedSection>
+
+							<AnimatedSection delay={170}>
+								<div class="mt-6">
+									<CTAButtons
+										primaryHref="/download"
+										primaryText="Download RalphOS"
+										secondaryHref={githubUrl}
+										secondaryText="View on GitHub"
+									/>
+								</div>
+							</AnimatedSection>
+
+							<AnimatedSection delay={220}>
+								<div class="mt-6 text-xs text-muted-foreground">
+									R4D pairs naturally with <RalphTextLogo className="align-[-0.08em]" />: a
+									sandbox OS that hosts the agent runtime. Built in the <LevitateTextLogo className="align-[-0.08em]" /> ecosystem.
+								</div>
+							</AnimatedSection>
+						</div>
+
+						<Fragment slot="demo">
+							<AnimatedSection delay={80}>
+								<div class="ring-1 ring-foreground/10 bg-card overflow-hidden">
+									<img
+										src="/r4d1.jpeg"
+										alt="Ralph4days UI showing disciplines, tasks, and a workspace tab"
+										width="1558"
+										height="1002"
+										class="w-full h-auto"
+									/>
+								</div>
+							</AnimatedSection>
+						</Fragment>
+					</SplitSection>
+				</div>
+			</section>
+
+			<!-- Core promises -->
+			<section id="r4d-core" class="py-16">
+				<div class="container">
+					<SectionHeader
+						label="What It Is"
+						title="A company simulator for agents"
+						highlight="Disciplines, subsystems, tasks, and durable memory."
+						centered={true}
+					/>
+
+					<div class="grid gap-4 md:grid-cols-3 mt-8">
+						{corePromises.map((p) => (
+							<FeatureCard title={p.title} description={p.description}>
+								<svg slot="icon" viewBox="0 0 256 256" fill="currentColor">
+									{p.icon === "users" ? (
+										<path d="M117.25 157.63a40 40 0 1 0-50.5 0A71.92 71.92 0 0 0 24 224a8 8 0 0 0 16 0a56 56 0 0 1 112 0a8 8 0 0 0 16 0a71.92 71.92 0 0 0-42.75-66.37ZM56 120a24 24 0 1 1 24 24a24 24 0 0 1-24-24Zm173.5 56.9a8 8 0 1 1-11 11.6a55.8 55.8 0 0 0-38.6-16.5a8 8 0 0 1 0-16a71.7 71.7 0 0 1 49.6 20.9ZM160 120a40 40 0 1 0-16 32a8 8 0 0 1 10.1 12.4A56 56 0 1 1 200 120a55.6 55.6 0 0 1-7.4 27.9a8 8 0 1 1-13.9-8a39.8 39.8 0 0 0 5.3-19.9a24 24 0 1 1-24-24Z" />
+									) : p.icon === "cog" ? (
+										<path d="M232 128a8 8 0 0 1-8 8h-11.05a83.23 83.23 0 0 1-5.83 14.06l7.82 7.82a8 8 0 0 1 0 11.32l-18.38 18.38a8 8 0 0 1-11.32 0l-7.82-7.82A83.23 83.23 0 0 1 136 212.95V224a8 8 0 0 1-8 8h-24a8 8 0 0 1-8-8v-11.05a83.23 83.23 0 0 1-14.06-5.83l-7.82 7.82a8 8 0 0 1-11.32 0L44.42 204.56a8 8 0 0 1 0-11.32l7.82-7.82A83.23 83.23 0 0 1 43.05 136H32a8 8 0 0 1-8-8v-24a8 8 0 0 1 8-8h11.05a83.23 83.23 0 0 1 5.83-14.06l-7.82-7.82a8 8 0 0 1 0-11.32l18.38-18.38a8 8 0 0 1 11.32 0l7.82 7.82A83.23 83.23 0 0 1 120 43.05V32a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v11.05a83.23 83.23 0 0 1 14.06 5.83l7.82-7.82a8 8 0 0 1 11.32 0l18.38 18.38a8 8 0 0 1 0 11.32l-7.82 7.82A83.23 83.23 0 0 1 212.95 120H224a8 8 0 0 1 8 8Zm-16-8h-9.52a8 8 0 0 1-7.85-6.49a67.4 67.4 0 0 0-8.1-19.51a8 8 0 0 1 1.2-10.13l6.73-6.73l-7.06-7.06l-6.73 6.73a8 8 0 0 1-10.13 1.2a67.4 67.4 0 0 0-19.51-8.1A8 8 0 0 1 152 49.52V40h-8v9.52a8 8 0 0 1-6.49 7.85a67.4 67.4 0 0 0-19.51 8.1a8 8 0 0 1-10.13-1.2l-6.73-6.73l-7.06 7.06l6.73 6.73a8 8 0 0 1 1.2 10.13a67.4 67.4 0 0 0-8.1 19.51A8 8 0 0 1 89.52 104H80v8h9.52a8 8 0 0 1 7.85 6.49a67.4 67.4 0 0 0 8.1 19.51a8 8 0 0 1-1.2 10.13l-6.73 6.73l7.06 7.06l6.73-6.73a8 8 0 0 1 10.13-1.2a67.4 67.4 0 0 0 19.51 8.1a8 8 0 0 1 6.49 7.85V216h8v-9.52a8 8 0 0 1 6.49-7.85a67.4 67.4 0 0 0 19.51-8.1a8 8 0 0 1 10.13 1.2l6.73 6.73l7.06-7.06l-6.73-6.73a8 8 0 0 1-1.2-10.13a67.4 67.4 0 0 0 8.1-19.51A8 8 0 0 1 206.48 136H216Zm-88 40a32 32 0 1 1 32-32a32 32 0 0 1-32 32Zm0-48a16 16 0 1 0 16 16a16 16 0 0 0-16-16Z" />
+									) : (
+										<path d="M208 24H80a16 16 0 0 0-16 16v40H48a16 16 0 0 0-16 16v112a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-40h16a16 16 0 0 0 16-16V40a16 16 0 0 0-16-16Zm-32 184H48V96h128Zm48-56h-32V96a16 16 0 0 0-16-16H80V40h144Z" />
+									)}
+								</svg>
+							</FeatureCard>
+						))}
+					</div>
+
+					<div class="mt-8">
+						<HighlightBox>
+							<p class="text-sm text-muted-foreground">
+								<strong class="text-foreground">Ralph is deterministic orchestration code.</strong>{" "}
+								The goal is simple: give employees a clean job description, the right tools, and a place to leave
+								receipts so the next session isn&apos;t starting from zero.
+							</p>
+						</HighlightBox>
+					</div>
+				</div>
+			</section>
+
+			<!-- Model section -->
+			<section id="r4d-model" class="py-16 bg-muted/30">
+				<div class="container">
+					<SplitSection>
+						<div>
+							<SectionHeader
+								label="Core Model"
+								title="A simple data model that scales"
+								highlight="From one-person projects to whole teams."
+							/>
+							<p class="text-sm text-muted-foreground mt-4 leading-relaxed">
+								R4D starts by making the work legible. Everything fits into four nouns:{" "}
+								<strong class="text-foreground">disciplines</strong> define employees,{" "}
+								<strong class="text-foreground">subsystems</strong> group work areas,{" "}
+								<strong class="text-foreground">tasks</strong> drive execution, and{" "}
+								<strong class="text-foreground">signals</strong> are the durable memory.
+							</p>
+
+							<div class="mt-6">
+								<Tabs tabs={modelTabs} name="r4d-model" defaultTab="disciplines" />
+
+								<div class="mt-3 bg-card ring-1 ring-foreground/10 p-5">
+									<TabContent name="r4d-model" tabId="disciplines" default>
+										<p class="text-sm font-medium mb-2">Disciplines are employee templates.</p>
+										<ul class="text-sm text-muted-foreground space-y-1.5">
+											<li>System prompt: how they think and what &quot;good&quot; means.</li>
+											<li>Skills: what they&apos;re trained to do repeatedly.</li>
+											<li>Conventions: code style, repo rules, and decision boundaries.</li>
+											<li>Tools: the MCP servers and commands they can invoke.</li>
+										</ul>
+									</TabContent>
+
+									<TabContent name="r4d-model" tabId="subsystems">
+										<p class="text-sm font-medium mb-2">Subsystems are where signals land.</p>
+										<p class="text-sm text-muted-foreground leading-relaxed">
+											You can model anything: &quot;Auth&quot;, &quot;Bookmark CRUD&quot;, &quot;Release pipeline&quot;, &quot;Docs&quot;.
+											A subsystem becomes a stable inbox for signals across many tasks and employees.
+										</p>
+									</TabContent>
+
+									<TabContent name="r4d-model" tabId="tasks">
+										<p class="text-sm font-medium mb-2">Tasks are the unit of execution.</p>
+										<ul class="text-sm text-muted-foreground space-y-1.5">
+											<li>Define the problem and acceptance criteria.</li>
+											<li>Bind a terminal session and run the work.</li>
+											<li>Update status: pending, running, done, stuck, needs input.</li>
+										</ul>
+									</TabContent>
+
+									<TabContent name="r4d-model" tabId="signals">
+										<p class="text-sm font-medium mb-2">Signals are the receipts.</p>
+										<p class="text-sm text-muted-foreground leading-relaxed">
+											Signals are comments, decisions, diffs, logs, and artifacts captured during execution.
+											R4D stores them locally and can index them for semantic retrieval (RAG) so
+											employees can &quot;remember&quot; without re-reading the whole repo.
+										</p>
+									</TabContent>
+								</div>
+							</div>
+						</div>
+
+						<Fragment slot="demo">
+							<div class="ring-1 ring-foreground/10 bg-card overflow-hidden">
+								<img
+									src="/r4d2.jpeg"
+									alt="Ralph4days UI showing disciplines and documentation tab"
+									width="1558"
+									height="1002"
+									loading="lazy"
+									class="w-full h-auto"
+								/>
+							</div>
+						</Fragment>
+					</SplitSection>
+				</div>
+			</section>
+
+			<!-- Memory -->
+			<section id="r4d-memory" class="py-16">
+				<div class="container max-w-4xl">
+					<SplitSection reverse={true}>
+						<SectionHeader
+							label="RAG Memory"
+							title="Signals that compound"
+							highlight="Local semantic search for employee receipts."
+						/>
+
+						<Fragment slot="demo">
+							<HighlightBox class="bg-card ring-1 ring-foreground/10">
+								<p class="text-sm text-muted-foreground mb-3">
+									<strong class="text-foreground">Problem:</strong> agents forget. Humans forget. Repositories sprawl.
+								</p>
+								<p class="text-sm text-muted-foreground mb-3">
+									<strong class="text-foreground">Answer:</strong> write signals like you&apos;re leaving a note to your future self.
+									Then index them.
+								</p>
+								<ul class="text-sm text-muted-foreground space-y-1.5">
+									<li>Feature comments can feed an embedding pipeline.</li>
+									<li>Task comments become searchable receipts.</li>
+									<li>Retrieve by meaning, not filename.</li>
+								</ul>
+							</HighlightBox>
+						</Fragment>
+					</SplitSection>
+				</div>
+			</section>
+
+			<!-- Built for execution -->
+			<section id="r4d-execution" class="py-16 bg-muted/30">
+				<div class="container max-w-4xl">
+					<SectionHeader
+						label="Workstation"
+						title="A UX for running work, not just describing it"
+						highlight="Split layout, tabs, terminals, and prompts."
+						centered={true}
+					/>
+
+					<div class="grid gap-4 md:grid-cols-2 mt-8">
+						<FeatureCard
+							title="Split layout"
+							description="Left side is your project graph. Right side is where work happens: tabs, details, and sessions."
+						>
+							<svg slot="icon" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M224 48H32a8 8 0 0 0-8 8v144a8 8 0 0 0 8 8h192a8 8 0 0 0 8-8V56a8 8 0 0 0-8-8Zm-8 144H40V64h176Z" />
+								<path d="M128 64a8 8 0 0 0-8 8v128a8 8 0 0 0 16 0V72a8 8 0 0 0-8-8Z" />
+							</svg>
+						</FeatureCard>
+
+						<FeatureCard
+							title="Terminal sessions"
+							description="Run task-bound sessions with model selection and thinking controls. Capture outputs as signals."
+						>
+							<svg slot="icon" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M224 48H32a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16h192a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16ZM32 64h192v16H32Zm0 128V96h192v96Zm24-64a8 8 0 0 1 8-8h56a8 8 0 0 1 0 16H64a8 8 0 0 1-8-8Zm8 24h88a8 8 0 0 1 0 16H64a8 8 0 0 1 0-16Z" />
+							</svg>
+						</FeatureCard>
+
+						<FeatureCard
+							title="Prompt builder"
+							description="Compose repeatable prompt recipes. Toggle sections, reorder, preview, and reuse."
+						>
+							<svg slot="icon" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M224 48H80a16 16 0 0 0-16 16v24H40a16 16 0 0 0-16 16v88a16 16 0 0 0 16 16h104a16 16 0 0 0 16-16v-24h64a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16ZM144 192H40v-88h104Zm80-40h-64v-48a16 16 0 0 0-16-16H80V64h144Z" />
+							</svg>
+						</FeatureCard>
+
+						<FeatureCard
+							title="Works beyond software"
+							description="Swap disciplines and subsystems and you can run any org: support, ops, research, design."
+						>
+							<svg slot="icon" viewBox="0 0 256 256" fill="currentColor">
+								<path d="M232 136a8 8 0 0 1-8 8h-20.7a79.87 79.87 0 0 1-29.14 36.24l8.52 17.05a8 8 0 1 1-14.32 7.16l-8.52-17.05A79.62 79.62 0 0 1 136 199.3V224a8 8 0 0 1-16 0v-24.7a79.62 79.62 0 0 1-23.84-10.9l-8.52 17.05a8 8 0 1 1-14.32-7.16l8.52-17.05A79.87 79.87 0 0 1 52.7 144H32a8 8 0 0 1 0-16h20.7a79.87 79.87 0 0 1 29.14-36.24l-8.52-17.05a8 8 0 0 1 14.32-7.16l8.52 17.05A79.62 79.62 0 0 1 120 56.7V32a8 8 0 0 1 16 0v24.7a79.62 79.62 0 0 1 23.84 10.9l8.52-17.05a8 8 0 1 1 14.32 7.16l-8.52 17.05A79.87 79.87 0 0 1 203.3 128H224a8 8 0 0 1 8 8Zm-104 56a56 56 0 1 0-56-56a56.06 56.06 0 0 0 56 56Z" />
+							</svg>
+						</FeatureCard>
+					</div>
+				</div>
+			</section>
+
+			<!-- RalphOS -->
+			<section id="r4d-ralphos" class="py-16">
+				<div class="container max-w-4xl">
+					<SplitSection>
+						<div>
+							<SectionHeader
+								label="Runs On RalphOS"
+								title="A sandbox OS for autonomous workers"
+								highlight="Keep toolchains, secrets, and experiments isolated."
+							/>
+							<p class="text-sm text-muted-foreground mt-4 leading-relaxed">
+								<RalphTextLogo className="align-[-0.08em]" /> is the appliance variant of the <LevitateTextLogo className="align-[-0.08em]" /> ecosystem.
+								It&apos;s designed to host agent runtimes and sandboxed workspaces safely. R4D is the command center UI
+								that makes that work legible and repeatable.
+							</p>
+							<div class="mt-6">
+								<CTAButtons
+									primaryHref="/download"
+									primaryText="Download RalphOS"
+									secondaryHref={githubUrl}
+									secondaryText="Ralph4days GitHub"
+								/>
+							</div>
+						</div>
+
+						<Fragment slot="demo">
+							<HighlightBox class="bg-card ring-1 ring-foreground/10">
+								<p class="text-sm text-muted-foreground mb-3">
+									<strong class="text-foreground">R4D</strong> is the company simulator.
+								</p>
+								<ul class="text-sm text-muted-foreground space-y-1.5">
+									<li>Define disciplines like job descriptions.</li>
+									<li>Create tasks like work orders.</li>
+									<li>Capture signals like receipts.</li>
+									<li>Index memory so the team compounds.</li>
+								</ul>
+							</HighlightBox>
+						</Fragment>
+					</SplitSection>
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</div>
+</BaseLayout>

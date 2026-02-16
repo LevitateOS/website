@@ -3,6 +3,22 @@
 @import "@fontsource-variable/jetbrains-mono";
 
 @font-face {
+	font-family: "Satoshi";
+	src: url("/fonts/satoshi-500.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Satoshi";
+	src: url("/fonts/satoshi-700.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
 	font-family: "Google Sans";
 	src: url("/Google_Sans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf") format("truetype");
 	font-weight: 100 900;
@@ -91,6 +107,7 @@
 @theme inline {
 	--font-sans: "JetBrains Mono Variable", monospace;
 	--font-logo: "Google Sans", sans-serif;
+	--font-brand: "Satoshi", Inter, "Google Sans", ui-sans-serif, system-ui, sans-serif;
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -140,6 +157,122 @@
 	html {
 		@apply font-sans;
 		overflow-x: hidden;
+	}
+}
+
+@layer components {
+	:root {
+		--spectrum-cobalt: #0b3cff;
+		--spectrum-blue: #2e6bff;
+		--spectrum-violet: #6b5cff;
+		--spectrum-magenta: #c14cff;
+		--spectrum-amber: #ff8a3d;
+		--spectrum-gold: #ffc76a;
+	}
+
+	.brand-text {
+		font-family: var(--font-brand);
+		letter-spacing: 0.015em;
+		font-kerning: normal;
+		font-feature-settings: "kern" 1;
+		line-height: 1;
+		display: inline-block;
+		position: relative;
+		white-space: nowrap;
+		/* Slightly larger than surrounding UI text (requested). */
+		font-size: 1.06em;
+	}
+
+	.brand-text--ralph {
+		font-weight: 500;
+		color: transparent;
+		background-image: linear-gradient(
+			90deg,
+			var(--ralph-cobalt, var(--spectrum-cobalt)) 0%,
+			var(--ralph-blue, var(--spectrum-blue)) 35%,
+			var(--ralph-violet, var(--spectrum-violet)) 60%,
+			var(--ralph-magenta, var(--spectrum-magenta)) 80%,
+			var(--ralph-amber, var(--spectrum-amber)) 100%
+		);
+		-webkit-background-clip: text;
+		background-clip: text;
+		text-shadow:
+			0 0 12px rgb(46 107 255 / 14%),
+			0 0 18px rgb(193 76 255 / 10%);
+	}
+
+	.dark .brand-text--ralph {
+		/* Dark mode needs higher minimum contrast on the early gradient stops. */
+		--ralph-cobalt: #3d63ff;
+		--ralph-blue: #4f83ff;
+		--ralph-violet: #8a7cff;
+		--ralph-magenta: #d06bff;
+		--ralph-amber: #ff9a57;
+		text-shadow:
+			0 0 16px rgb(46 107 255 / 22%),
+			0 0 26px rgb(193 76 255 / 16%);
+	}
+
+	.brand-text--acorn {
+		font-weight: 500;
+		color: transparent;
+		background-image: linear-gradient(
+			90deg,
+			var(--acorn-blue, var(--spectrum-blue)) 0%,
+			var(--acorn-violet, var(--spectrum-violet)) 45%,
+			var(--acorn-amber, var(--spectrum-amber)) 75%,
+			var(--acorn-gold, var(--spectrum-gold)) 100%
+		);
+		-webkit-background-clip: text;
+		background-clip: text;
+		text-shadow:
+			0 0 9px rgb(255 138 61 / 12%),
+			0 0 14px rgb(255 138 61 / 8%);
+		filter: saturate(0.9);
+	}
+
+	.dark .brand-text--acorn {
+		/* Brighten the left side for contrast on dark backgrounds. */
+		--acorn-blue: #4f83ff;
+		--acorn-violet: #8a7cff;
+		--acorn-amber: #ff9a57;
+		--acorn-gold: #ffd27e;
+		text-shadow:
+			0 0 12px rgb(255 138 61 / 18%),
+			0 0 18px rgb(255 138 61 / 12%);
+		filter: saturate(0.95);
+	}
+
+	.brand-text--levitate {
+		/* Light mode: neutral flagship mark that still reads on a light background. */
+		font-weight: 700; /* Satoshi doesn't ship a true 600. */
+		color: transparent;
+		background-image: linear-gradient(180deg, #1b2436 0%, #0b1220 100%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		text-shadow: 0 0 10px rgb(46 107 255 / 8%);
+	}
+
+	.brand-text--levitate::after {
+		content: attr(data-text);
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		color: transparent;
+		background-image: linear-gradient(90deg, var(--spectrum-blue), var(--spectrum-violet));
+		-webkit-background-clip: text;
+		background-clip: text;
+		opacity: 0.12;
+	}
+
+	.dark .brand-text--levitate {
+		/* Dark mode: near-neutral cool white with faint spectral reflection. */
+		background-image: linear-gradient(180deg, #ffffff 0%, #dce6ff 100%);
+		text-shadow: 0 0 10px rgb(46 107 255 / 10%);
+	}
+
+	.dark .brand-text--levitate::after {
+		opacity: 0.14;
 	}
 }
 

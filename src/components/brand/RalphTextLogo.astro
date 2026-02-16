@@ -1,0 +1,12 @@
+---
+interface Props {
+	className?: string
+}
+
+const { className } = Astro.props
+const text = "RalphOS"
+---
+
+<span class:list={["brand-text brand-text--ralph", className]} aria-label="RalphOS">
+	{text}
+</span>
