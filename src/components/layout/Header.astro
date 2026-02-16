@@ -1,11 +1,18 @@
 ---
 import ThemeToggle from "../ThemeToggle.astro"
 import LevitateTextLogo from "../brand/LevitateTextLogo.astro"
+
+const path = Astro.url.pathname
+function active(href: string): boolean {
+	if (href === "/") return path === "/"
+	return path === href || path.startsWith(`${href}/`)
+}
 ---
 
 <header
-	class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+	class="sticky top-0 z-50 w-full bg-background/92 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative"
 >
+	<div class="absolute bottom-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,var(--spectrum-cobalt),var(--spectrum-magenta),var(--spectrum-amber),transparent)] opacity-40 pointer-events-none" />
 	<div class="container flex h-14 items-center justify-between px-4">
 		<a href="/" class="flex items-center gap-2">
 			<LevitateTextLogo className="text-base" />
@@ -13,24 +20,48 @@ import LevitateTextLogo from "../brand/LevitateTextLogo.astro"
 
 		<!-- Desktop navigation -->
 		<nav class="hidden md:flex items-center gap-6">
-			<a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+			<a
+				href="/"
+				class:list={[
+					"text-sm font-medium transition-colors",
+					active("/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Home
 			</a>
-			<a href="/ralph4days" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+			<a
+				href="/ralph4days"
+				class:list={[
+					"text-sm font-medium transition-colors",
+					active("/ralph4days") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Ralph4days
 			</a>
-			<a href="/download" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+			<a
+				href="/download"
+				class:list={[
+					"text-sm font-medium transition-colors",
+					active("/download") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Download
 			</a>
 			<a
 				href="/docs/getting-started"
-				class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+				class:list={[
+					"text-sm font-medium transition-colors",
+					active("/docs") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
 			>
 				Docs
 			</a>
 			<a
 				href="/docs/recipe-format"
-				class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+				class:list={[
+					"text-sm font-medium transition-colors",
+					active("/docs/recipe-format") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
 			>
 				Recipes
 			</a>
@@ -75,19 +106,49 @@ import LevitateTextLogo from "../brand/LevitateTextLogo.astro"
 		class="hidden md:hidden border-t bg-background"
 	>
 		<div class="container px-4 py-3 flex flex-col gap-2">
-			<a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+			<a
+				href="/"
+				class:list={[
+					"text-sm font-medium transition-colors py-2",
+					active("/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Home
 			</a>
-			<a href="/ralph4days" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+			<a
+				href="/ralph4days"
+				class:list={[
+					"text-sm font-medium transition-colors py-2",
+					active("/ralph4days") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Ralph4days
 			</a>
-			<a href="/download" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+			<a
+				href="/download"
+				class:list={[
+					"text-sm font-medium transition-colors py-2",
+					active("/download") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Download
 			</a>
-			<a href="/docs/getting-started" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+			<a
+				href="/docs/getting-started"
+				class:list={[
+					"text-sm font-medium transition-colors py-2",
+					active("/docs") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Docs
 			</a>
-			<a href="/docs/recipe-format" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+			<a
+				href="/docs/recipe-format"
+				class:list={[
+					"text-sm font-medium transition-colors py-2",
+					active("/docs/recipe-format") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+				]}
+			>
 				Recipes
 			</a>
 		</div>

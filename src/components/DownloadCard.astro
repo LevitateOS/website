@@ -87,7 +87,8 @@ function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | unde
 }
 ---
 
-<div class="bg-card border overflow-hidden text-sm">
+<div class="ui-panel ui-lift overflow-hidden text-sm">
+	<div class="ui-divider" />
 	<div class="flex flex-col sm:flex-row">
 		<!-- OS Info -->
 		<div class="px-5 py-5 flex flex-col flex-1">
@@ -138,7 +139,7 @@ function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | unde
 		</div>
 
 		<!-- Download -->
-		<div class="bg-black/20 px-5 py-5 flex flex-col sm:w-56 sm:shrink-0">
+		<div class="bg-muted/40 dark:bg-black/20 px-5 py-5 flex flex-col sm:w-56 sm:shrink-0">
 			<h4 class="font-medium mb-3">
 				Download{" "}
 				{variant === "levitate" ? (

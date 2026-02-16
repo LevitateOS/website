@@ -16,14 +16,14 @@ const activeTab = defaultTab || tabs[0]?.id
 ---
 
 <div class:list={["w-full", className]} data-tabs={name}>
-	<div class="bg-muted p-[3px] flex h-8 items-center w-full">
+	<div class="ui-panel ui-panel-muted p-[3px] flex h-9 items-center w-full">
 		{tabs.map((tab) => (
 			<button
 				type="button"
 				class:list={[
 					"flex-1 h-[calc(100%-1px)] px-2.5 text-xs font-medium transition-colors select-none",
 					"text-muted-foreground hover:text-foreground",
-					"data-[active]:bg-background data-[active]:text-foreground",
+					"data-[active]:bg-background data-[active]:text-foreground data-[active]:shadow-[0_0_0_1px_rgba(0,0,0,0.08)] dark:data-[active]:shadow-[0_0_0_1px_rgba(255,255,255,0.12)]",
 				]}
 				data-tab-trigger={tab.id}
 				data-active={tab.id === activeTab ? "" : undefined}

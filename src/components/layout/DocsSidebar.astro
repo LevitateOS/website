@@ -26,7 +26,7 @@ const currentTitle = docsNav
 	<button
 		type="button"
 		id="docs-nav-toggle"
-		class="w-full flex items-center justify-between px-4 py-3 bg-muted text-left text-sm select-none"
+		class="ui-panel ui-panel-muted w-full flex items-center justify-between px-4 py-3 text-left text-sm select-none"
 		aria-expanded="false"
 	>
 		<div class="flex items-center gap-2">
@@ -41,7 +41,7 @@ const currentTitle = docsNav
 	</button>
 	<nav
 		id="docs-nav-mobile"
-		class="hidden mt-1 bg-muted overflow-hidden"
+		class="hidden mt-2 ui-panel ui-panel-muted overflow-hidden"
 	>
 		{
 			docsNav.map((section) => (
@@ -73,9 +73,9 @@ const currentTitle = docsNav
 </div>
 
 <!-- Desktop sidebar -->
-<aside class="hidden md:block w-48 shrink-0 sticky top-14 h-[calc(100vh-4rem)]">
-	<div class="h-full overflow-y-auto">
-		<nav class="space-y-3 pr-4 text-sm">
+<aside class="hidden md:block w-56 shrink-0 sticky top-14 h-[calc(100vh-4rem)] ui-panel ui-panel-muted overflow-hidden">
+	<div class="h-full overflow-y-auto p-4 pr-2">
+		<nav class="space-y-3 text-sm">
 			{
 				docsNav.map((section) => (
 					<div>

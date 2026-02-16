@@ -102,9 +102,9 @@ const corePromises = [
 							</AnimatedSection>
 						</div>
 
-						<Fragment slot="demo">
-							<AnimatedSection delay={80}>
-								<div class="ring-1 ring-foreground/10 bg-card overflow-hidden">
+							<Fragment slot="demo">
+								<AnimatedSection delay={80}>
+								<div class="ui-panel overflow-hidden">
 									<img
 										src="/r4d1.jpeg"
 										alt="Ralph4days UI showing disciplines, tasks, and a workspace tab"
@@ -175,14 +175,15 @@ const corePromises = [
 								<strong class="text-foreground">signals</strong> are the durable memory.
 							</p>
 
-							<div class="mt-6">
-								<Tabs tabs={modelTabs} name="r4d-model" defaultTab="disciplines" />
+								<div class="mt-6">
+									<Tabs tabs={modelTabs} name="r4d-model" defaultTab="disciplines" />
 
-								<div class="mt-3 bg-card ring-1 ring-foreground/10 p-5">
-									<TabContent name="r4d-model" tabId="disciplines" default>
-										<p class="text-sm font-medium mb-2">Disciplines are employee templates.</p>
-										<ul class="text-sm text-muted-foreground space-y-1.5">
-											<li>System prompt: how they think and what &quot;good&quot; means.</li>
+									<div class="mt-3 ui-panel p-5 overflow-hidden">
+										<div class="ui-divider -mx-5 mb-4" />
+										<TabContent name="r4d-model" tabId="disciplines" default>
+											<p class="text-sm font-medium mb-2">Disciplines are employee templates.</p>
+											<ul class="text-sm text-muted-foreground space-y-1.5">
+												<li>System prompt: how they think and what &quot;good&quot; means.</li>
 											<li>Skills: what they&apos;re trained to do repeatedly.</li>
 											<li>Conventions: code style, repo rules, and decision boundaries.</li>
 											<li>Tools: the MCP servers and commands they can invoke.</li>
@@ -219,7 +220,7 @@ const corePromises = [
 						</div>
 
 						<Fragment slot="demo">
-							<div class="ring-1 ring-foreground/10 bg-card overflow-hidden">
+							<div class="ui-panel overflow-hidden">
 								<img
 									src="/r4d2.jpeg"
 									alt="Ralph4days UI showing disciplines and documentation tab"
@@ -245,7 +246,7 @@ const corePromises = [
 						/>
 
 						<Fragment slot="demo">
-							<HighlightBox class="bg-card ring-1 ring-foreground/10">
+							<HighlightBox>
 								<p class="text-sm text-muted-foreground mb-3">
 									<strong class="text-foreground">Problem:</strong> agents forget. Humans forget. Repositories sprawl.
 								</p>
@@ -260,9 +261,9 @@ const corePromises = [
 								</ul>
 							</HighlightBox>
 						</Fragment>
-					</SplitSection>
-				</div>
-			</section>
+						</SplitSection>
+					</div>
+				</section>
 
 			<!-- Built for execution -->
 			<section id="r4d-execution" class="py-16 bg-muted/30">
@@ -341,7 +342,7 @@ const corePromises = [
 						</div>
 
 						<Fragment slot="demo">
-							<HighlightBox class="bg-card ring-1 ring-foreground/10">
+							<HighlightBox>
 								<p class="text-sm text-muted-foreground mb-3">
 									<strong class="text-foreground">R4D</strong> is the company simulator.
 								</p>

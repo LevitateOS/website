@@ -16,7 +16,8 @@ interface Props {
 const { variant, name, stack, description, features, logo, builderDescription } = Astro.props
 ---
 
-<div class="p-5 bg-background ring-1 ring-border h-full flex flex-col">
+<div class="ui-panel ui-lift p-5 h-full flex flex-col overflow-hidden">
+	<div class="ui-divider -mx-5 mb-4" />
 	<div class="flex items-center gap-3 mb-3">
 		<div class="size-10 shrink-0 grid place-items-center">
 			<img

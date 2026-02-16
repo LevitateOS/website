@@ -19,7 +19,8 @@ const pageDescription = description || `${title} - LevitateOS documentation. Lea
 	<div class="container py-6">
 		<div class="md:flex md:gap-6">
 			<DocsSidebar currentSlug={currentSlug} />
-			<article class="flex-1 min-w-0">
+			<article class="flex-1 min-w-0 ui-panel overflow-hidden p-6">
+				<div class="ui-divider -mx-6 mb-5" />
 				<slot />
 			</article>
 		</div>
