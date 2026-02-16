@@ -190,7 +190,7 @@ Primary target: **960x1080** (half-width of 1920x1080)
 
 This simulates a user with the site on one half of their screen (common for power users reading docs while working).
 
-### Visual Checkpoints
+### Visual Stages
 
 - [ ] Hero fits above the fold at 960x1080
 - [ ] CTAs (Download, GitHub) visible without scrolling
