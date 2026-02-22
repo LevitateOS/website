@@ -9,6 +9,7 @@ import ListBlock from "./ListBlock.astro"
 import ConversationBlock from "./ConversationBlock.astro"
 import InteractiveBlock from "./InteractiveBlock.astro"
 import QABlock from "./QABlock.astro"
+import NoteBlock from "./NoteBlock.astro"
 import CodeBlock from "../CodeBlock.astro"
 
 interface Props {
@@ -17,6 +18,12 @@ interface Props {
 }
 
 const { content, slug } = Astro.props
+
+function unsupportedBlockType(block: ContentBlock): never {
+	throw new Error(
+		`Unsupported docs block type '${(block as { type: string }).type}' in docs/website renderer. Add a renderer in src/components/docs/DocsPage.astro.`,
+	)
+}
 
 function toAnchor(title: string): string {
 	return title
@@ -81,8 +88,10 @@ const description = extractPlainText(content.intro)
 								return <CommandBlockComponent block={block} />
 							case "qa":
 								return <QABlock block={block} />
+							case "note":
+								return <NoteBlock block={block} />
 							default:
-								return null
+								return unsupportedBlockType(block)
 						}
 					})}
 				</section>

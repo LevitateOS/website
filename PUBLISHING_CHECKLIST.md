@@ -254,3 +254,32 @@ curl -I https://levitateos.org
 dig +short www.levitateos.org
 dig +short levitateos.org
 ```
+
+## Puppeteer Visual Testing
+
+The site has anchors for easy navigation:
+
+```
+http://localhost:3000/#hero      - Hero section
+http://localhost:3000/#features  - Features section
+http://localhost:3000/#download  - Download section
+```
+
+### Target Viewport
+
+Primary target: **960x1080** (half-width of 1920x1080)
+
+This simulates a user with the site on one half of their screen (common for power users reading docs while working).
+
+### Visual Stages
+
+- [ ] Hero fits above the fold at 960x1080
+- [ ] CTAs (Download, GitHub) visible without scrolling
+- [ ] Feature cards readable, no text overflow
+- [ ] Code blocks don't overflow containers
+- [ ] Dark mode renders correctly
+- [ ] Light mode renders correctly
+
+---
+
+## Lighthouse Audit

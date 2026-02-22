@@ -1,42 +1,15 @@
 ---
+import type { DocsSyntaxLanguage } from "@levitate/docs-content"
 import { Code } from "astro:components"
 
 interface Props {
 	code: string
-	language?: string
+	language: DocsSyntaxLanguage
 	filename?: string
 }
 
-const { code, language = "text", filename } = Astro.props
-
-const langMap: Record<string, string> = {
-	conf: "ini",
-	json: "json",
-	yaml: "yaml",
-	yml: "yaml",
-	toml: "toml",
-	sh: "bash",
-	bash: "bash",
-	zsh: "bash",
-	rhai: "rust",
-	ts: "typescript",
-	tsx: "tsx",
-	js: "javascript",
-	jsx: "jsx",
-	rs: "rust",
-	py: "python",
-	go: "go",
-	md: "markdown",
-}
-
-function inferLanguage(filename: string): string {
-	const ext = filename.split(".").pop()?.toLowerCase() || ""
-	return langMap[ext] || "text"
-}
-
-// Map language through langMap to handle aliases (e.g., rhai -> rust)
-const mappedLanguage = langMap[language] || language
-const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) : "text")
+const { code, language, filename } = Astro.props
+const astroLanguage = language === "rhai" ? "rust" : language
 ---
 
 {
@@ -51,8 +24,8 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 					<span class="font-mono truncate">{filename}</span>
 				</div>
 				<div class="flex items-center gap-1.5 shrink-0">
-					{resolvedLanguage && <span class="hidden sm:inline">{resolvedLanguage}</span>}
-					{resolvedLanguage && <span class="hidden sm:inline text-muted-foreground/50">|</span>}
+					<span class="hidden sm:inline">{language}</span>
+					<span class="hidden sm:inline text-muted-foreground/50">|</span>
 					<button
 						type="button"
 						class="copy-btn flex items-center gap-1 hover:text-foreground transition-colors select-none"
@@ -71,7 +44,7 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 			<!-- Code content - horizontally scrollable -->
 			<div class="bg-[var(--muted)]/30 overflow-x-auto">
 				<div class="p-3 min-w-fit [&>pre]:p-0 [&>pre]:text-xs [&>pre]:font-mono [&>pre]:min-w-fit">
-					<Code code={code} lang={resolvedLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
+					<Code code={code} lang={astroLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
 				</div>
 			</div>
 		</div>
@@ -79,8 +52,8 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 		<div class="mb-2 overflow-hidden bg-[var(--muted)]">
 			<!-- Header with language and copy button -->
 			<div class="flex items-center justify-end gap-1.5 px-3 py-1 text-xs text-muted-foreground border-b border-foreground/5">
-				{resolvedLanguage && <span class="hidden sm:inline">{resolvedLanguage}</span>}
-				{resolvedLanguage && <span class="hidden sm:inline text-muted-foreground/50">|</span>}
+				<span class="hidden sm:inline">{language}</span>
+				<span class="hidden sm:inline text-muted-foreground/50">|</span>
 				<button
 					type="button"
 					class="copy-btn flex items-center gap-1 hover:text-foreground transition-colors select-none"
@@ -98,7 +71,7 @@ const resolvedLanguage = mappedLanguage || (filename ? inferLanguage(filename) :
 			<!-- Code content - horizontally scrollable -->
 			<div class="overflow-x-auto">
 				<div class="p-3 min-w-fit [&>pre]:p-0 [&>pre]:text-xs [&>pre]:min-w-fit">
-					<Code code={code} lang={resolvedLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
+					<Code code={code} lang={astroLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
 				</div>
 			</div>
 		</div>
