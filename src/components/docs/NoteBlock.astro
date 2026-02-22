@@ -1,0 +1,29 @@
+---
+import type { NoteBlock } from "@levitate/docs-content"
+import InlineContent from "./InlineContent.astro"
+
+interface Props {
+	block: NoteBlock
+}
+
+const { block } = Astro.props
+
+const variantClasses: Record<NoteBlock["variant"], string> = {
+	info: "border-primary/50 bg-primary/10",
+	warning: "border-amber-500/50 bg-amber-500/10",
+	danger: "border-red-500/50 bg-red-500/10",
+}
+
+const variantLabel: Record<NoteBlock["variant"], string> = {
+	info: "Note",
+	warning: "Warning",
+	danger: "Danger",
+}
+---
+
+<div class={`mb-3 border-l-2 px-3 py-2 text-sm leading-relaxed text-foreground ${variantClasses[block.variant]}`}>
+	<p class="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{variantLabel[block.variant]}</p>
+	<div class="text-sm leading-relaxed">
+		<InlineContent content={block.content} />
+	</div>
+</div>

@@ -1,5 +1,6 @@
 ---
 import type { CommandBlock } from "@levitate/docs-content"
+import { mapDocsSyntaxToAstro } from "../../lib/docsSyntax"
 import { Code } from "astro:components"
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 
 const { block } = Astro.props
 const commandText = Array.isArray(block.command) ? block.command.join("\n") : block.command
+const codeLanguage = mapDocsSyntaxToAstro(block.language)
 ---
 
 <div class="mb-3">
@@ -32,7 +34,7 @@ const commandText = Array.isArray(block.command) ? block.command.join("\n") : bl
 		<!-- Code content - horizontally scrollable -->
 		<div class="overflow-x-auto">
 			<div class="p-4 min-w-fit [&>pre]:p-0 [&>pre]:min-w-fit [&>pre]:text-sm">
-				<Code code={commandText} lang="bash" themes={{ light: "github-light", dark: "github-dark" }} />
+				<Code code={commandText} lang={codeLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
 			</div>
 		</div>
 		{

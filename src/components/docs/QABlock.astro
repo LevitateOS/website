@@ -4,6 +4,7 @@ import InlineContent from "./InlineContent.astro"
 import TextBlock from "./TextBlock.astro"
 import CommandBlockComponent from "./CommandBlock.astro"
 import ListBlock from "./ListBlock.astro"
+import NoteBlock from "./NoteBlock.astro"
 import CodeBlock from "../CodeBlock.astro"
 
 interface Props {
@@ -31,6 +32,8 @@ const { block } = Astro.props
 								return <CommandBlockComponent block={answerBlock} />
 							case "list":
 								return <ListBlock list={answerBlock} />
+							case "note":
+								return <NoteBlock block={answerBlock} />
 							default:
 								return null
 						}
