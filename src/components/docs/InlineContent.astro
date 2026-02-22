@@ -13,6 +13,31 @@ type InlinePart =
 	| { type: "link"; content: string; href: string }
 	| { type: "bold"; content: string }
 
+function escapeHtml(value: string): string {
+	return value
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;")
+		.replaceAll('"', "&quot;")
+		.replaceAll("'", "&#39;")
+}
+
+function sanitizeHref(rawHref: string): string {
+	const href = rawHref.trim()
+	const lower = href.toLowerCase()
+	if (
+		lower.startsWith("/") ||
+		lower.startsWith("#") ||
+		lower.startsWith("http://") ||
+		lower.startsWith("https://") ||
+		lower.startsWith("mailto:") ||
+		lower.startsWith("tel:")
+	) {
+		return escapeHtml(href)
+	}
+	return "#"
+}
+
 function parseInlineContent(text: string): InlinePart[] {
 	const parts: InlinePart[] = []
 	const regex = /`([^`]+)`|\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))+)\)|\*\*(.+?)\*\*/g
@@ -44,17 +69,17 @@ function parseInlineContent(text: string): InlinePart[] {
 
 function renderInlineNode(node: InlineNode): string {
 	if (typeof node === "string") {
-		return node
+		return escapeHtml(node)
 	}
 	switch (node.type) {
 		case "link":
-			return `<a href="${node.href}" class="text-primary hover:underline">${node.text}</a>`
+			return `<a href="${sanitizeHref(node.href)}" class="text-primary hover:underline">${escapeHtml(node.text)}</a>`
 		case "bold":
-			return `<strong>${node.text}</strong>`
+			return `<strong>${escapeHtml(node.text)}</strong>`
 		case "code":
-			return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${node.text}</code>`
+			return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${escapeHtml(node.text)}</code>`
 		case "italic":
-			return `<em>${node.text}</em>`
+			return `<em>${escapeHtml(node.text)}</em>`
 		default:
 			return ""
 	}
@@ -69,15 +94,15 @@ function renderContent(content: string | RichText): string {
 	return parts
 		.map((part) => {
 			if (part.type === "code") {
-				return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${part.content}</code>`
+				return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${escapeHtml(part.content)}</code>`
 			}
 			if (part.type === "link") {
-				return `<a href="${part.href}" class="text-primary hover:underline">${part.content}</a>`
+				return `<a href="${sanitizeHref(part.href)}" class="text-primary hover:underline">${escapeHtml(part.content)}</a>`
 			}
 			if (part.type === "bold") {
-				return `<strong>${part.content}</strong>`
+				return `<strong>${escapeHtml(part.content)}</strong>`
 			}
-			return part.content
+			return escapeHtml(part.content)
 		})
 		.join("")
 }

@@ -1,6 +1,5 @@
 ---
 import type { CommandBlock } from "@levitate/docs-content"
-import { mapDocsSyntaxToAstro } from "../../lib/docsSyntax"
 import { Code } from "astro:components"
 
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 
 const { block } = Astro.props
 const commandText = Array.isArray(block.command) ? block.command.join("\n") : block.command
-const codeLanguage = mapDocsSyntaxToAstro(block.language)
+const codeLanguage = block.language === "rhai" ? "rust" : block.language
 ---
 
 <div class="mb-3">

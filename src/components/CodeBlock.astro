@@ -1,15 +1,15 @@
 ---
-import { mapDocsSyntaxToAstro } from "../lib/docsSyntax"
+import type { DocsSyntaxLanguage } from "@levitate/docs-content"
 import { Code } from "astro:components"
 
 interface Props {
 	code: string
-	language: string
+	language: DocsSyntaxLanguage
 	filename?: string
 }
 
 const { code, language, filename } = Astro.props
-const astroLanguage = mapDocsSyntaxToAstro(language)
+const astroLanguage = language === "rhai" ? "rust" : language
 ---
 
 {

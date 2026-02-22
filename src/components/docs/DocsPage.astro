@@ -19,6 +19,12 @@ interface Props {
 
 const { content, slug } = Astro.props
 
+function unsupportedBlockType(block: ContentBlock): never {
+	throw new Error(
+		`Unsupported docs block type '${(block as { type: string }).type}' in docs/website renderer. Add a renderer in src/components/docs/DocsPage.astro.`,
+	)
+}
+
 function toAnchor(title: string): string {
 	return title
 		.toLowerCase()
@@ -85,7 +91,7 @@ const description = extractPlainText(content.intro)
 							case "note":
 								return <NoteBlock block={block} />
 							default:
-								return null
+								return unsupportedBlockType(block)
 						}
 					})}
 				</section>
