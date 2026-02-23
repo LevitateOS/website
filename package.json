@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "typecheck": "astro check && tsc --noEmit",
     "check": "bun run typecheck && bun run build",
-    "deploy": "astro build && CLOUDFLARE_ACCOUNT_ID=cf772d0960afaac63a91ba755590e524 wrangler pages deploy --commit-dirty=true",
+    "deploy": "bun run build && CLOUDFLARE_ACCOUNT_ID=cf772d0960afaac63a91ba755590e524 wrangler pages deploy --commit-dirty=true",
     "pages:list": "CLOUDFLARE_ACCOUNT_ID=cf772d0960afaac63a91ba755590e524 wrangler pages project list"
   },
   "dependencies": {

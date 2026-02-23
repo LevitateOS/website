@@ -1,0 +1,123 @@
+---
+import SectionHeader from "../SectionHeader.astro"
+import StoreBadge from "../ui/StoreBadge.astro"
+
+const releaseStores = [
+	{
+		os: "Linux",
+		stores: [
+			{ name: "Flathub", color: "#000000", iconPath: "/icons/stores/flathub.svg" },
+			{ name: "AUR", color: "#1793D1", iconPath: "/icons/stores/archlinux.svg" },
+			{ name: "AppImage", color: "#222222", iconPath: "/icons/stores/appimage.svg" },
+		],
+	},
+	{
+		os: "macOS",
+		stores: [
+			{ name: "Homebrew", color: "#FBB040", textColor: "#ffffff", iconPath: "/icons/stores/homebrew.svg" },
+			{ name: "Mac App Store", color: "#0D96F6", iconPath: "/icons/stores/appstore.svg" },
+		],
+	},
+	{
+		os: "Android",
+		stores: [
+			{ name: "Google Play", color: "#34A853", iconPath: "/icons/stores/googleplay.svg" },
+			{ name: "F-Droid", color: "#1976D2", iconPath: "/icons/stores/fdroid.svg" },
+		],
+	},
+	{
+		os: "iOS",
+		stores: [
+			{ name: "App Store", color: "#0D96F6", iconPath: "/icons/stores/appstore.svg" },
+			{ name: "TestFlight", color: "#0A84FF", iconPath: "/icons/stores/testflight.svg" },
+		],
+	},
+]
+---
+
+<section id="r4d-availability" class="py-16 section-surface">
+	<div class="container max-w-6xl">
+		<SectionHeader
+			label="Download"
+			title="Release channels are opening soon"
+			highlight="Desktop stores first. Mobile stores follow after."
+			centered={true}
+		/>
+
+		<div class="r4d-store-grid mt-8 grid gap-4">
+			{releaseStores.map((group) => (
+				<article class="r4d-os-column">
+					<div class="r4d-os-head">
+						<h3 class="r4d-os-name">{group.os}</h3>
+					</div>
+					<div class="r4d-store-list mt-3">
+						{group.stores.map((store) => (
+							<StoreBadge
+								label={store.name}
+								color={store.color}
+								textColor={store.textColor}
+								iconPath={store.iconPath}
+							/>
+						))}
+					</div>
+				</article>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.r4d-store-grid {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
+
+	.r4d-os-column {
+		padding: 0.25rem 0.9rem;
+	}
+
+	.r4d-os-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+
+	.r4d-os-name {
+		margin: 0;
+		font-size: 1.02rem;
+		font-weight: 700;
+		color: color-mix(in oklab, var(--foreground) 96%, white 4%);
+	}
+
+	.r4d-store-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+	}
+
+	@media (min-width: 640px) {
+		.r4d-store-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 960px) {
+		.r4d-store-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+
+		.r4d-store-grid {
+			gap: 0;
+		}
+
+		.r4d-os-column {
+			padding: 0.25rem 0.9rem 0.25rem 1rem;
+			border-left: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent);
+		}
+
+		.r4d-os-column:nth-child(1) {
+			border-left: none;
+			padding-left: 0.2rem;
+		}
+	}
+</style>

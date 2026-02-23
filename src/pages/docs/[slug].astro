@@ -1,7 +1,7 @@
 ---
-import { contentBySlug } from "@levitate/docs-content"
 import type { DocsContent } from "@levitate/docs-content"
 import DocsPage from "../../components/docs/DocsPage.astro"
+import { contentBySlug } from "@levitate/docs-content/live"
 
 export function getStaticPaths() {
 	return Object.entries(contentBySlug).map(([slug, content]) => ({

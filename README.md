@@ -74,6 +74,12 @@ src/
 
 Documentation content comes from `@levitate/docs-content` workspace package. This README is about the website renderer, not the content.
 
+### Dev vs Build Behavior
+
+- Website uses live discovery from `docs/content/src/content/**` in both dev and build.
+- No manual docs-content build step is required to update sidebar/routes for website.
+- `docs/content` build is only needed when you want to regenerate `docs/content/src/generated/index.ts` for non-Vite consumers.
+
 ## Adding Pages
 
 ```astro
