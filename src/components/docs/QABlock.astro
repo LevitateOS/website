@@ -1,62 +1,26 @@
 ---
 import type { QABlock, ContentBlock } from "@levitate/docs-content"
 import InlineContent from "./InlineContent.astro"
-import TextBlock from "./TextBlock.astro"
-import CommandBlockComponent from "./CommandBlock.astro"
-import ListBlock from "./ListBlock.astro"
-import NoteBlock from "./NoteBlock.astro"
-import TableBlock from "./TableBlock.astro"
-import ConversationBlock from "./ConversationBlock.astro"
-import InteractiveBlock from "./InteractiveBlock.astro"
-import CodeBlock from "../CodeBlock.astro"
+import RenderBlock from "./RenderBlock.astro"
 
 interface Props {
 	block: QABlock
 }
 
 const { block } = Astro.props
-
-function unsupportedAnswerBlockType(block: ContentBlock): never {
-	throw new Error(
-		`Unsupported QA answer block type '${(block as { type: string }).type}' in docs/website renderer. Add support in src/components/docs/QABlock.astro.`,
-	)
-}
 ---
 
 <div class="space-y-4 mb-4">
 	{
 		block.items.map((item) => (
-			<div class="border-l-2 border-primary/30 pl-4">
-				<h4 class="font-medium text-base mb-2">
-					<InlineContent content={item.question} />
-				</h4>
-				<div class="space-y-2 text-sm leading-relaxed">
-					{item.answer.map((answerBlock: ContentBlock) => {
-						switch (answerBlock.type) {
-							case "text":
-								return <TextBlock content={answerBlock.content} />
-							case "code":
-								return <CodeBlock code={answerBlock.content} language={answerBlock.language} filename={answerBlock.filename} />
-							case "command":
-								return <CommandBlockComponent block={answerBlock} />
-							case "list":
-								return <ListBlock list={answerBlock} />
-							case "table":
-								return <TableBlock table={answerBlock} />
-							case "conversation":
-								return <ConversationBlock conversation={answerBlock} />
-							case "interactive":
-								return <InteractiveBlock block={answerBlock} />
-							case "qa":
-								return <QABlock block={answerBlock} />
-							case "note":
-								return <NoteBlock block={answerBlock} />
-							default:
-								return unsupportedAnswerBlockType(answerBlock)
-						}
-					})}
-				</div>
-			</div>
-		))
-	}
+				<div class="border-l-2 border-primary/30 pl-4">
+					<h4 class="font-medium text-base mb-2">
+						<InlineContent content={item.question} />
+					</h4>
+						<div class="space-y-2 text-sm leading-relaxed">
+							{item.answer.map((answerBlock: ContentBlock) => <RenderBlock block={answerBlock} />)}
+						</div>
+					</div>
+				))
+			}
 </div>

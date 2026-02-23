@@ -2,15 +2,7 @@
 import type { DocsContent, Section, ContentBlock } from "@levitate/docs-content"
 import DocsLayout from "../layout/DocsLayout.astro"
 import InlineContent from "./InlineContent.astro"
-import TextBlock from "./TextBlock.astro"
-import CommandBlockComponent from "./CommandBlock.astro"
-import TableBlock from "./TableBlock.astro"
-import ListBlock from "./ListBlock.astro"
-import ConversationBlock from "./ConversationBlock.astro"
-import InteractiveBlock from "./InteractiveBlock.astro"
-import QABlock from "./QABlock.astro"
-import NoteBlock from "./NoteBlock.astro"
-import CodeBlock from "../CodeBlock.astro"
+import RenderBlock from "./RenderBlock.astro"
 
 interface Props {
 	content: DocsContent
@@ -18,12 +10,6 @@ interface Props {
 }
 
 const { content, slug } = Astro.props
-
-function unsupportedBlockType(block: ContentBlock): never {
-	throw new Error(
-		`Unsupported docs block type '${(block as { type: string }).type}' in docs/website renderer. Add a renderer in src/components/docs/DocsPage.astro.`,
-	)
-}
 
 function toAnchor(title: string): string {
 	return title
@@ -67,35 +53,12 @@ const description = extractPlainText(content.intro)
 				<section id={anchor} class="mb-6 scroll-mt-16">
 					{level === 2 ? (
 						<h2 class="text-lg font-medium mb-3">{section.title}</h2>
-					) : (
-						<h3 class="text-base font-medium mb-2">{section.title}</h3>
-					)}
-					{section.content.map((block: ContentBlock) => {
-						switch (block.type) {
-							case "text":
-								return <TextBlock content={block.content} />
-							case "code":
-								return <CodeBlock code={block.content} language={block.language} filename={block.filename} />
-							case "table":
-								return <TableBlock table={block} />
-							case "list":
-								return <ListBlock list={block} />
-							case "conversation":
-								return <ConversationBlock conversation={block} />
-							case "interactive":
-								return <InteractiveBlock block={block} />
-							case "command":
-								return <CommandBlockComponent block={block} />
-							case "qa":
-								return <QABlock block={block} />
-							case "note":
-								return <NoteBlock block={block} />
-							default:
-								return unsupportedBlockType(block)
-						}
-					})}
-				</section>
-			)
-		})
+						) : (
+							<h3 class="text-base font-medium mb-2">{section.title}</h3>
+						)}
+						{section.content.map((block: ContentBlock) => <RenderBlock block={block} />)}
+					</section>
+				)
+			})
 	}
 </DocsLayout>

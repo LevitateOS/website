@@ -1,0 +1,86 @@
+---
+import type { ContentBlock } from "@levitate/docs-content"
+import { renderDocsBlock } from "@levitate/docs-content"
+import TextBlock from "./TextBlock.astro"
+import CommandBlockComponent from "./CommandBlock.astro"
+import TableBlock from "./TableBlock.astro"
+import ListBlock from "./ListBlock.astro"
+import ConversationBlock from "./ConversationBlock.astro"
+import InteractiveBlock from "./InteractiveBlock.astro"
+import QABlock from "./QABlock.astro"
+import NoteBlock from "./NoteBlock.astro"
+import CodeBlock from "../CodeBlock.astro"
+
+interface Props {
+	block: ContentBlock
+}
+
+const { block } = Astro.props
+
+type ResolvedBlock =
+	| { type: "text"; block: Extract<ContentBlock, { type: "text" }> }
+	| { type: "code"; block: Extract<ContentBlock, { type: "code" }> }
+	| { type: "table"; block: Extract<ContentBlock, { type: "table" }> }
+	| { type: "list"; block: Extract<ContentBlock, { type: "list" }> }
+	| { type: "conversation"; block: Extract<ContentBlock, { type: "conversation" }> }
+	| { type: "interactive"; block: Extract<ContentBlock, { type: "interactive" }> }
+	| { type: "command"; block: Extract<ContentBlock, { type: "command" }> }
+	| { type: "qa"; block: Extract<ContentBlock, { type: "qa" }> }
+	| { type: "note"; block: Extract<ContentBlock, { type: "note" }> }
+
+const resolvedBlock: ResolvedBlock = renderDocsBlock<undefined, ResolvedBlock>(
+	block,
+	{
+		text: (textBlock) => ({ type: "text", block: textBlock }),
+		code: (codeBlock) => ({ type: "code", block: codeBlock }),
+		table: (tableBlock) => ({ type: "table", block: tableBlock }),
+		list: (listBlock) => ({ type: "list", block: listBlock }),
+		conversation: (conversationBlock) => ({ type: "conversation", block: conversationBlock }),
+		interactive: (interactiveBlock) => ({ type: "interactive", block: interactiveBlock }),
+		command: (commandBlock) => ({ type: "command", block: commandBlock }),
+		qa: (qaBlock) => ({ type: "qa", block: qaBlock }),
+		note: (noteBlock) => ({ type: "note", block: noteBlock }),
+	},
+	undefined,
+)
+---
+
+{
+	resolvedBlock.type === "text" && <TextBlock content={resolvedBlock.block.content} />
+}
+{
+	resolvedBlock.type === "code" && (
+		<CodeBlock
+			code={resolvedBlock.block.content}
+			language={resolvedBlock.block.language}
+			filename={resolvedBlock.block.filename}
+		/>
+	)
+}
+{
+	resolvedBlock.type === "table" && <TableBlock table={resolvedBlock.block} />
+}
+{
+	resolvedBlock.type === "list" && <ListBlock list={resolvedBlock.block} />
+}
+{
+	resolvedBlock.type === "conversation" && (
+		<ConversationBlock conversation={resolvedBlock.block} />
+	)
+}
+{
+	resolvedBlock.type === "interactive" && (
+		<InteractiveBlock block={resolvedBlock.block} />
+	)
+}
+{
+	resolvedBlock.type === "command" && (
+		<CommandBlockComponent block={resolvedBlock.block} />
+	)
+}
+{
+	resolvedBlock.type === "qa" && <QABlock block={resolvedBlock.block} />
+}
+{
+	resolvedBlock.type === "note" && <NoteBlock block={resolvedBlock.block} />
+}
