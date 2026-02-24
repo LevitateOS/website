@@ -1,0 +1,89 @@
+---
+---
+
+<div class="text-sm r4d-ralphd-content">
+	<div class="r4d-ralphd__head">
+		<div class="r4d-ralphd__brand">
+			<div class="r4d-ralphd__icon-wrap" aria-hidden="true">
+				<svg class="r4d-ralphd__icon" viewBox="0 0 256 256" fill="currentColor">
+					<path d="M232 128a8 8 0 0 1-8 8h-11.05a83.23 83.23 0 0 1-5.83 14.06l7.82 7.82a8 8 0 0 1 0 11.32l-18.38 18.38a8 8 0 0 1-11.32 0l-7.82-7.82A83.23 83.23 0 0 1 136 212.95V224a8 8 0 0 1-8 8h-24a8 8 0 0 1-8-8v-11.05a83.23 83.23 0 0 1-14.06-5.83l-7.82 7.82a8 8 0 0 1-11.32 0L44.42 204.56a8 8 0 0 1 0-11.32l7.82-7.82A83.23 83.23 0 0 1 43.05 136H32a8 8 0 0 1-8-8v-24a8 8 0 0 1 8-8h11.05a83.23 83.23 0 0 1 5.83-14.06l-7.82-7.82a8 8 0 0 1 0-11.32l18.38-18.38a8 8 0 0 1 11.32 0l7.82 7.82A83.23 83.23 0 0 1 120 43.05V32a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v11.05a83.23 83.23 0 0 1 14.06 5.83l7.82-7.82a8 8 0 0 1 11.32 0l18.38 18.38a8 8 0 0 1 0 11.32l-7.82 7.82A83.23 83.23 0 0 1 212.95 120H224a8 8 0 0 1 8 8Zm-16-8h-9.52a8 8 0 0 1-7.85-6.49a67.4 67.4 0 0 0-8.1-19.51a8 8 0 0 1 1.2-10.13l6.73-6.73l-7.06-7.06l-6.73 6.73a8 8 0 0 1-10.13 1.2a67.4 67.4 0 0 0-19.51-8.1A8 8 0 0 1 152 49.52V40h-8v9.52a8 8 0 0 1-6.49 7.85a67.4 67.4 0 0 0-19.51 8.1a8 8 0 0 1-10.13-1.2l-6.73-6.73l-7.06 7.06l6.73 6.73a8 8 0 0 1 1.2 10.13a67.4 67.4 0 0 0-8.1 19.51A8 8 0 0 1 89.52 104H80v8h9.52a8 8 0 0 1 7.85 6.49a67.4 67.4 0 0 0 8.1 19.51a8 8 0 0 1-1.2 10.13l-6.73 6.73l7.06 7.06l6.73-6.73a8 8 0 0 1 10.13-1.2a67.4 67.4 0 0 0 19.51 8.1a8 8 0 0 1 6.49 7.85V216h8v-9.52a8 8 0 0 1 6.49-7.85a67.4 67.4 0 0 0 19.51-8.1a8 8 0 0 1 10.13 1.2l6.73 6.73l7.06-7.06l-6.73-6.73a8 8 0 0 1-1.2-10.13a67.4 67.4 0 0 0 8.1-19.51A8 8 0 0 1 206.48 136H216Zm-88 40a32 32 0 1 1 32-32a32 32 0 0 1-32 32Z" />
+				</svg>
+			</div>
+			<div>
+				<h3 class="text-base font-medium leading-tight"><code>ralphd</code></h3>
+				<p class="text-xs font-mono text-muted-foreground mt-0.5">Daemon</p>
+			</div>
+		</div>
+	</div>
+
+	<p class="r4d-ralphd__meta text-xs text-muted-foreground mt-2.5">
+		Runtime endpoint for R4D clients and automation workers.
+	</p>
+
+	<div class="r4d-ralphd__notice mt-3" role="note" aria-label="Mobile companion disclaimer">
+		<p class="r4d-ralphd__notice-label">Companion Clients Only</p>
+		<p class="r4d-ralphd__notice-copy">
+			Mobile apps require a reachable <code>ralphd</code> host on Linux, macOS, or RalphOS.
+		</p>
+	</div>
+</div>
+
+<style>
+	.r4d-ralphd-content {
+		padding: 0.15rem 0;
+	}
+
+	.r4d-ralphd__head {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+	}
+
+	.r4d-ralphd__brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		min-width: 0;
+	}
+
+	.r4d-ralphd__icon-wrap {
+		width: 2rem;
+		height: 2rem;
+		flex: 0 0 auto;
+		display: grid;
+		place-items: center;
+	}
+
+	.r4d-ralphd__icon {
+		width: 1.35rem;
+		height: 1.35rem;
+		color: color-mix(in oklab, var(--foreground) 90%, white 10%);
+	}
+
+	.r4d-ralphd__meta {
+		line-height: 1.3;
+		max-width: 54ch;
+	}
+
+	.r4d-ralphd__notice {
+		max-width: 54ch;
+		padding: 0.5rem 0.65rem;
+		border-left: 2px solid color-mix(in oklab, var(--foreground) 26%, transparent);
+		background: color-mix(in oklab, var(--muted) 28%, transparent);
+	}
+
+	.r4d-ralphd__notice-label {
+		margin: 0;
+		font-size: 0.62rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--muted-foreground);
+	}
+
+	.r4d-ralphd__notice-copy {
+		margin: 0.2rem 0 0;
+		line-height: 1.35;
+		color: color-mix(in oklab, var(--foreground) 80%, transparent);
+	}
+</style>

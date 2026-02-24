@@ -19,7 +19,7 @@ Static documentation site built with Astro. Renders content from `@levitate/docs
 
 ```bash
 bun install           # Install deps
-bun run dev           # Dev server at localhost:3000
+bun run dev           # Dev server at localhost:43117
 bun run build         # Production build to dist/
 bun run preview       # Preview production build
 ```

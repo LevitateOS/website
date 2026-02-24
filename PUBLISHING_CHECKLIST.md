@@ -260,9 +260,9 @@ dig +short levitateos.org
 The site has anchors for easy navigation:
 
 ```
-http://localhost:3000/#hero      - Hero section
-http://localhost:3000/#features  - Features section
-http://localhost:3000/#download  - Download section
+http://localhost:43117/#hero      - Hero section
+http://localhost:43117/#features  - Features section
+http://localhost:43117/#download  - Download section
 ```
 
 ### Target Viewport

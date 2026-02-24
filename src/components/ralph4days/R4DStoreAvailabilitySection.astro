@@ -1,10 +1,13 @@
 ---
 import SectionHeader from "../SectionHeader.astro"
 import StoreBadge from "../ui/StoreBadge.astro"
+import R4DRalphOSCard from "./R4DRalphOSCard.astro"
+import R4DRalphdCard from "./R4DRalphdCard.astro"
 
 const releaseStores = [
 	{
 		os: "Linux",
+		osIconPath: "/icons/os/linux.svg",
 		stores: [
 			{ name: "Flathub", color: "#000000", iconPath: "/icons/stores/flathub.svg" },
 			{ name: "AUR", color: "#1793D1", iconPath: "/icons/stores/archlinux.svg" },
@@ -13,6 +16,7 @@ const releaseStores = [
 	},
 	{
 		os: "macOS",
+		osIconPath: "/icons/os/macos.svg",
 		stores: [
 			{ name: "Homebrew", color: "#FBB040", textColor: "#ffffff", iconPath: "/icons/stores/homebrew.svg" },
 			{ name: "Mac App Store", color: "#0D96F6", iconPath: "/icons/stores/appstore.svg" },
@@ -20,6 +24,7 @@ const releaseStores = [
 	},
 	{
 		os: "Android",
+		osIconPath: "/icons/os/android.svg",
 		stores: [
 			{ name: "Google Play", color: "#34A853", iconPath: "/icons/stores/googleplay.svg" },
 			{ name: "F-Droid", color: "#1976D2", iconPath: "/icons/stores/fdroid.svg" },
@@ -27,6 +32,7 @@ const releaseStores = [
 	},
 	{
 		os: "iOS",
+		osIconPath: "/icons/os/ios.svg",
 		stores: [
 			{ name: "App Store", color: "#0D96F6", iconPath: "/icons/stores/appstore.svg" },
 			{ name: "TestFlight", color: "#0A84FF", iconPath: "/icons/stores/testflight.svg" },
@@ -48,7 +54,14 @@ const releaseStores = [
 			{releaseStores.map((group) => (
 				<article class="r4d-os-column">
 					<div class="r4d-os-head">
-						<h3 class="r4d-os-name">{group.os}</h3>
+						<div class="r4d-os-title">
+							<span
+								class="r4d-os-icon"
+								aria-hidden="true"
+								style={`--os-icon:url('${group.osIconPath}')`}
+							/>
+							<h3 class="r4d-os-name">{group.os}</h3>
+						</div>
 					</div>
 					<div class="r4d-store-list mt-3">
 						{group.stores.map((store) => (
@@ -61,7 +74,16 @@ const releaseStores = [
 						))}
 					</div>
 				</article>
-			))}
+				))}
+		</div>
+
+		<div class="r4d-disclaimer-grid mt-6">
+			<div class="r4d-disclaimer-col">
+				<R4DRalphOSCard />
+			</div>
+			<div class="r4d-disclaimer-col">
+				<R4DRalphdCard />
+			</div>
 		</div>
 	</div>
 </section>
@@ -82,6 +104,29 @@ const releaseStores = [
 		gap: 0.5rem;
 	}
 
+	.r4d-os-title {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.48rem;
+	}
+
+	.r4d-os-icon {
+		display: inline-block;
+		width: 1rem;
+		height: 1rem;
+		flex: 0 0 auto;
+		background: color-mix(in oklab, var(--foreground) 90%, white 10%);
+		-webkit-mask-image: var(--os-icon);
+		mask-image: var(--os-icon);
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		-webkit-mask-position: center;
+		mask-position: center;
+		-webkit-mask-size: contain;
+		mask-size: contain;
+		opacity: 0.95;
+	}
+
 	.r4d-os-name {
 		margin: 0;
 		font-size: 1.02rem;
@@ -95,15 +140,29 @@ const releaseStores = [
 		gap: 0.45rem;
 	}
 
+	.r4d-disclaimer-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+
+	.r4d-disclaimer-col {
+		min-height: 1px;
+	}
+
 	@media (min-width: 640px) {
 		.r4d-store-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
-	@media (min-width: 960px) {
+	@media (min-width: 900px) {
 		.r4d-store-grid {
 			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+
+		.r4d-disclaimer-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
 		.r4d-store-grid {
