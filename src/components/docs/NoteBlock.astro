@@ -9,21 +9,21 @@ interface Props {
 const { block } = Astro.props
 
 const variantClasses: Record<NoteBlock["variant"], string> = {
-	info: "border-primary/50 bg-primary/10",
-	warning: "border-amber-500/50 bg-amber-500/10",
-	danger: "border-red-500/50 bg-red-500/10",
+	info: "border-[color:var(--accent)]",
+	warning: "border-[color:var(--spectrum-1)]",
+	danger: "border-[color:var(--spectrum-6)]",
 }
 
 const variantLabel: Record<NoteBlock["variant"], string> = {
-	info: "Note",
-	warning: "Warning",
-	danger: "Danger",
+	info: "NOTE",
+	warning: "WARNING",
+	danger: "DANGER",
 }
 ---
 
-<div class={`mb-3 border-l-2 px-3 py-2 text-sm leading-relaxed text-foreground ${variantClasses[block.variant]}`}>
-	<p class="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{variantLabel[block.variant]}</p>
-	<div class="text-sm leading-relaxed">
+<div class:list={["ui-panel ui-panel-muted mb-4 border-l-[8px] p-4", variantClasses[block.variant]]}>
+	<p class="ui-label mb-2">{variantLabel[block.variant]}</p>
+	<div class="text-sm leading-relaxed text-muted-foreground">
 		<InlineContent content={block.content} />
 	</div>
 </div>

@@ -9,31 +9,27 @@ interface Props {
 const { table } = Astro.props
 ---
 
-<div class="relative w-full overflow-x-auto mb-4">
+<div class="relative mb-5 w-full overflow-x-auto ui-panel">
 	<table class="w-full caption-bottom text-sm">
-		<thead class="[&_tr]:border-b">
-			<tr class="hover:bg-muted/50 border-b transition-colors">
-				{
-					table.headers.map((header) => (
-						<th class="text-foreground h-10 px-3 text-left align-middle font-medium whitespace-nowrap">
-							<InlineContent content={header} />
-						</th>
-					))
-				}
+		<thead>
+			<tr class="border-b-2 border-border-strong bg-secondary/60">
+				{table.headers.map((header) => (
+					<th class="h-10 px-3 text-left align-middle font-semibold whitespace-nowrap">
+						<InlineContent content={header} />
+					</th>
+				))}
 			</tr>
 		</thead>
-		<tbody class="[&_tr:last-child]:border-0">
-			{
-				table.rows.map((row) => (
-					<tr class="hover:bg-muted/50 border-b transition-colors">
-						{row.map((cell, j) => (
-							<td class={`px-3 py-2 align-middle whitespace-nowrap ${j === table.monospaceCol ? "font-mono" : ""}`}>
-								<InlineContent content={cell} />
-							</td>
-						))}
-					</tr>
-				))
-			}
+		<tbody>
+			{table.rows.map((row) => (
+				<tr class="border-b border-border last:border-b-0 hover:bg-muted/40 transition-colors">
+					{row.map((cell, j) => (
+						<td class:list={["px-3 py-2 align-middle whitespace-nowrap", j === table.monospaceCol ? "font-mono text-xs" : ""]}>
+							<InlineContent content={cell} />
+						</td>
+					))}
+				</tr>
+			))}
 		</tbody>
 	</table>
 </div>

@@ -12,91 +12,56 @@ const { code, language, filename } = Astro.props
 const astroLanguage = language === "rhai" ? "rust" : language
 ---
 
-{
-	filename ? (
-		<div class="mb-2 overflow-hidden ring-1 ring-foreground/10">
-			<!-- Header with filename and copy button -->
-			<div class="flex items-center justify-between gap-1.5 px-3 py-1.5 bg-[var(--muted)] text-xs text-muted-foreground">
-				<div class="flex items-center gap-1.5 min-w-0">
-					<svg class="size-3.5 shrink-0" viewBox="0 0 256 256" fill="currentColor">
-						<path d="M213.66 82.34l-56-56A8 8 0 0 0 152 24H56a16 16 0 0 0-16 16v176a16 16 0 0 0 16 16h144a16 16 0 0 0 16-16V88a8 8 0 0 0-2.34-5.66ZM160 51.31L188.69 80H160ZM200 216H56V40h88v48a8 8 0 0 0 8 8h48v120Z" />
-					</svg>
-					<span class="font-mono truncate">{filename}</span>
-				</div>
-				<div class="flex items-center gap-1.5 shrink-0">
-					<span class="hidden sm:inline">{language}</span>
-					<span class="hidden sm:inline text-muted-foreground/50">|</span>
-					<button
-						type="button"
-						class="copy-btn flex items-center gap-1 hover:text-foreground transition-colors select-none"
-						data-code={code}
-					>
-						<svg class="copy-icon size-3.5" viewBox="0 0 256 256" fill="currentColor">
-							<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
-						</svg>
-						<svg class="check-icon hidden size-3.5" viewBox="0 0 256 256" fill="currentColor">
-							<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
-						</svg>
-						<span class="copy-text hidden sm:inline">copy</span>
-					</button>
-				</div>
-			</div>
-			<!-- Code content - horizontally scrollable -->
-			<div class="bg-[var(--muted)]/30 overflow-x-auto">
-				<div class="p-3 min-w-fit [&>pre]:p-0 [&>pre]:text-xs [&>pre]:font-mono [&>pre]:min-w-fit">
-					<Code code={code} lang={astroLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
-				</div>
-			</div>
+<div class="code-plate mb-2 overflow-hidden">
+	<div class="code-plate__header flex items-center justify-between gap-2 px-3 py-1.5 text-muted-foreground">
+		<div class="min-w-0 truncate flex items-center gap-2">
+			<span class="ui-label">{filename ? "File" : "Command"}</span>
+			{filename && <span class="truncate normal-case tracking-normal text-[0.72rem] font-mono">{filename}</span>}
 		</div>
-	) : (
-		<div class="mb-2 overflow-hidden bg-[var(--muted)]">
-			<!-- Header with language and copy button -->
-			<div class="flex items-center justify-end gap-1.5 px-3 py-1 text-xs text-muted-foreground border-b border-foreground/5">
-				<span class="hidden sm:inline">{language}</span>
-				<span class="hidden sm:inline text-muted-foreground/50">|</span>
-				<button
-					type="button"
-					class="copy-btn flex items-center gap-1 hover:text-foreground transition-colors select-none"
-					data-code={code}
-				>
-					<svg class="copy-icon size-3.5" viewBox="0 0 256 256" fill="currentColor">
-						<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
-					</svg>
-					<svg class="check-icon hidden size-3.5" viewBox="0 0 256 256" fill="currentColor">
-						<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
-					</svg>
-					<span class="copy-text hidden sm:inline">copy</span>
-				</button>
-			</div>
-			<!-- Code content - horizontally scrollable -->
-			<div class="overflow-x-auto">
-				<div class="p-3 min-w-fit [&>pre]:p-0 [&>pre]:text-xs [&>pre]:min-w-fit">
-					<Code code={code} lang={astroLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
-				</div>
-			</div>
+		<div class="flex items-center gap-2">
+			<span>{language}</span>
+			<button
+				type="button"
+				class="code-copy-btn inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground select-none"
+				data-code={code}
+			>
+				<svg class="copy-icon size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+					<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
+				</svg>
+				<svg class="check-icon hidden size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+					<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+				</svg>
+				<span class="copy-text">COPY</span>
+			</button>
 		</div>
-	)
-}
+	</div>
+	<div class="code-plate__body overflow-x-auto">
+		<div class="p-3 min-w-fit [&>pre]:p-0 [&>pre]:text-xs [&>pre]:font-mono [&>pre]:min-w-fit">
+			<Code code={code} lang={astroLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
+		</div>
+	</div>
+</div>
 
 <script>
-	document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+	document.querySelectorAll<HTMLButtonElement>(".code-copy-btn").forEach((btn) => {
 		btn.addEventListener("click", async () => {
-			const code = btn.dataset.code
-			if (code) {
-				await navigator.clipboard.writeText(code)
-				const copyIcon = btn.querySelector(".copy-icon")
-				const checkIcon = btn.querySelector(".check-icon")
-				const copyText = btn.querySelector(".copy-text")
-				if (copyIcon && checkIcon && copyText) {
-					copyIcon.classList.add("hidden")
-					checkIcon.classList.remove("hidden")
-					copyText.textContent = "copied"
-					setTimeout(() => {
-						copyIcon.classList.remove("hidden")
-						checkIcon.classList.add("hidden")
-						copyText.textContent = "copy"
-					}, 2000)
-				}
+			const text = btn.dataset.code
+			if (!text) return
+
+			await navigator.clipboard.writeText(text)
+			const copyIcon = btn.querySelector(".copy-icon")
+			const checkIcon = btn.querySelector(".check-icon")
+			const copyText = btn.querySelector(".copy-text")
+
+			if (copyIcon && checkIcon && copyText) {
+				copyIcon.classList.add("hidden")
+				checkIcon.classList.remove("hidden")
+				copyText.textContent = "COPIED"
+				setTimeout(() => {
+					copyIcon.classList.remove("hidden")
+					checkIcon.classList.add("hidden")
+					copyText.textContent = "COPY"
+				}, 600)
 			}
 		})
 	})

@@ -13,14 +13,14 @@ const { messages } = Astro.props
 ---
 
 <div
-	class="ring-foreground/10 bg-card text-card-foreground gap-2 overflow-hidden py-4 text-xs/relaxed ring-1 group/card flex flex-col"
+	class="ui-panel text-card-foreground flex flex-col gap-2 overflow-hidden py-4 text-xs/relaxed"
 >
 	<div class="px-4 space-y-1">
 		{
 			messages.map((msg) => (
 				<div>
 					<span class="text-muted-foreground">{msg.role === "user" ? "You:" : "Assistant:"}</span>
-					<span class={msg.highlight ? "text-primary ml-1" : "ml-1"}>{msg.text}</span>
+					<span class={msg.highlight ? "ml-1 text-[color:var(--accent)]" : "ml-1"}>{msg.text}</span>
 				</div>
 			))
 		}

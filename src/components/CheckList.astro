@@ -7,15 +7,15 @@ interface Props {
 const { items, class: className = "" } = Astro.props
 ---
 
-<div class:list={["grid grid-cols-1 gap-2 text-left", className]}>
-	{
-		items.map((item) => (
-			<div class="flex items-center gap-2 text-sm text-muted-foreground">
-				<svg class="size-4 text-primary shrink-0" viewBox="0 0 256 256" fill="currentColor">
+<div class:list={["grid grid-cols-1 gap-3 text-left", className]}>
+	{items.map((item) => (
+		<div class="flex items-start gap-2.5 text-sm text-muted-foreground">
+			<span class="mt-0.5 inline-grid size-4 shrink-0 place-items-center border-2 border-border-strong bg-primary text-primary-foreground">
+				<svg class="size-2.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
 					<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
 				</svg>
-				{item}
-			</div>
-		))
-	}
+			</span>
+			<span>{item}</span>
+		</div>
+	))}
 </div>

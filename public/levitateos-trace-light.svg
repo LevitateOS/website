@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
+  <style type="text/css">
+    g.prefab path{
+      vector-effect:non-scaling-stroke;
+      -inkscape-stroke:hairline;
+      fill:none;
+      fill-opacity:1;
+      stroke-opacity:1;
+      stroke:#00349c;
+    }
+  </style>
+
+  <g>
+    <!-- Top-right trapezoid: clamp right edge to 857 (was 859) -->
+    <path d="M639 41 H857 V297 L639 461 Z" fill="#252426"/>
+
+    <!-- Bottom-right block: already within 43..857 -->
+    <path d="M580 552 H856 V854 L366 855 Z" fill="#6b8a86"/>
+
+    <!-- Main off-white form: clamp left edge to 43 (was 44) -->
+    <path
+      d="
+        M606 43
+        S57 406 82 640
+        C107 873 606 514 606 514
+        L366 856
+        H43
+        V267
+        S349 81 606 44
+        Z"
+      fill="#252426"/>
+  </g>
+</svg>

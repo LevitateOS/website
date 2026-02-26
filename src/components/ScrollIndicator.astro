@@ -6,8 +6,11 @@ interface Props {
 const { class: className = "" } = Astro.props
 ---
 
-<div class:list={["absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce", className]}>
-	<svg class="size-4 text-muted-foreground/50" viewBox="0 0 256 256" fill="currentColor">
-		<path d="M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z" />
-	</svg>
+<div class:list={["absolute bottom-4 left-1/2 -translate-x-1/2", className]}>
+	<div class="inline-flex flex-col items-center gap-1 text-muted-foreground/70">
+		<span class="ui-label">Scroll</span>
+		<svg class="size-4" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+			<path d="M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z" />
+		</svg>
+	</div>
 </div>

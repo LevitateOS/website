@@ -48,18 +48,15 @@ const releaseStores = [
 			title="Release channels are opening soon"
 			highlight="Desktop stores first. Mobile stores follow after."
 			centered={true}
+			accent="mustard"
 		/>
 
 		<div class="r4d-store-grid mt-8 grid gap-4">
 			{releaseStores.map((group) => (
-				<article class="r4d-os-column">
+				<article class="r4d-os-column ui-panel ui-panel-muted h-full p-4">
 					<div class="r4d-os-head">
 						<div class="r4d-os-title">
-							<span
-								class="r4d-os-icon"
-								aria-hidden="true"
-								style={`--os-icon:url('${group.osIconPath}')`}
-							/>
+							<span class="r4d-os-icon" aria-hidden="true" style={`--os-icon:url('${group.osIconPath}')`} />
 							<h3 class="r4d-os-name">{group.os}</h3>
 						</div>
 					</div>
@@ -74,14 +71,14 @@ const releaseStores = [
 						))}
 					</div>
 				</article>
-				))}
+			))}
 		</div>
 
 		<div class="r4d-disclaimer-grid mt-6">
-			<div class="r4d-disclaimer-col">
+			<div class="ui-panel ui-panel-muted h-full p-4 r4d-disclaimer-col">
 				<R4DRalphOSCard />
 			</div>
-			<div class="r4d-disclaimer-col">
+			<div class="ui-panel ui-panel-muted h-full p-4 r4d-disclaimer-col">
 				<R4DRalphdCard />
 			</div>
 		</div>
@@ -93,15 +90,13 @@ const releaseStores = [
 		grid-template-columns: repeat(1, minmax(0, 1fr));
 	}
 
-	.r4d-os-column {
-		padding: 0.25rem 0.9rem;
-	}
-
 	.r4d-os-head {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 0.5rem;
+		padding-bottom: 0.4rem;
+		border-bottom: 1px solid var(--border);
 	}
 
 	.r4d-os-title {
@@ -115,7 +110,7 @@ const releaseStores = [
 		width: 1rem;
 		height: 1rem;
 		flex: 0 0 auto;
-		background: color-mix(in oklab, var(--foreground) 90%, white 10%);
+		background: color-mix(in srgb, var(--foreground) 90%, white 10%);
 		-webkit-mask-image: var(--os-icon);
 		mask-image: var(--os-icon);
 		-webkit-mask-repeat: no-repeat;
@@ -131,7 +126,7 @@ const releaseStores = [
 		margin: 0;
 		font-size: 1.02rem;
 		font-weight: 700;
-		color: color-mix(in oklab, var(--foreground) 96%, white 4%);
+		color: color-mix(in srgb, var(--foreground) 96%, white 4%);
 	}
 
 	.r4d-store-list {
@@ -163,20 +158,6 @@ const releaseStores = [
 
 		.r4d-disclaimer-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-
-		.r4d-store-grid {
-			gap: 0;
-		}
-
-		.r4d-os-column {
-			padding: 0.25rem 0.9rem 0.25rem 1rem;
-			border-left: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent);
-		}
-
-		.r4d-os-column:nth-child(1) {
-			border-left: none;
-			padding-left: 0.2rem;
 		}
 	}
 </style>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
+  <style type="text/css">
+    g.prefab path{
+      vector-effect:non-scaling-stroke;
+      -inkscape-stroke:hairline;
+      fill:none;
+      fill-opacity:1;
+      stroke-opacity:1;
+      stroke:#00349c;
+    }
+  </style>
+
+  <!-- Ralph artwork normalized into the same safe box (43..857) -->
+  <g stroke-width="4" transform="matrix(1.02005 0 0 1.02778 -12.08 -11.47)">
+    <path
+      d="M604 54
+         S443 100 254 290
+         C65 480 106 591 106 591
+         S112 622 140 635
+         C168 648 186 645 186 645
+         S215 737 285 782
+         C355 827 412 844 412 844
+         L56 844
+         L54 157
+         S149 100 227 81
+         C305 62 376 57 376 57
+         Z"
+      fill="#f1e6d3"/>
+
+    <path
+      d="M478 513
+         L731 845
+         L409 844
+         S308 805 259 762
+         C210 719 184 645 184 645
+         S224 643 293 617
+         C362 591 478 513 478 513
+         Z"
+      fill="#8C8FA8"/>
+
+    <path d="M557 464 L851 466 L852 794" fill="#7E968C"/>
+
+    <path
+      d="M638 53
+         H849
+         L851 316
+         S775 357 699 395
+         C623 433 555 461 555 461
+         L852 793
+         L850 799
+         H696
+         L433 456
+         S626 390 691 320
+         C756 250 750 182 750 182
+         S752 129 709 92
+         C665 55 640 53 640 53
+         Z"
+      fill="#f1e6d3"/>
+  </g>
+</svg>

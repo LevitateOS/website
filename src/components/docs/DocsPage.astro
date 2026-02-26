@@ -18,7 +18,6 @@ function toAnchor(title: string): string {
 		.replace(/\s+/g, "-")
 }
 
-// Extract plain text description from intro for meta tags
 function extractPlainText(intro: any): string | undefined {
 	if (!intro) return undefined
 	if (typeof intro === "string") return intro
@@ -36,29 +35,36 @@ const description = extractPlainText(content.intro)
 ---
 
 <DocsLayout title={content.title} currentSlug={slug} description={description}>
-	<h1 class="text-2xl font-medium mb-4">{content.title}</h1>
-	{
-		content.intro && (
-			<p class="text-muted-foreground text-sm leading-relaxed mb-6">
-				<InlineContent content={content.intro} />
-			</p>
-		)
-	}
-	{
-		content.sections.map((section: Section) => {
-			const level = section.level ?? 2
-			const anchor = toAnchor(section.title)
+	<div class="max-w-[78ch]">
+		<p class="ui-label mb-2">Documentation</p>
+		<h1 class="text-3xl font-semibold tracking-tight mb-4">{content.title}</h1>
+		{
+			content.intro && (
+				<p class="text-muted-foreground text-base leading-relaxed mb-8">
+					<InlineContent content={content.intro} />
+				</p>
+			)
+		}
+		{
+			content.sections.map((section: Section) => {
+				const level = section.level ?? 2
+				const anchor = toAnchor(section.title)
 
-			return (
-				<section id={anchor} class="mb-6 scroll-mt-16">
-					{level === 2 ? (
-						<h2 class="text-lg font-medium mb-3">{section.title}</h2>
+				return (
+					<section id={anchor} class="mb-9 scroll-mt-20">
+						{level === 2 ? (
+							<>
+								<p class="ui-label mb-1">Section</p>
+								<h2 class="text-xl font-semibold mb-3 tracking-tight">{section.title}</h2>
+								<div class="ui-divider mb-4" />
+							</>
 						) : (
-							<h3 class="text-base font-medium mb-2">{section.title}</h3>
+							<h3 class="text-lg font-semibold mb-3 tracking-tight">{section.title}</h3>
 						)}
 						{section.content.map((block: ContentBlock) => <RenderBlock block={block} />)}
 					</section>
 				)
 			})
-	}
+		}
+	</div>
 </DocsLayout>

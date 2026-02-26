@@ -40,7 +40,7 @@ function sanitizeHref(rawHref: string): string {
 
 function parseInlineContent(text: string): InlinePart[] {
 	const parts: InlinePart[] = []
-	const regex = /`([^`]+)`|\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))+)\)|\*\*(.+?)\*\*/g
+	const regex = /`([^`]+)`|\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))+\))|\*\*(.+?)\*\*/g
 	let lastIndex = 0
 	let match
 
@@ -73,11 +73,11 @@ function renderInlineNode(node: InlineNode): string {
 	}
 	switch (node.type) {
 		case "link":
-			return `<a href="${sanitizeHref(node.href)}" class="text-primary hover:underline">${escapeHtml(node.text)}</a>`
+			return `<a href="${sanitizeHref(node.href)}" class="ui-link">${escapeHtml(node.text)}</a>`
 		case "bold":
 			return `<strong>${escapeHtml(node.text)}</strong>`
 		case "code":
-			return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${escapeHtml(node.text)}</code>`
+			return `<code class="code-plate px-1.5 py-0.5 font-mono text-[0.82em]">${escapeHtml(node.text)}</code>`
 		case "italic":
 			return `<em>${escapeHtml(node.text)}</em>`
 		default:
@@ -94,10 +94,10 @@ function renderContent(content: string | RichText): string {
 	return parts
 		.map((part) => {
 			if (part.type === "code") {
-				return `<code class="bg-[var(--muted)] px-1.5 py-0.5">${escapeHtml(part.content)}</code>`
+				return `<code class="code-plate px-1.5 py-0.5 font-mono text-[0.82em]">${escapeHtml(part.content)}</code>`
 			}
 			if (part.type === "link") {
-				return `<a href="${sanitizeHref(part.href)}" class="text-primary hover:underline">${escapeHtml(part.content)}</a>`
+				return `<a href="${sanitizeHref(part.href)}" class="ui-link">${escapeHtml(part.content)}</a>`
 			}
 			if (part.type === "bold") {
 				return `<strong>${escapeHtml(part.content)}</strong>`

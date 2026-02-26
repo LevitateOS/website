@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
+  <style type="text/css">
+    g.prefab path{
+      vector-effect:non-scaling-stroke;
+      -inkscape-stroke:hairline;
+      fill:none;
+      fill-opacity:1;
+      stroke-opacity:1;
+      stroke:#00349c;
+    }
+  </style>
+
+  <g>
+    <!-- Top off-white -->
+    <path d="M855 211 L507 371 L507 46 s219 4 347 89" fill="#252426"/>
+
+    <!-- Mid green/gray -->
+    <path d="M853 406 L855 572 L345 647 L508 405" fill="#9AA48C"/>
+
+    <!-- Red -->
+    <path
+      d="M856 655
+         S771 742 631 799
+         C491 856 449 861 449 861
+         S412 851 343 828
+         C274 804 253 795 253 795
+         L349 646
+         L856 573
+         Z"
+      fill="#B9827E"/>
+
+    <!-- Main off-white body: clamp any x=42 up to x=43 to respect 20px clearance from border inner edge -->
+    <path
+      d="M507 406
+         L251 794
+         S179 763 118 721
+         C57 679 43 655 43 655
+         V135
+         S129 77 242 61
+         C355 45 482 46 482 46
+         S92 297 94 473
+         C96 650 425 459 425 459
+         Z"
+      fill="#252426"/>
+  </g>
+</svg>

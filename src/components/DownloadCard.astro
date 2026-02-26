@@ -53,15 +53,13 @@ const {
 	recDisk,
 } = Astro.props
 
-const cardId = title.toLowerCase().replace(/\s+/g, '-')
+const cardId = title.toLowerCase().replace(/\s+/g, "-")
 const archTabs = [
 	{ id: "x86_64", label: "x86_64" },
 	{ id: "aarch64", label: "AArch64" },
 ]
 
-const downloadFormats: DownloadFormat[] = formats?.length
-	? formats
-	: (["iso", "qcow2", "img"] as DownloadFormat[])
+const downloadFormats: DownloadFormat[] = formats?.length ? formats : (["iso", "qcow2", "img"] as DownloadFormat[])
 const primaryFormat: DownloadFormat = downloadFormats[0] ?? "qcow2"
 
 function formatLabel(kind: DownloadFormat): string {
@@ -85,98 +83,95 @@ function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | unde
 			return arch?.imgUrl
 	}
 }
+
+const statusClass = status === "available" ? "ui-chip ui-chip--available" : status === "coming-soon" ? "ui-chip ui-chip--beta" : "ui-chip ui-chip--blocked"
+const statusLabel = status === "available" ? "Available" : status === "coming-soon" ? "Coming Soon" : "Planned"
+const lightLogo = logo.endsWith("-trace.svg") ? logo.replace("-trace.svg", "-trace-light.svg") : logo
 ---
 
 <div class="ui-panel ui-lift overflow-hidden text-sm">
-	<div class="flex flex-col sm:flex-row">
-		<!-- OS Info -->
-		<div class="px-5 py-5 flex flex-col flex-1">
-			<div class="flex items-center gap-3 mb-2">
-				<div class="size-10 shrink-0 grid place-items-center">
+	<div class="grid gap-0 sm:grid-cols-[1.7fr_1fr]">
+		<div class="p-5 border-b sm:border-b-0 sm:border-r border-border">
+			<div class="mb-3 flex items-start justify-between gap-3 border-b border-border pb-3">
+				<div class="flex min-w-0 items-start gap-3">
 					<img
-						src={logo}
+						src={lightLogo}
+						data-dark-src={logo}
+						data-light-src={lightLogo}
 						alt={title}
 						loading="lazy"
-						class="w-full h-full object-contain"
+						class="mt-0.5 size-16 shrink-0 object-contain"
 					/>
+					<div class="min-w-0">
+						<h3 class="min-w-0 text-lg font-semibold leading-tight">
+							{variant === "levitate" ? (
+								<LevitateTextLogo className="text-lg" />
+							) : variant === "ralph" ? (
+								<RalphTextLogo className="text-lg" />
+							) : (
+								<AcornTextLogo className="text-lg" />
+							)}
+						</h3>
+						<p class="mt-1 font-mono text-xs text-muted-foreground">{stack}</p>
+					</div>
 				</div>
-				<h3 class="text-lg font-medium">
-					{variant === "levitate" ? (
-						<LevitateTextLogo className="text-lg" />
-					) : variant === "ralph" ? (
-						<RalphTextLogo className="text-lg" />
-					) : (
-						<AcornTextLogo className="text-lg" />
-					)}
-				</h3>
+				<span class:list={[statusClass, "shrink-0 self-start"]}>{statusLabel}</span>
 			</div>
 
-			<p class="font-mono text-muted-foreground mb-2">{stack}</p>
-			<p class="text-muted-foreground mb-3">{description}</p>
+			<p class="text-muted-foreground mb-4">{description}</p>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-				<!-- Pros -->
-				<ul class="space-y-1">
-					{pros.map((pro) => (
-						<li class="flex items-start gap-2">
-							<span class="text-green-500 shrink-0">+</span>
-							<span>{pro}</span>
-						</li>
-					))}
-				</ul>
-
-				<!-- Cons -->
-				<ul class="space-y-1">
-					{cons.map((con) => (
-						<li class="flex items-start gap-2">
-							<span class="text-red-400 shrink-0">−</span>
-							<span>{con}</span>
-						</li>
-					))}
-				</ul>
+			<div class="grid gap-4 sm:grid-cols-2">
+				<div>
+					<p class="ui-label mb-2">Strengths</p>
+					<ul class="space-y-1.5">
+						{pros.map((pro) => (
+							<li class="flex items-start gap-2 text-muted-foreground">
+								<span class="font-mono text-[var(--spectrum-3)]">+</span>
+								<span>{pro}</span>
+							</li>
+						))}
+					</ul>
+				</div>
+				<div>
+					<p class="ui-label mb-2">Tradeoffs</p>
+					<ul class="space-y-1.5">
+						{cons.map((con) => (
+							<li class="flex items-start gap-2 text-muted-foreground">
+								<span class="font-mono text-[var(--spectrum-6)]">-</span>
+								<span>{con}</span>
+							</li>
+						))}
+					</ul>
+				</div>
 			</div>
 		</div>
 
-		<!-- Download -->
-		<div class="bg-muted/40 dark:bg-black/20 px-5 py-5 flex flex-col sm:w-56 sm:shrink-0">
-			<h4 class="font-medium mb-3">
-				Download{" "}
-				{variant === "levitate" ? (
-					<LevitateTextLogo />
-				) : variant === "ralph" ? (
-					<RalphTextLogo />
-				) : (
-					<AcornTextLogo />
-				)}
-			</h4>
-			<div class="text-muted-foreground mb-3">
-				<table class="w-full">
-					<thead>
-						<tr class="text-muted-foreground/70">
-							<td></td>
-							<td class="text-right pb-0.5 pl-3">Min</td>
-							<td class="text-right pb-0.5 pl-3">Rec</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td class="font-medium">RAM</td>
-							<td class="text-right pl-3">{minRam}</td>
-							<td class="text-right pl-3">{recRam}</td>
-						</tr>
-						<tr>
-							<td class="font-medium">Disk</td>
-							<td class="text-right pl-3">{minDisk}</td>
-							<td class="text-right pl-3">{recDisk}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+		<div class="p-5 ui-panel-muted">
+			<h4 class="font-medium mb-2">Requirements</h4>
+			<table class="mb-4 w-full text-xs">
+				<thead>
+					<tr class="text-muted-foreground/90">
+						<td></td>
+						<td class="text-right pb-0.5 pl-3 font-mono">Min</td>
+						<td class="text-right pb-0.5 pl-3 font-mono">Rec</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="font-medium">RAM</td>
+						<td class="text-right pl-3">{minRam}</td>
+						<td class="text-right pl-3">{recRam}</td>
+					</tr>
+					<tr>
+						<td class="font-medium">Disk</td>
+						<td class="text-right pl-3">{minDisk}</td>
+						<td class="text-right pl-3">{recDisk}</td>
+					</tr>
+				</tbody>
+			</table>
 
-				<!-- Arch tabs -->
-			<Tabs tabs={archTabs} name={cardId} defaultTab="x86_64" class="mt-auto mb-3" />
+			<Tabs tabs={archTabs} mode="meta" name={cardId} defaultTab="x86_64" class="mb-3" />
 
-			<!-- x86_64 downloads -->
 			<TabContent name={cardId} tabId="x86_64" default class="flex flex-col gap-2">
 				{status === "available" && x86_64 ? (
 					<>
@@ -185,36 +180,31 @@ function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | unde
 							const url = getUrl(x86_64, kind)
 							const isPrimary = kind === primaryFormat
 							const klass = isPrimary
-								? "inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
-								: "inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+								? "ui-btn ui-btn-primary inline-flex h-10 w-full items-center justify-center gap-2 px-4 text-sm"
+								: "ui-btn ui-btn-secondary inline-flex h-10 w-full items-center justify-center gap-2 px-4 text-sm"
 
 							return url ? (
 								<a href={url} class={klass}>
-									<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+									<svg class="size-4" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z" />
 									</svg>
 									{label}
 								</a>
 							) : (
-								<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-									{label}
-								</span>
+								<span class="ui-field w-full px-4 text-sm">{label}</span>
 							)
 						})}
 					</>
 				) : (
 					<>
 						{downloadFormats.map((kind) => (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								{formatLabel(kind)}
-							</span>
+							<span class="ui-field w-full px-4 text-sm">{formatLabel(kind)}</span>
 						))}
 						<span class="text-xs text-muted-foreground text-center">{x86_64Date}</span>
 					</>
 				)}
 			</TabContent>
 
-			<!-- AArch64 downloads -->
 			<TabContent name={cardId} tabId="aarch64" class="flex flex-col gap-2">
 				{status === "available" && aarch64 ? (
 					<>
@@ -223,29 +213,25 @@ function getUrl(arch: ArchUrls | undefined, kind: DownloadFormat): string | unde
 							const url = getUrl(aarch64, kind)
 							const isPrimary = kind === primaryFormat
 							const klass = isPrimary
-								? "inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-10 px-4 hover:bg-primary/90 transition-colors select-none"
-								: "inline-flex items-center justify-center gap-2 bg-muted text-foreground h-10 px-4 hover:bg-muted/70 transition-colors select-none"
+								? "ui-btn ui-btn-primary inline-flex h-10 w-full items-center justify-center gap-2 px-4 text-sm"
+								: "ui-btn ui-btn-secondary inline-flex h-10 w-full items-center justify-center gap-2 px-4 text-sm"
 
 							return url ? (
 								<a href={url} class={klass}>
-									<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z"/>
+									<svg class="size-4" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+										<path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0Zm-101.66 5.66a8 8 0 0 0 11.32 0l40-40a8 8 0 0 0-11.32-11.32L136 132.69V40a8 8 0 0 0-16 0v92.69l-26.34-26.35a8 8 0 0 0-11.32 11.32Z" />
 									</svg>
 									{label}
 								</a>
 							) : (
-								<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-									{label}
-								</span>
+								<span class="ui-field w-full px-4 text-sm">{label}</span>
 							)
 						})}
 					</>
 				) : (
 					<>
 						{downloadFormats.map((kind) => (
-							<span class="flex items-center justify-center bg-muted text-muted-foreground h-10 px-4 text-center">
-								{formatLabel(kind)}
-							</span>
+							<span class="ui-field w-full px-4 text-sm">{formatLabel(kind)}</span>
 						))}
 						<span class="text-xs text-muted-foreground text-center">{aarch64Date}</span>
 					</>

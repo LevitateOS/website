@@ -11,60 +11,55 @@ const commandText = Array.isArray(block.command) ? block.command.join("\n") : bl
 const codeLanguage = block.language === "rhai" ? "rust" : block.language
 ---
 
-<div class="mb-3">
-	<div class="bg-[var(--muted)] text-sm overflow-hidden">
-		<!-- Header with description and copy button -->
-		<div class="flex items-center justify-between gap-2 px-4 py-2 border-b border-foreground/10">
-			<span class="text-muted-foreground truncate">{block.description}</span>
-			<button
-				type="button"
-				class="copy-btn flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors shrink-0 select-none"
-				data-code={commandText}
-			>
-				<svg class="copy-icon size-3.5" viewBox="0 0 256 256" fill="currentColor">
-					<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z"></path>
-				</svg>
-				<svg class="check-icon hidden size-3.5" viewBox="0 0 256 256" fill="currentColor">
-					<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z"></path>
-				</svg>
-				<span class="copy-text hidden sm:inline">copy</span>
-			</button>
-		</div>
-		<!-- Code content - horizontally scrollable -->
-		<div class="overflow-x-auto">
-			<div class="p-4 min-w-fit [&>pre]:p-0 [&>pre]:min-w-fit [&>pre]:text-sm">
-				<Code code={commandText} lang={codeLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
-			</div>
-		</div>
-		{
-			block.output && (
-				<div class="bg-background/50 px-4 py-2 border-t border-dashed border-foreground/10 overflow-x-auto">
-					<pre class="text-muted-foreground/60 min-w-fit text-sm">{block.output}</pre>
-				</div>
-			)
-		}
+<div class="mb-4 code-plate overflow-hidden">
+	<div class="code-plate__header flex items-center justify-between gap-2 px-4 py-2 text-muted-foreground">
+		<span class="truncate">{block.description}</span>
+		<button
+			type="button"
+			class="command-copy-btn inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors shrink-0 select-none"
+			data-code={commandText}
+		>
+			<svg class="copy-icon size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+				<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
+			</svg>
+			<svg class="check-icon hidden size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+				<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
+			</svg>
+			<span class="copy-text">COPY</span>
+		</button>
 	</div>
+	<div class="code-plate__body overflow-x-auto">
+		<div class="p-4 min-w-fit [&>pre]:p-0 [&>pre]:min-w-fit [&>pre]:text-sm">
+			<Code code={commandText} lang={codeLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
+		</div>
+	</div>
+	{block.output && (
+		<div class="border-t border-dashed border-border bg-background/50 px-4 py-2 overflow-x-auto">
+			<p class="ui-label mb-1">OUTPUT</p>
+			<pre class="min-w-fit text-sm text-muted-foreground/85">{block.output}</pre>
+		</div>
+	)}
 </div>
 
 <script>
-	document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+	document.querySelectorAll<HTMLButtonElement>(".command-copy-btn").forEach((btn) => {
 		btn.addEventListener("click", async () => {
 			const code = btn.dataset.code
-			if (code) {
-				await navigator.clipboard.writeText(code)
-				const copyIcon = btn.querySelector(".copy-icon")
-				const checkIcon = btn.querySelector(".check-icon")
-				const copyText = btn.querySelector(".copy-text")
-				if (copyIcon && checkIcon && copyText) {
-					copyIcon.classList.add("hidden")
-					checkIcon.classList.remove("hidden")
-					copyText.textContent = "copied"
-					setTimeout(() => {
-						copyIcon.classList.remove("hidden")
-						checkIcon.classList.add("hidden")
-						copyText.textContent = "copy"
-					}, 2000)
-				}
+			if (!code) return
+
+			await navigator.clipboard.writeText(code)
+			const copyIcon = btn.querySelector(".copy-icon")
+			const checkIcon = btn.querySelector(".check-icon")
+			const copyText = btn.querySelector(".copy-text")
+			if (copyIcon && checkIcon && copyText) {
+				copyIcon.classList.add("hidden")
+				checkIcon.classList.remove("hidden")
+				copyText.textContent = "COPIED"
+				setTimeout(() => {
+					copyIcon.classList.remove("hidden")
+					checkIcon.classList.add("hidden")
+					copyText.textContent = "COPY"
+				}, 600)
 			}
 		})
 	})

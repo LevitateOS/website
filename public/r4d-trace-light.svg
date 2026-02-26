@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
+  <style type="text/css">
+    g.prefab path{
+      vector-effect:non-scaling-stroke;
+      -inkscape-stroke:hairline;
+      fill:none;
+      fill-opacity:1;
+      stroke-opacity:1;
+      stroke:#00349c;
+    }
+  </style>
+
+  <!-- Artwork: nudged to respect the same safe box; scaleX slightly reduced so max X stays <= 857 -->
+  <g transform="matrix(1.072 0 0 1.028 -16 -11)">
+    <path
+      d="M409 692
+         L60 693
+         V580
+         S44 548 162 415
+         C280 282 531 59 531 59
+         H705
+         L706 380
+         L531 466
+         L533 133
+         L281 370
+         S182 463 151 527
+         C120 591 178 591 178 591
+         S206 605 344 558
+         C481 512 597 466 597 466
+         Z"
+      fill="#252426"/>
+
+    <path
+      transform="matrix(0.98 0 0 0.973 12 11)"
+      d="M807 685
+         L808 371
+         L596 468
+         L533 546
+         Z"
+      fill="#6F8F86"/>
+
+    <path
+      d="M535 541
+         L290 839
+         S353 835 551 773
+         C749 711 803 678 803 678
+         Z"
+      fill="#A4869F"/>
+  </g>
+</svg>

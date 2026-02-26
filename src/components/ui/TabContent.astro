@@ -19,6 +19,10 @@ const { name, tabId, default: isDefault, class: className } = Astro.props
 </div>
 
 <style>
+	[data-tab-content] {
+		transition: opacity var(--dur-ui) var(--ease-out);
+	}
+
 	[data-hidden] {
 		display: none;
 	}

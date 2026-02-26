@@ -8,27 +8,31 @@ export interface Props {
 	tabs: Tab[]
 	defaultTab?: string
 	name: string
+	mode?: "content" | "meta"
 	class?: string
 }
 
-const { tabs, defaultTab, name, class: className } = Astro.props
+const { tabs, defaultTab, name, mode = "content", class: className } = Astro.props
 const activeTab = defaultTab || tabs[0]?.id
+const textClass = mode === "meta" ? "ui-label text-[0.64rem]" : "text-xs font-medium"
 ---
 
-<div class:list={["w-full", className]} data-tabs={name}>
-	<div class="ui-panel ui-panel-muted p-[3px] flex h-9 items-center w-full">
+<div class:list={["w-full", className]} data-tabs={name} data-tabs-mode={mode}>
+	<div class="ui-panel ui-panel-muted flex h-10 w-full items-end p-[3px] gap-[3px]">
 		{tabs.map((tab) => (
 			<button
 				type="button"
 				class:list={[
-					"flex-1 h-[calc(100%-1px)] px-2.5 text-xs font-medium transition-colors select-none",
-					"text-muted-foreground hover:text-foreground",
-					"data-[active]:bg-background data-[active]:text-foreground data-[active]:shadow-[0_0_0_1px_rgba(0,0,0,0.08)] dark:data-[active]:shadow-[0_0_0_1px_rgba(255,255,255,0.12)]",
+					"group relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center border border-transparent px-2.5 transition-colors select-none",
+					textClass,
+					"text-muted-foreground hover:text-foreground hover:border-border",
+					"data-[active]:bg-secondary data-[active]:text-foreground data-[active]:border-border",
 				]}
 				data-tab-trigger={tab.id}
 				data-active={tab.id === activeTab ? "" : undefined}
 			>
-				{tab.label}
+				<span>{tab.label}</span>
+				<span class="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-transparent group-data-[active]:bg-[var(--accent)]" />
 			</button>
 		))}
 	</div>
@@ -36,19 +40,20 @@ const activeTab = defaultTab || tabs[0]?.id
 
 <script>
 	document.querySelectorAll('[data-tabs]').forEach((tabsContainer) => {
+		if (tabsContainer.hasAttribute('data-tabs-bound')) return
+		tabsContainer.setAttribute('data-tabs-bound', '')
+
 		const name = tabsContainer.getAttribute('data-tabs')
+		if (!name) return
 		const triggers = tabsContainer.querySelectorAll('[data-tab-trigger]')
 		const contents = document.querySelectorAll(`[data-tab-content="${name}"]`)
 
 		triggers.forEach((trigger) => {
 			trigger.addEventListener('click', () => {
 				const tabId = trigger.getAttribute('data-tab-trigger')
-
-				// Update triggers
 				triggers.forEach((t) => t.removeAttribute('data-active'))
 				trigger.setAttribute('data-active', '')
 
-				// Update content panels
 				contents.forEach((content) => {
 					if (content.getAttribute('data-tab-id') === tabId) {
 						content.removeAttribute('data-hidden')

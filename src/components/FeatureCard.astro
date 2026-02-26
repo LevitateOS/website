@@ -7,23 +7,13 @@ interface Props {
 const { title, description } = Astro.props
 ---
 
-<div
-	class="ui-panel ui-lift flex flex-col gap-3 overflow-hidden py-5 h-full text-sm"
->
-	<div class="px-5 grid gap-2 auto-rows-min items-start">
-		<div class="flex items-center gap-2">
-			<div class="text-primary [&_svg]:size-5">
-				<slot name="icon" />
-			</div>
-			<div class="text-base font-medium">{title}</div>
+<div class="ui-panel ui-lift flex h-full flex-col gap-3 overflow-hidden p-5 text-sm">
+	<div class="flex items-center gap-2">
+		<div class="text-accent [&_svg]:size-5 text-[color:var(--accent)]">
+			<slot name="icon" />
 		</div>
-		<div class="text-muted-foreground">{description}</div>
+		<h3 class="text-base font-semibold tracking-tight">{title}</h3>
 	</div>
-	{
-		Astro.slots.has("default") && (
-			<div class="px-5">
-				<slot />
-			</div>
-		)
-	}
+	<p class="text-muted-foreground">{description}</p>
+	{Astro.slots.has("default") && <div class="pt-1"><slot /></div>}
 </div>

@@ -3,6 +3,7 @@ import ThemeToggle from "../ThemeToggle.astro"
 import LevitateTextLogo from "../brand/LevitateTextLogo.astro"
 
 const path = Astro.url.pathname
+
 function normalizePath(input: string): string {
 	if (input === "/") return "/"
 	return input.endsWith("/") ? input.slice(0, -1) : input
@@ -14,86 +15,57 @@ function active(href: string): boolean {
 	if (normalizedHref === "/") return normalizedPath === "/"
 	return normalizedPath === normalizedHref || normalizedPath.startsWith(`${normalizedHref}/`)
 }
+
+const navItems = [
+	{ href: "/", label: "Home" },
+	{ href: "/ralph4days/", label: "R4D" },
+	{ href: "/download/", label: "Download" },
+	{ href: "/docs/getting-started/", label: "Docs" },
+	{ href: "/docs/recipe-format/", label: "Recipes" },
+]
 ---
 
-<header
-	class="sticky top-0 z-50 w-full bg-background/92 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative"
->
-	<div class="absolute bottom-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,var(--spectrum-cobalt),var(--spectrum-magenta),var(--spectrum-amber),transparent)] opacity-40 pointer-events-none" />
-	<div class="container flex h-14 items-center justify-between px-4">
-		<a href="/" class="flex items-center gap-2">
-			<LevitateTextLogo className="text-base" />
+<header class="sticky top-0 z-50 w-full border-b-2 border-border-strong bg-background/96">
+	<div class="container flex h-14 items-center justify-between px-3 sm:px-4">
+		<a href="/" class="inline-flex items-center gap-2 min-w-0">
+			<LevitateTextLogo className="text-base sm:text-lg" />
 		</a>
 
-		<!-- Desktop navigation -->
-		<nav class="hidden md:flex items-center gap-6">
-			<a
-				href="/"
-				class:list={[
-					"text-sm font-medium transition-colors",
-					active("/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Home
-			</a>
-			<a
-				href="/ralph4days/"
-				class:list={[
-					"text-sm font-medium transition-colors",
-					active("/ralph4days/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Ralph4days
-			</a>
-			<a
-				href="/download/"
-				class:list={[
-					"text-sm font-medium transition-colors",
-					active("/download/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Download
-			</a>
-			<a
-				href="/docs/getting-started/"
-				class:list={[
-					"text-sm font-medium transition-colors",
-					active("/docs") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Docs
-			</a>
-			<a
-				href="/docs/recipe-format/"
-				class:list={[
-					"text-sm font-medium transition-colors",
-					active("/docs/recipe-format/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Recipes
-			</a>
+		<nav class="hidden md:flex items-center gap-2">
+			{navItems.map((item) => (
+				<a
+					href={item.href}
+					class:list={[
+						"inline-flex h-9 items-center px-3 ui-label tracking-[0.10em] transition-colors border border-transparent",
+						active(item.href)
+							? "bg-card text-foreground border-border"
+							: "text-muted-foreground hover:text-foreground hover:border-border",
+					]}
+				>
+					{item.label}
+				</a>
+			))}
 		</nav>
 
-		<div class="flex items-center gap-2">
+		<div class="flex min-w-0 items-center gap-1 sm:gap-2">
 			<ThemeToggle />
 			<a
 				href="https://github.com/LevitateOS/LevitateOS"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="inline-flex items-center justify-center size-9 hover:bg-muted transition-colors"
+				class="hidden sm:inline-flex size-9 items-center justify-center border border-transparent text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+				aria-label="GitHub"
 			>
 				<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
 					<path
 						d="M208.31 75.68A59.78 59.78 0 0 0 202.93 28a8 8 0 0 0-6.93-4a59.75 59.75 0 0 0-48 24h-24a59.75 59.75 0 0 0-48-24a8 8 0 0 0-6.93 4a59.78 59.78 0 0 0-5.38 47.68A58.14 58.14 0 0 0 56 104v8a56.06 56.06 0 0 0 48.44 55.47A39.8 39.8 0 0 0 96 192v8H72a24 24 0 0 1-24-24a40 40 0 0 0-40-40a8 8 0 0 0 0 16a24 24 0 0 1 24 24a40 40 0 0 0 40 40h24v16a8 8 0 0 0 16 0v-40a24 24 0 0 1 48 0v40a8 8 0 0 0 16 0v-40a39.8 39.8 0 0 0-8.44-24.53A56.06 56.06 0 0 0 216 112v-8a58.14 58.14 0 0 0-7.69-28.32ZM200 112a40 40 0 0 1-40 40h-48a40 40 0 0 1-40-40v-8a41.74 41.74 0 0 1 6.9-22.48a8 8 0 0 0 1.1-7.69a43.81 43.81 0 0 1 .79-33.58a43.88 43.88 0 0 1 32.32 20.06a8 8 0 0 0 6.71 3.69h32.35a8 8 0 0 0 6.74-3.69a43.87 43.87 0 0 1 32.32-20.06a43.81 43.81 0 0 1 .77 33.58a8.09 8.09 0 0 0 1 7.65a41.72 41.72 0 0 1 7 22.52Z"
 					></path>
 				</svg>
-				<span class="sr-only">GitHub</span>
 			</a>
-			<!-- Mobile hamburger button -->
 			<button
 				type="button"
 				id="mobile-menu-btn"
-				class="md:hidden inline-flex items-center justify-center size-9 hover:bg-muted transition-colors select-none"
+				class="md:hidden inline-flex size-9 items-center justify-center border border-transparent text-muted-foreground transition-colors hover:border-border hover:text-foreground"
 				aria-label="Open menu"
 				aria-expanded="false"
 			>
@@ -107,57 +79,21 @@ function active(href: string): boolean {
 		</div>
 	</div>
 
-	<!-- Mobile navigation menu -->
-	<nav
-		id="mobile-menu"
-		class="hidden md:hidden border-t bg-background"
-	>
+	<nav id="mobile-menu" class="hidden md:hidden border-t border-border-strong bg-card">
 		<div class="container px-4 py-3 flex flex-col gap-2">
-			<a
-				href="/"
-				class:list={[
-					"text-sm font-medium transition-colors py-2",
-					active("/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Home
-			</a>
-			<a
-				href="/ralph4days/"
-				class:list={[
-					"text-sm font-medium transition-colors py-2",
-					active("/ralph4days/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Ralph4days
-			</a>
-			<a
-				href="/download/"
-				class:list={[
-					"text-sm font-medium transition-colors py-2",
-					active("/download/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Download
-			</a>
-			<a
-				href="/docs/getting-started/"
-				class:list={[
-					"text-sm font-medium transition-colors py-2",
-					active("/docs") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Docs
-			</a>
-			<a
-				href="/docs/recipe-format/"
-				class:list={[
-					"text-sm font-medium transition-colors py-2",
-					active("/docs/recipe-format/") ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-				]}
-			>
-				Recipes
-			</a>
+			{navItems.map((item) => (
+				<a
+					href={item.href}
+					class:list={[
+						"inline-flex h-9 items-center px-3 ui-label tracking-[0.10em] transition-colors border",
+						active(item.href)
+							? "border-border bg-secondary text-foreground"
+							: "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
+					]}
+				>
+					{item.label}
+				</a>
+			))}
 		</div>
 	</nav>
 </header>

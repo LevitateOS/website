@@ -53,10 +53,9 @@ const ogImageURL = new URL("/og-image.png", siteBase)
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-		<!-- Font preloading -->
-		<link rel="preload" href="/fonts/satoshi-400.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/satoshi-500.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/satoshi-700.woff2" as="font" type="font/woff2" crossorigin />
+		<!-- Font preconnect -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
 		<!-- Preconnect to external domains -->
 			<link rel="preconnect" href="https://github.com" />
@@ -94,5 +93,42 @@ const ogImageURL = new URL("/og-image.png", siteBase)
 				<slot />
 			</div>
 		</div>
+		<script is:inline>
+			;(function () {
+				function syncThemeTraceLogos() {
+					const isDark = document.documentElement.classList.contains("dark")
+					const logos = document.querySelectorAll("img[data-dark-src][data-light-src]")
+					for (const logo of logos) {
+						const darkSrc = logo.getAttribute("data-dark-src")
+						const lightSrc = logo.getAttribute("data-light-src")
+						if (!darkSrc || !lightSrc) continue
+						const expected = isDark ? darkSrc : lightSrc
+						if (logo.getAttribute("src") !== expected) {
+							logo.setAttribute("src", expected)
+						}
+					}
+				}
+
+				const win = window
+				if (win.__traceLogoObserver) {
+					win.__traceLogoObserver.disconnect()
+				}
+
+				const observer = new MutationObserver(syncThemeTraceLogos)
+				observer.observe(document.documentElement, {
+					attributes: true,
+					attributeFilter: ["class"],
+				})
+				win.__traceLogoObserver = observer
+
+				if (win.__traceLogoPageLoadHandler) {
+					document.removeEventListener("astro:page-load", win.__traceLogoPageLoadHandler)
+				}
+				win.__traceLogoPageLoadHandler = syncThemeTraceLogos
+				document.addEventListener("astro:page-load", syncThemeTraceLogos)
+
+				syncThemeTraceLogos()
+			})()
+		</script>
 	</body>
 </html>

@@ -10,17 +10,19 @@ interface Props {
 const { block } = Astro.props
 ---
 
-<div class="space-y-4 mb-4">
-	{
-		block.items.map((item) => (
-				<div class="border-l-2 border-primary/30 pl-4">
-					<h4 class="font-medium text-base mb-2">
-						<InlineContent content={item.question} />
-					</h4>
-						<div class="space-y-2 text-sm leading-relaxed">
-							{item.answer.map((answerBlock: ContentBlock) => <RenderBlock block={answerBlock} />)}
-						</div>
-					</div>
-				))
-			}
+<div class="space-y-4 mb-5">
+	{block.items.map((item) => (
+		<div class="ui-panel p-4">
+			<div class="flex items-start gap-2 border-b border-border pb-2 mb-3">
+				<span class="ui-label text-[color:var(--accent)]">Q /</span>
+				<h4 class="font-semibold text-base">
+					<InlineContent content={item.question} />
+				</h4>
+			</div>
+			<div class="space-y-2 text-sm leading-relaxed">
+				<div class="ui-label mb-1">A /</div>
+				{item.answer.map((answerBlock: ContentBlock) => <RenderBlock block={answerBlock} />)}
+			</div>
+		</div>
+	))}
 </div>

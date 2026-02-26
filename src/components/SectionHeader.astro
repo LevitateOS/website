@@ -4,26 +4,26 @@ interface Props {
 	title: string
 	highlight?: string
 	centered?: boolean
+	accent?: "mustard" | "rust" | "olive" | "teal" | "cyan" | "red"
 	class?: string
 }
 
-const { label, title, highlight, centered = false, class: className = "" } = Astro.props
+const { label, title, highlight, centered = false, accent = "teal", class: className = "" } = Astro.props
+
+const accentMap: Record<NonNullable<Props["accent"]>, string> = {
+	mustard: "var(--spectrum-1)",
+	rust: "var(--spectrum-2)",
+	olive: "var(--spectrum-3)",
+	teal: "var(--spectrum-4)",
+	cyan: "var(--spectrum-5)",
+	red: "var(--spectrum-6)",
+}
 ---
 
-<div class:list={[{ "text-center": centered }, className]}>
-	{label && (
-		<p class="text-sm font-medium text-primary uppercase tracking-widest mb-2">
-			{label}
-		</p>
-	)}
-	<h2 class="text-2xl sm:text-3xl font-medium mb-3">
-		{title}
-		{highlight && (
-			<>
-				<br />
-				<span class="text-primary">{highlight}</span>
-			</>
-		)}
-	</h2>
-	<div class:list={["ui-divider", centered ? "mx-auto w-40" : "w-32"]} />
+<div class:list={[{ "text-center": centered }, className]} style={`--section-accent: ${accentMap[accent]};`}>
+	{label && <p class="ui-label mb-2">{label}</p>}
+	<h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
+	{highlight && <p class="mt-2 text-base text-muted-foreground">{highlight}</p>}
+	<div class:list={["ui-divider-strong mt-3", centered ? "mx-auto w-48" : "w-56"]} />
+	<div class:list={["h-2 w-2 mt-1", centered ? "mx-auto" : "ml-0"]} style="background: var(--section-accent);" />
 </div>
