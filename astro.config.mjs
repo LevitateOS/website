@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config"
 import tailwindcss from "@tailwindcss/vite"
 import sitemap from "@astrojs/sitemap"
+import { INDUSTRIAL_PASTEL_1984_THEMES } from "@levitate/docs-content/syntax-theme"
 
 export default defineConfig({
   site: "https://levitateos.org",
@@ -20,7 +21,7 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: "shiki",
     shikiConfig: {
-      themes: { light: "github-light", dark: "github-dark" },
+      themes: INDUSTRIAL_PASTEL_1984_THEMES,
       defaultColor: false,
     },
   },

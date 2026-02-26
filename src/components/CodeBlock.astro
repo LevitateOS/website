@@ -1,6 +1,7 @@
 ---
 import type { DocsSyntaxLanguage } from "@levitate/docs-content"
 import { Code } from "astro:components"
+import { INDUSTRIAL_PASTEL_1984_THEMES } from "@levitate/docs-content/syntax-theme"
 
 interface Props {
 	code: string
@@ -37,32 +38,13 @@ const astroLanguage = language === "rhai" ? "rust" : language
 	</div>
 	<div class="code-plate__body overflow-x-auto">
 		<div class="p-3 min-w-fit [&>pre]:p-0 [&>pre]:text-xs [&>pre]:font-mono [&>pre]:min-w-fit">
-			<Code code={code} lang={astroLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
+			<Code code={code} lang={astroLanguage} themes={INDUSTRIAL_PASTEL_1984_THEMES} />
 		</div>
 	</div>
 </div>
 
 <script>
-	document.querySelectorAll<HTMLButtonElement>(".code-copy-btn").forEach((btn) => {
-		btn.addEventListener("click", async () => {
-			const text = btn.dataset.code
-			if (!text) return
+	import { bindCopyButtons } from "../scripts/copyButtons"
 
-			await navigator.clipboard.writeText(text)
-			const copyIcon = btn.querySelector(".copy-icon")
-			const checkIcon = btn.querySelector(".check-icon")
-			const copyText = btn.querySelector(".copy-text")
-
-			if (copyIcon && checkIcon && copyText) {
-				copyIcon.classList.add("hidden")
-				checkIcon.classList.remove("hidden")
-				copyText.textContent = "COPIED"
-				setTimeout(() => {
-					copyIcon.classList.remove("hidden")
-					checkIcon.classList.add("hidden")
-					copyText.textContent = "COPY"
-				}, 600)
-			}
-		})
-	})
+	bindCopyButtons(".code-copy-btn")
 </script>

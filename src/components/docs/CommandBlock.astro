@@ -1,6 +1,7 @@
 ---
 import type { CommandBlock } from "@levitate/docs-content"
 import { Code } from "astro:components"
+import { INDUSTRIAL_PASTEL_1984_THEMES } from "@levitate/docs-content/syntax-theme"
 
 interface Props {
 	block: CommandBlock
@@ -30,7 +31,7 @@ const codeLanguage = block.language === "rhai" ? "rust" : block.language
 	</div>
 	<div class="code-plate__body overflow-x-auto">
 		<div class="p-4 min-w-fit [&>pre]:p-0 [&>pre]:min-w-fit [&>pre]:text-sm">
-			<Code code={commandText} lang={codeLanguage as any} themes={{ light: "github-light", dark: "github-dark" }} />
+			<Code code={commandText} lang={codeLanguage} themes={INDUSTRIAL_PASTEL_1984_THEMES} />
 		</div>
 	</div>
 	{block.output && (
@@ -42,25 +43,7 @@ const codeLanguage = block.language === "rhai" ? "rust" : block.language
 </div>
 
 <script>
-	document.querySelectorAll<HTMLButtonElement>(".command-copy-btn").forEach((btn) => {
-		btn.addEventListener("click", async () => {
-			const code = btn.dataset.code
-			if (!code) return
+	import { bindCopyButtons } from "../../scripts/copyButtons"
 
-			await navigator.clipboard.writeText(code)
-			const copyIcon = btn.querySelector(".copy-icon")
-			const checkIcon = btn.querySelector(".check-icon")
-			const copyText = btn.querySelector(".copy-text")
-			if (copyIcon && checkIcon && copyText) {
-				copyIcon.classList.add("hidden")
-				checkIcon.classList.remove("hidden")
-				copyText.textContent = "COPIED"
-				setTimeout(() => {
-					copyIcon.classList.remove("hidden")
-					checkIcon.classList.add("hidden")
-					copyText.textContent = "COPY"
-				}, 600)
-			}
-		})
-	})
+	bindCopyButtons(".command-copy-btn")
 </script>
