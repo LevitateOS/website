@@ -337,6 +337,80 @@
 		color: color-mix(in srgb, var(--spectrum-1) 72%, var(--foreground) 28%);
 	}
 
+	.logo-relief {
+		--logo-shadow-hard: rgb(8 8 11 / 0.58);
+		--logo-shadow-mid: rgb(8 8 11 / 0.4);
+		--logo-shadow-soft: rgb(8 8 11 / 0.26);
+		--logo-shadow-tail: rgb(8 8 11 / 0.16);
+		--logo-shadow-far: rgb(8 8 11 / 0.1);
+		--logo-contact-plane: rgb(8 8 11 / 0.26);
+		position: relative;
+		display: inline-block;
+		line-height: 0;
+		isolation: isolate;
+	}
+
+	.logo-relief::before,
+	.logo-relief::after {
+		content: "";
+		position: absolute;
+		pointer-events: none;
+	}
+
+	.logo-relief::before {
+		inset: 69% 18% -8% 21%;
+		z-index: -1;
+		border-radius: 999px;
+		background: var(--logo-contact-plane);
+		transform: translate(-8%, 8%) scale(1.08, 0.34);
+		filter: blur(4px);
+		opacity: 0.7;
+	}
+
+	.logo-relief::after {
+		content: none;
+	}
+
+	.logo-relief > :is(img, svg, .logo-svg) {
+		position: relative;
+		z-index: 1;
+		display: block;
+		filter:
+			drop-shadow(-1px 1px 0 var(--logo-shadow-hard))
+			drop-shadow(-4px 4px 0 var(--logo-shadow-hard))
+			drop-shadow(-8px 8px 0 var(--logo-shadow-mid))
+			drop-shadow(-14px 14px 0 var(--logo-shadow-soft))
+			drop-shadow(-24px 24px 1px var(--logo-shadow-tail))
+			drop-shadow(-36px 36px 2px var(--logo-shadow-far))
+			drop-shadow(-52px 52px 5px rgb(8 8 11 / 0.08));
+	}
+
+	.dark .logo-relief {
+		--logo-shadow-hard: rgb(0 0 0 / 0.68);
+		--logo-shadow-mid: rgb(0 0 0 / 0.48);
+		--logo-shadow-soft: rgb(0 0 0 / 0.32);
+		--logo-shadow-tail: rgb(0 0 0 / 0.2);
+		--logo-shadow-far: rgb(0 0 0 / 0.12);
+		--logo-contact-plane: rgb(0 0 0 / 0.38);
+	}
+
+	@media (max-width: 640px) {
+		.logo-relief::before {
+			filter: blur(3px);
+			transform: translate(-6%, 6%) scale(1.02, 0.36);
+		}
+
+		.logo-relief > :is(img, svg, .logo-svg) {
+			filter:
+				drop-shadow(-1px 1px 0 var(--logo-shadow-hard))
+				drop-shadow(-3px 3px 0 var(--logo-shadow-mid))
+				drop-shadow(-7px 7px 0 var(--logo-shadow-soft))
+				drop-shadow(-13px 13px 1px var(--logo-shadow-tail))
+				drop-shadow(-20px 20px 2px var(--logo-shadow-far))
+				drop-shadow(-30px 30px 4px rgb(8 8 11 / 0.07));
+		}
+	}
+
 	.ui-panel {
 		background: var(--card);
 		color: var(--card-foreground);
