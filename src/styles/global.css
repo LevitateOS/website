@@ -329,10 +329,6 @@
 		color: var(--foreground);
 	}
 
-	.brand-text--ralph {
-		color: color-mix(in srgb, var(--spectrum-4) 72%, var(--foreground) 28%);
-	}
-
 	.brand-text--acorn {
 		color: color-mix(in srgb, var(--spectrum-1) 72%, var(--foreground) 28%);
 	}

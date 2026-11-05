@@ -51,7 +51,6 @@ Use this as the source of truth for launch readiness and first growth phases.
 - [x] Core routes load with HTTP 200:
   - [x] `/`
   - [x] `/download/`
-  - [x] `/ralph4days/`
   - [x] `/docs/`
   - [x] `/docs/getting-started/`
   - [x] `/privacy/`
@@ -61,7 +60,6 @@ Use this as the source of truth for launch readiness and first growth phases.
 
 ### P0.4 Content Accuracy (No stale claims)
 - [ ] Home page claims match actual current product behavior.
-- [ ] `Ralph4days` page copy matches current product model and terminology.
 - [ ] Download page dates/statuses are current and intentionally labeled (`planned`/`coming soon`).
 - [ ] No claims imply features that are not shipped.
 - [ ] All screenshots reflect the current UI state.
@@ -101,7 +99,6 @@ Use this as the source of truth for launch readiness and first growth phases.
 - [ ] Events tracked at minimum:
   - [ ] `nav_click_download`
   - [ ] `cta_click_home_primary`
-  - [ ] `cta_click_r4d_primary`
   - [ ] `docs_entry`
 - [ ] Events are verified in production (not just local dev).
 
@@ -117,13 +114,12 @@ Use this as the source of truth for launch readiness and first growth phases.
 ### P1.1 Conversion Optimization
 - [ ] Tighten hero copy on `/` to one primary promise and one primary CTA.
 - [ ] Add one low-friction secondary CTA (`View on GitHub` or `Read docs`) above fold.
-- [ ] Add clearer CTA hierarchy on `/ralph4days` (download vs learn more vs source).
 - [ ] Ensure CTA copy is outcome-based (not generic “Click here” style).
 - [ ] Add supporting proof near CTAs (screenshots, concrete claims, status clarity).
 
 ### P1.2 Content System Cleanup
 - [ ] Add “Last updated” metadata on key landing pages where factual drift matters.
-- [ ] Align naming conventions across all pages (`LevitateOS`, `RalphOS`, `acornOS`, `R4D`).
+- [ ] Align naming conventions across all pages (`LevitateOS`, `acornOS`).
 - [ ] Remove duplicated statements that dilute clarity.
 - [ ] Add short FAQ section for top objections:
   - [ ] Is this production-ready?
@@ -132,7 +128,7 @@ Use this as the source of truth for launch readiness and first growth phases.
 - [ ] Add one concise “not for you if…” qualifier section to improve fit.
 
 ### P1.3 SEO Expansion
-- [ ] Add internal links between `/`, `/ralph4days`, `/download`, and top docs pages.
+- [ ] Add internal links between `/`, `/download`, and top docs pages.
 - [ ] Add descriptive anchor text (avoid vague “read more” links).
 - [ ] Add/update JSON-LD on key pages as needed.
 - [ ] Validate Search Console indexing for canonical host.
@@ -151,7 +147,7 @@ Use this as the source of truth for launch readiness and first growth phases.
 - [ ] Validate spacing rhythm between sections on long pages.
 
 ### P1.5 Performance Hardening
-- [ ] Run Lighthouse on production for `/`, `/ralph4days`, `/download`.
+- [ ] Run Lighthouse on production for `/`, `/download`.
 - [ ] Triage largest opportunities from LCP/INP/CLS results.
 - [ ] Optimize heavy assets in `public/` where needed.
 - [ ] Ensure no unnecessary blocking font or script behavior.

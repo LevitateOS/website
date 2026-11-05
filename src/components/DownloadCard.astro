@@ -2,7 +2,6 @@
 import Tabs from "./ui/Tabs.astro"
 import TabContent from "./ui/TabContent.astro"
 import LevitateTextLogo from "./brand/LevitateTextLogo.astro"
-import RalphTextLogo from "./brand/RalphTextLogo.astro"
 import AcornTextLogo from "./brand/AcornTextLogo.astro"
 
 export interface ArchUrls {
@@ -14,7 +13,7 @@ export interface ArchUrls {
 export type DownloadFormat = "iso" | "qcow2" | "img"
 
 export interface Props {
-	variant: "levitate" | "ralph" | "acorn"
+	variant: "levitate" | "acorn"
 	title: string
 	logo: string
 	stack: string
@@ -106,8 +105,6 @@ const lightLogo = logo.endsWith("-trace.svg") ? logo.replace("-trace.svg", "-tra
 						<h3 class="min-w-0 text-lg font-semibold leading-tight">
 							{variant === "levitate" ? (
 								<LevitateTextLogo className="text-lg" />
-							) : variant === "ralph" ? (
-								<RalphTextLogo className="text-lg" />
 							) : (
 								<AcornTextLogo className="text-lg" />
 							)}

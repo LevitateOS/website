@@ -1,10 +1,9 @@
 ---
 import LevitateTextLogo from "./brand/LevitateTextLogo.astro"
-import RalphTextLogo from "./brand/RalphTextLogo.astro"
 import AcornTextLogo from "./brand/AcornTextLogo.astro"
 
 interface Props {
-	variant: "levitate" | "ralph" | "acorn"
+	variant: "levitate" | "acorn"
 	name: string
 	stack: string
 	description: string
@@ -15,7 +14,7 @@ interface Props {
 
 const { variant, name, stack, description, features, logo, builderDescription } = Astro.props
 
-const accent = variant === "levitate" ? "var(--spectrum-4)" : variant === "ralph" ? "var(--spectrum-5)" : "var(--spectrum-1)"
+const accent = variant === "levitate" ? "var(--spectrum-4)" : "var(--spectrum-1)"
 const lightLogo = logo.endsWith("-trace.svg") ? logo.replace("-trace.svg", "-trace-light.svg") : logo
 ---
 
@@ -33,8 +32,6 @@ const lightLogo = logo.endsWith("-trace.svg") ? logo.replace("-trace.svg", "-tra
 			<h3 class="min-w-0 text-lg font-semibold leading-tight">
 				{variant === "levitate" ? (
 					<LevitateTextLogo className="text-lg" />
-				) : variant === "ralph" ? (
-					<RalphTextLogo className="text-lg" />
 				) : (
 					<AcornTextLogo className="text-lg" />
 				)}
