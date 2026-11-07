@@ -1,0 +1,28 @@
+---
+import type { Variant } from "../lib/variants"
+
+interface Props {
+	variant: Variant
+}
+
+const { variant } = Astro.props
+const statusClass = { available: "status--available", "in-development": "", planned: "status--planned" }[variant.status]
+---
+
+<article class="entry" aria-labelledby={`entry-${variant.id}`}>
+	<h3 class="lockup" id={`entry-${variant.id}`}>
+		<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="48" alt={variant.name} />
+		<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="48" alt={variant.name} />
+	</h3>
+	<p class="entry__role">{variant.role}</p>
+	<dl class="facts">
+		<dt>Stack</dt>
+		<dd>{variant.stack}</dd>
+		<dt>Base</dt>
+		<dd>{variant.base}</dd>
+		<dt>Updates</dt>
+		<dd>A/B by default, trial boot, rollback</dd>
+	</dl>
+	<p class:list={["status", statusClass]}>{variant.statusLabel} · {variant.release}</p>
+	<p><a class="text-action" href={`/download/#${variant.id}`}>{variant.name} downloads &amp; status</a></p>
+</article>

@@ -9,27 +9,18 @@ interface Props {
 const { conversation } = Astro.props
 ---
 
-<div class="ui-panel mb-5 p-4 text-sm leading-relaxed">
-	<p class="ui-label mb-3">Transcript</p>
-	<div class="space-y-3">
-		{conversation.messages.map((msg) => (
-			<div class="border-b border-border pb-2 last:border-b-0 last:pb-0">
-				<span class:list={["ui-label", msg.role === "user" ? "text-[color:var(--accent)]" : "text-muted-foreground"]}>
-					{msg.role === "user" ? "USER /" : "ASSISTANT /"}
-				</span>
-				<span class="ml-2">
-					<InlineContent content={msg.text} />
-				</span>
-				{msg.list && (
-					<ul class="list-disc list-inside ml-4 mt-1 text-muted-foreground">
-						{msg.list.map((item) => (
-							<li>
-								<InlineContent content={item} />
-							</li>
-						))}
-					</ul>
-				)}
-			</div>
-		))}
-	</div>
+<div class="docs-transcript">
+	{conversation.messages.map((msg) => (
+		<div>
+			<span class="docs-transcript__role">{msg.role === "user" ? "User" : "Assistant"}</span>
+			<InlineContent content={msg.text} />
+			{msg.list && (
+				<ul class="docs-list">
+					{msg.list.map((item) => (
+						<li><InlineContent content={item} /></li>
+					))}
+				</ul>
+			)}
+		</div>
+	))}
 </div>

@@ -1,50 +1,41 @@
 ---
-import type { DocsSyntaxLanguage } from "@levitate/docs-content"
 import { Code } from "astro:components"
-import { INDUSTRIAL_PASTEL_1984_THEMES } from "@levitate/docs-content/syntax-theme"
+import { fieldNotesCodeTheme } from "../lib/codeTheme"
 
 interface Props {
 	code: string
-	language: DocsSyntaxLanguage
-	filename?: string
+	/** Shiki language; rhai is highlighted with the Rust grammar. */
+	language: string
+	/** File name or short label shown above the code. */
+	label?: string
+	/** Text the copy button copies, when it differs from the shown code. */
+	copyText?: string
+	/** Command output shown under the code. */
+	output?: string
 }
 
-const { code, language, filename } = Astro.props
-const astroLanguage = language === "rhai" ? "rust" : language
+const { code, language, label, copyText, output } = Astro.props
+const lang = language === "rhai" ? "rust" : language
+const regionLabel = label ? `Code: ${label}` : `${language} code`
 ---
 
-<div class="code-plate mb-2 overflow-hidden">
-	<div class="code-plate__header flex items-center justify-between gap-2 px-3 py-1.5 text-muted-foreground">
-		<div class="min-w-0 truncate flex items-center gap-2">
-			<span class="ui-label">{filename ? "File" : "Command"}</span>
-			{filename && <span class="truncate normal-case tracking-normal text-[0.72rem] font-mono">{filename}</span>}
-		</div>
-		<div class="flex items-center gap-2">
-			<span>{language}</span>
-			<button
-				type="button"
-				class="code-copy-btn inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground select-none"
-				data-code={code}
-			>
-				<svg class="copy-icon size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-					<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
-				</svg>
-				<svg class="check-icon hidden size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-					<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
-				</svg>
-				<span class="copy-text">COPY</span>
-			</button>
-		</div>
+<div class="code-shell">
+	<div class="code-head">
+		<span class="code-head__label">{label ?? language}</span>
+		<button type="button" class="copy-button" data-code={copyText ?? code} aria-label={label ? `Copy ${label}` : "Copy code"}>Copy</button>
 	</div>
-	<div class="code-plate__body overflow-x-auto">
-		<div class="p-3 min-w-fit [&>pre]:p-0 [&>pre]:text-xs [&>pre]:font-mono [&>pre]:min-w-fit">
-			<Code code={code} lang={astroLanguage} themes={INDUSTRIAL_PASTEL_1984_THEMES} />
-		</div>
+	<div role="region" tabindex="0" aria-label={regionLabel} class="code-region">
+		<Code code={code} lang={lang as any} theme={fieldNotesCodeTheme as any} />
 	</div>
+	{output && (
+		<div class="code-output">
+			<p class="caption">Output</p>
+			<pre>{output}</pre>
+		</div>
+	)}
 </div>
 
 <script>
 	import { bindCopyButtons } from "../scripts/copyButtons"
-
-	bindCopyButtons(".code-copy-btn")
+	bindCopyButtons()
 </script>

@@ -9,7 +9,7 @@ Static documentation site built with Astro. Renders content from `@levitate/docs
 | Works | Not done |
 |-------|----------|
 | Static site builds | All documentation pages |
-| Dark/light theme toggle | Search |
+| System / Light / Dark appearance | Search |
 | Syntax highlighting | |
 | Mobile-first responsive design | |
 | Mobile hamburger navigation | |
@@ -48,10 +48,31 @@ Prerequisites:
 
 ## Stack
 
-- Astro 5.7
-- Tailwind CSS 4.0
-- Shiki (syntax highlighting)
+- Astro 5
+- Tailwind CSS 4 (utilities resolve to the Field Notes role tokens)
+- Shiki (syntax highlighting, with a theme built from the code tokens)
 - Bun (package manager)
+
+## Visual identity
+
+The site uses the Field Notes identity for LevitateOS and AcornOS: warm paper,
+forest ink, restrained red, Source Serif 4 display headings, Source Sans 3 for
+reading and Source Code Pro for code.
+
+- `src/styles/field-notes/tokens.json` is the single source for colors, type,
+  spacing, layout and motion. After editing it, run
+  `python3 scripts/export-tokens.py` to regenerate `tokens.css`. Components use
+  the `--fn-*` role tokens, never raw hex values.
+- `public/brand/` holds the selected marks and outlined lockups
+  (hovering leaf for LevitateOS, sculpted acorn for AcornOS). Use them as
+  supplied; pick the `-color` lockup on light surfaces and `-reversed` on dark.
+- `public/fonts/field-notes/` holds the self-hosted WOFF2 files and their
+  licenses. Fonts are never loaded from a third-party CDN.
+- `public/illustrations/oak-engraving.png` is the one botanical illustration,
+  tinted through a CSS mask on the homepage hero only.
+- Appearance follows the system unless the visitor picks Light or Dark in the
+  footer; the choice is kept in `localStorage` and applied before first paint
+  through `data-theme` on `<html>`.
 
 ## Structure
 

@@ -9,21 +9,19 @@ interface Props {
 const { block } = Astro.props
 ---
 
-<div class="mb-5 space-y-3 text-sm leading-relaxed">
+<div>
 	{block.intro && (
-		<p class="text-muted-foreground">
-			<InlineContent content={block.intro} />
-		</p>
+		<p><InlineContent content={block.intro} /></p>
 	)}
-	{block.steps.map((step, index) => (
-		<div class="ui-panel p-3 grid gap-3 md:grid-cols-[auto_1fr] md:items-start">
-			<div class="ui-label text-[color:var(--accent)]">STEP {String(index + 1).padStart(2, "0")}</div>
-			<div class="grid gap-2">
-				<code class="code-plate px-3 py-2 font-mono text-xs overflow-x-auto">{step.command}</code>
-				<span class="text-muted-foreground">
-					<InlineContent content={step.description} />
-				</span>
-			</div>
-		</div>
-	))}
+	<ol class="docs-steps">
+		{block.steps.map((step, index) => (
+			<li>
+				<span class="docs-steps__number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+				<div>
+					<code class="inline-code">{step.command}</code>
+					<p><InlineContent content={step.description} /></p>
+				</div>
+			</li>
+		))}
+	</ol>
 </div>

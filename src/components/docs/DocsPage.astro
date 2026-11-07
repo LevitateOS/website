@@ -3,6 +3,7 @@ import type { DocsContent, Section, ContentBlock } from "@levitate/docs-content"
 import DocsLayout from "../layout/DocsLayout.astro"
 import InlineContent from "./InlineContent.astro"
 import RenderBlock from "./RenderBlock.astro"
+import { toAnchor } from "../../lib/anchor"
 
 interface Props {
 	content: DocsContent
@@ -11,12 +12,6 @@ interface Props {
 
 const { content, slug } = Astro.props
 
-function toAnchor(title: string): string {
-	return title
-		.toLowerCase()
-		.replace(/[^a-z0-9\s-]/g, "")
-		.replace(/\s+/g, "-")
-}
 
 function extractPlainText(intro: any): string | undefined {
 	if (!intro) return undefined
@@ -35,36 +30,23 @@ const description = extractPlainText(content.intro)
 ---
 
 <DocsLayout title={content.title} currentSlug={slug} description={description}>
-	<div class="max-w-[78ch]">
-		<p class="ui-label mb-2">Documentation</p>
-		<h1 class="text-3xl font-semibold tracking-tight mb-4">{content.title}</h1>
-		{
-			content.intro && (
-				<p class="text-muted-foreground text-base leading-relaxed mb-8">
-					<InlineContent content={content.intro} />
-				</p>
-			)
-		}
-		{
-			content.sections.map((section: Section) => {
-				const level = section.level ?? 2
-				const anchor = toAnchor(section.title)
-
-				return (
-					<section id={anchor} class="mb-9 scroll-mt-20">
-						{level === 2 ? (
-							<>
-								<p class="ui-label mb-1">Section</p>
-								<h2 class="text-xl font-semibold mb-3 tracking-tight">{section.title}</h2>
-								<div class="ui-divider mb-4" />
-							</>
-						) : (
-							<h3 class="text-lg font-semibold mb-3 tracking-tight">{section.title}</h3>
-						)}
-						{section.content.map((block: ContentBlock) => <RenderBlock block={block} />)}
-					</section>
-				)
-			})
-		}
-	</div>
+	<p class="eyebrow">Documentation</p>
+	<h1>{content.title}</h1>
+	{content.intro && (
+		<p class="docs-intro"><InlineContent content={content.intro} /></p>
+	)}
+	{content.sections.map((section: Section) => {
+		const level = section.level ?? 2
+		const anchor = toAnchor(section.title)
+		return (
+			<section id={anchor} class:list={["docs-section", { "docs-section--sub": level !== 2 }]}>
+				{level === 2 ? (
+					<h2><a class="docs-heading-anchor" href={`#${anchor}`}>{section.title}</a></h2>
+				) : (
+					<h3><a class="docs-heading-anchor" href={`#${anchor}`}>{section.title}</a></h3>
+				)}
+				{section.content.map((block: ContentBlock) => <RenderBlock block={block} />)}
+			</section>
+		)
+	})}
 </DocsLayout>

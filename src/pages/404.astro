@@ -4,24 +4,18 @@ import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
 ---
 
-<BaseLayout title="Page Not Found - LevitateOS" description="The page you're looking for doesn't exist.">
-	<div class="flex min-h-screen flex-col">
-		<Header />
-		<main class="flex-1 flex items-center justify-center py-8">
-			<div class="text-center ui-panel p-8 max-w-lg">
-				<h1 class="text-4xl font-medium text-primary mb-2">404</h1>
-				<p class="text-sm text-muted-foreground mb-4">Page not found</p>
-				<p class="text-xs text-muted-foreground mb-4 max-w-md mx-auto">
-					The page you're looking for doesn't exist or has been moved.
-				</p>
-				<a
-					href="/"
-					class="ui-btn ui-btn-primary inline-flex h-11 items-center justify-center px-5 text-sm font-medium"
-				>
-					Back to Home
-				</a>
+<BaseLayout title="Page not found · LevitateOS" description="The page you're looking for doesn't exist.">
+	<Header />
+	<main id="main" class="section">
+		<div class="wrap prose">
+			<p class="eyebrow">404</p>
+			<h1>Page not found.</h1>
+			<p class="lead">There is no page at this address. It may have moved, or the link may be mistyped.</p>
+			<div class="actions">
+				<a class="button" href="/docs/getting-started/">Read the docs</a>
+				<a href="/">Go to the homepage</a>
 			</div>
-		</main>
-		<Footer />
-	</div>
+		</div>
+	</main>
+	<Footer />
 </BaseLayout>

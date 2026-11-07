@@ -1,486 +1,212 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Header from "../components/layout/Header.astro";
-import Footer from "../components/layout/Footer.astro";
-import CodeBlock from "../components/CodeBlock.astro";
-import AnimatedSection from "../components/AnimatedSection.astro";
-import CheckList from "../components/CheckList.astro";
-import ScrollIndicator from "../components/ScrollIndicator.astro";
-import SectionHeader from "../components/SectionHeader.astro";
-import OSCard from "../components/OSCard.astro";
-import SplitSection from "../components/SplitSection.astro";
-import CTAButtons from "../components/CTAButtons.astro";
-import HighlightBox from "../components/HighlightBox.astro";
-import LevitateTextLogo from "../components/brand/LevitateTextLogo.astro";
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Header from "../components/layout/Header.astro"
+import Footer from "../components/layout/Footer.astro"
+import CodeBlock from "../components/CodeBlock.astro"
+import ProductEntry from "../components/ProductEntry.astro"
+import { variants } from "../lib/variants"
 
-const recipeAdvantages = [
-  "Pin exact versions — downloads need a SHA-256, git checkouts a full commit",
-  "Read the build logic in seconds — it's just Rhai script",
-  "Add patches directly — your recipes, your rules",
-  "Every build runs isolated, never on your running system",
-];
-
-const updateSteps = [
-  "The next system is written to the inactive slot",
-  "It boots once as a trial, and is kept only if it comes up healthy",
-  "A failed trial lands you back on the slot you came from",
-  "Roll back later with one command and a reboot",
-];
-
-const recipeCode = `// recipes/ripgrep.rhai
-const RECIPE_API = 2;
-
+// The runnable example from tools/recipe/WRITING_RECIPES.md.
+const recipeCode = `const RECIPE_API = 2;
 let ctx = #{
-    name: "ripgrep",
-    version: "14.1.1",
-    url: "https://github.com/BurntSushi/ripgrep/archive/14.1.1.tar.gz",
-    sha256: "<pinned sha256>",
-    src: join_path(RUNTIME.paths.build, "ripgrep-14.1.1"),
-    bin: join_path(RUNTIME.paths.output, "usr/bin/rg"),
+    name: "hello",
+    version: "1.0",
+    program: join_path(RUNTIME.paths.output, "bin/hello"),
+    payload: "#!/bin/sh\\nprintf 'hello\\\\n'\\n",
 };
 
-fn is_acquired(ctx) {
-    if !is_file(join_path(ctx.src, "Cargo.toml")) {
-        return needs_work(ctx, "source not unpacked");
-    }
-    ready(ctx)
-}
-
-fn acquire(ctx) {
-    let dest = join_path(ctx.runtime.paths.build, "ripgrep.tar.gz");
-    extract(download(ctx.url, dest, ctx.sha256), ctx.runtime.paths.build);
-    ctx
-}
-
-fn is_built(ctx) {
-    if !is_file(join_path(ctx.src, "target/release/rg")) {
-        return needs_work(ctx, "rg not built");
-    }
-    ready(ctx)
-}
-
-fn build(ctx) {
-    shell_in(ctx.src, "cargo build --release --locked");
-    ctx
-}
+fn is_acquired(ctx) { ready(ctx) }
+fn acquire(ctx) { ctx }
+fn is_built(ctx) { ready(ctx) }
+fn build(ctx) { ctx }
 
 fn is_installed(ctx) {
-    if !is_file(ctx.bin) { return needs_work(ctx, "rg not installed"); }
-    ctx.outputs.rg = ctx.bin;
+    if !is_file(ctx.program) { return needs_work(ctx, "hello output is missing"); }
+    if read_file(ctx.program) != ctx.payload {
+        return needs_work(ctx, "hello output has different contents");
+    }
+    ctx.outputs.program = ctx.program;
     ready(ctx)
 }
 
 fn install(ctx) {
-    mkdir(dirname(ctx.bin));
-    copy_file(join_path(ctx.src, "target/release/rg"), ctx.bin);
-    chmod(ctx.bin, 0o755);
-    ctx.outputs.rg = ctx.bin;
+    mkdir(dirname(ctx.program));
+    write_file(ctx.program, ctx.payload);
+    chmod(ctx.program, 0o755);
+    ctx.outputs.program = ctx.program;
     ctx
-}`;
+}
 
-const updateCode = `# running from slot A
-$ recab stage --rootfs next.erofs \\
-      --kernel vmlinuz --initrd initramfs.img
-$ recab set-next B
-$ reboot
+fn remove(ctx) {
+    if is_file(ctx.program) { rm(ctx.program); }
+    ctx.outputs = #{};
+    ctx
+}`
 
-# B boots once as a trial:
-# healthy -> committed, B is the new default
-# not     -> back to A, nothing lost
+// The update example from tools/recab/README.md.
+const updateCode = `recab stage --rootfs /mnt/live/filesystem.erofs --kernel /mnt/boot/vmlinuz --initrd /mnt/boot/initramfs.img
+recab set-next B      # one trial boot of the staged slot
+reboot                # into B: committed if it comes up healthy, else back to A
+recab rollback        # later, if wanted: back to A, while A still holds its system`
 
-$ recab rollback    # any time, while A still holds its system`;
+// The install commands from the repository README.
+const installCode = `recpart apply --disk /dev/nvme0n1 --confirm DESTROY   # A/B layout, mounted at /mnt (--mode mutable for one root)
+recstrap /mnt                                          # extract the system
+recfstab /mnt >> /mnt/etc/fstab
+recsetup inspect --root /mnt --json                    # choose target configuration
+recsetup apply --root /mnt --hostname myhostname       # apply machine settings
+recchroot /mnt -- passwd                               # set the installed root password`
 
-const docsFeatures = [
-  '<strong class="text-foreground">Code</strong> on the left',
-  '<strong class="text-foreground">Documentation</strong> on the right',
-  '<strong class="text-foreground">Context</strong> exactly when you need it',
-];
+const recipePoints = [
+	"Pin exact versions: downloads need a SHA-256, git checkouts a full commit.",
+	"Each check inspects the real files, so an interrupted build resumes where it stopped.",
+	"Add patches directly in the recipe that builds the package.",
+	"Builds run in an isolated Ginux domain, never on the running system.",
+]
+
+const updatePoints = [
+	"The next system is written to the inactive slot.",
+	"It boots once as a trial and is kept only if that boot is healthy.",
+	"A failed trial returns you to the slot you came from.",
+	"recab rollback switches back later, while the old slot still holds its system.",
+]
+
+const acknowledgments = [
+	{ name: "Arch Linux", href: "https://archlinux.org", text: "For the blueprint of a user-controlled distribution and a manual installation." },
+	{ name: "Fedora", href: "https://fedoraproject.org", text: "For the signed, maintained packages the LevitateOS core system is extracted from." },
+	{ name: "Alpine Linux", href: "https://alpinelinux.org", text: "For the musl and busybox base that AcornOS builds on." },
+	{ name: "Nix", href: "https://nixos.org", text: "For pioneering declarative dependency management and reproducible builds." },
+	{ name: "Gentoo", href: "https://gentoo.org", text: "For USE flags and the philosophy of compile-time customization." },
+	{ name: "Universal Blue", href: "https://universal-blue.org", text: "For demonstrating image-based updates on the desktop." },
+	{ name: "Ginux", href: "https://github.com/gmkurtzer/ginux", text: "For the userspace kernel every recipe builds inside." },
+	{ name: "Claude Code", href: "https://claude.ai/claude-code", text: "For AI-assisted development that accelerated this project." },
+	{ name: "Rust", href: "https://rust-lang.org", text: "For the language the rec* tools and recipe are written in." },
+]
 ---
 
 <BaseLayout
-  title="LevitateOS - A Linux Distribution You Actually Control"
-  description="Linux you control end-to-end: recipe-built packages built in isolation, atomic A/B updates by default, rollback in one reboot. Mutable mode exists for daredevils."
+	title="LevitateOS: a system of your own"
+	description="A Linux distribution built around readable package recipes and explicit control: recipes built in isolated Ginux domains and atomic A/B updates by default."
 >
-  <div class="flex min-h-screen flex-col">
-    <Header />
-    <main class="flex-1">
-      <!-- Hero -->
-      <section
-        id="hero"
-        class="relative min-h-[85vh] flex flex-col items-center justify-center text-center py-12"
-      >
-        <div class="container flex flex-col items-center max-w-3xl">
-          <AnimatedSection>
-            <div class="logo-relief mb-6">
-              <img
-                id="hero-logo"
-                src="/levitateos-trace-light.svg"
-                data-dark-src="/levitateos-trace.svg"
-                data-light-src="/levitateos-trace-light.svg"
-                alt="LevitateOS"
-                width="192"
-                height="192"
-                class="w-36 sm:w-40 lg:w-48 h-auto"
-              />
-            </div>
-          </AnimatedSection>
+	<Header />
+	<main id="main">
+		<section class="section">
+			<div class="wrap hero">
+				<div class="hero__copy">
+					<p class="eyebrow">Be your own package maintainer</p>
+					<h1 class="hero__title">A system of your own.</h1>
+					<p class="lead">A Linux distribution built around readable package recipes and explicit control.</p>
+					<div class="actions">
+						<a class="button" href="/#recipe">Explore recipes</a>
+						<a href="/docs/getting-started/">Read the docs</a>
+					</div>
+				</div>
+				<div class="hero__art" aria-hidden="true"></div>
+			</div>
+		</section>
 
-          <AnimatedSection delay={25}>
-            <LevitateTextLogo className="text-3xl sm:text-4xl mb-4" />
-          </AnimatedSection>
+		<section class="section" id="variants" aria-labelledby="variants-title">
+			<div class="wrap">
+				<div class="section-head">
+					<p class="eyebrow">Two variants / one pipeline</p>
+					<h2 id="variants-title">Choose a foundation.</h2>
+					<p>Both variants are built from their own declarations by the same pipeline. Both install as A/B systems by default; a mutable install is an explicit opt-in.</p>
+				</div>
+				<div class="entries">
+					{variants.map((variant) => (
+						<ProductEntry variant={variant} />
+					))}
+				</div>
+			</div>
+		</section>
 
-          <AnimatedSection delay={50}>
-            <p
-              class="text-sm font-medium text-primary uppercase tracking-widest mb-3"
-            >
-              Be your own package maintainer
-            </p>
-          </AnimatedSection>
+		<section class="section" id="recipe" aria-labelledby="recipe-title">
+			<div class="wrap split">
+				<div class="split__copy">
+					<p class="eyebrow">Recipes, not repositories</p>
+					<h2 id="recipe-title">Every package is a file you can read.</h2>
+					<p>Instead of <code class="inline-code">apt</code> or <code class="inline-code">dnf</code>, LevitateOS uses <code class="inline-code">recipe</code>. A recipe is a Rhai script with the package's facts, checks that inspect the real files, and hooks that acquire, build and install it.</p>
+					<p>Recipes run inside a <a href="https://github.com/gmkurtzer/ginux">Ginux</a> domain, a userspace kernel that gives each build only the inputs, network hosts and resources it was granted. On an A/B system, recipe changes compose the inactive slot, never the system you are running.</p>
+					<ul class="checklist">
+						{recipePoints.map((point) => <li>{point}</li>)}
+					</ul>
+					<div class="actions">
+						<a href="/docs/recipe-format/">Read the recipe format</a>
+					</div>
+				</div>
+				<div class="split__example">
+					<CodeBlock code={recipeCode} language="rhai" label="hello.rhai · tools/recipe/WRITING_RECIPES.md" />
+				</div>
+			</div>
+		</section>
 
-          <AnimatedSection delay={150}>
-            <h1
-              class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight"
-            >
-              Customization from the <span class="text-primary"
-                >package level</span
-              >.
-            </h1>
-          </AnimatedSection>
+		<section class="section" id="updates" aria-labelledby="updates-title">
+			<div class="wrap split">
+				<div class="split__copy">
+					<p class="eyebrow">Atomic updates</p>
+					<h2 id="updates-title">Updates you can undo.</h2>
+					<p>The disk holds two system slots and one running system. An update never changes the slot you are booted from.</p>
+					<p><code class="inline-code">recab</code> writes the new system into the other slot, carries your hostname, users and enabled services across, and boots it once. Mutable mode exists, but it is an explicit opt-in without that safety net.</p>
+					<ul class="checklist">
+						{updatePoints.map((point) => <li>{point}</li>)}
+					</ul>
+					<div class="actions">
+						<a href="/docs/atomic-updates/">Read about A/B updates</a>
+					</div>
+				</div>
+				<div class="split__example">
+					<CodeBlock code={updateCode} language="bash" label="An update · tools/recab/README.md" />
+				</div>
+			</div>
+		</section>
 
-          <AnimatedSection delay={250} class="mt-5 max-w-2xl">
-            <p class="text-sm text-muted-foreground leading-relaxed">
-              Make your own package repository. While other Linux distributions
-              rely on centralized repositories, here we take the slow route. You
-              write your own packages named "recipes": declaring how to acquire,
-              build and install each piece of software.
-            </p>
-          </AnimatedSection>
+		<section class="section" id="docs" aria-labelledby="docs-title">
+			<div class="wrap split">
+				<div class="split__copy">
+					<p class="eyebrow">Installation</p>
+					<h2 id="docs-title">The guide sits beside your shell.</h2>
+					<p>LevitateOS installs the Arch way, one step at a time. The live ISO boots into an install screen: a shell on one side and the full installation guide on the other, with <kbd class="inline-code">Ctrl-]</kbd> switching between them.</p>
+					<p>The same pages are on this site, so you can read ahead before you boot.</p>
+					<div class="actions">
+						<a class="button button--secondary" href="/docs/installation/">Read the installation guide</a>
+					</div>
+				</div>
+				<div class="split__example">
+					<CodeBlock code={installCode} language="bash" label="Installing · README.md" />
+				</div>
+			</div>
+		</section>
 
-          <AnimatedSection delay={300} class="mt-3 max-w-2xl">
-            <p class="text-sm text-muted-foreground leading-relaxed">
-              Atomic A/B updates by default. The next system is written to the
-              other slot and boots once as a trial: kept if it comes up healthy,
-              back to the old one if not. Roll back by rebooting.
-            </p>
-          </AnimatedSection>
+		<section class="section" aria-labelledby="status-title">
+			<div class="wrap">
+				<div class="section-head">
+					<p class="eyebrow">Releases</p>
+					<h2 id="status-title">Not released yet.</h2>
+					<p>The first releases of LevitateOS and AcornOS are planned for 2027, x86_64 first. The downloads page tracks each variant's status and requirements; the source is public now.</p>
+				</div>
+				<div class="actions actions--flush">
+					<a class="button" href="/download/">Downloads &amp; status</a>
+					<a href="https://github.com/LevitateOS/LevitateOS">View the source</a>
+				</div>
+			</div>
+		</section>
 
-          <AnimatedSection delay={350} class="mt-3 max-w-2xl">
-            <p class="text-sm text-muted-foreground leading-relaxed">
-              Every recipe builds inside an isolated Ginux domain. It sees only
-              the inputs you hand it, every download is pinned by checksum, and
-              nothing it does touches your running system.
-            </p>
-          </AnimatedSection>
-
-          <AnimatedSection delay={450} class="mt-6">
-            <p class="text-lg font-medium">
-              Immutable by default. Full control. <span class="text-primary"
-                >Isolated builds</span
-              >.
-            </p>
-          </AnimatedSection>
-
-          <AnimatedSection delay={550} class="mt-6">
-            <CTAButtons
-              primaryHref="#recipe"
-              primaryText="See How It Works"
-              secondaryHref="https://github.com/LevitateOS/LevitateOS"
-              secondaryText="GitHub"
-              centered={true}
-            />
-          </AnimatedSection>
-        </div>
-
-        <ScrollIndicator />
-      </section>
-
-      <!-- Variants -->
-      <section id="flavors" class="py-16 section-surface">
-        <div class="container max-w-4xl">
-          <div class="text-center mb-8">
-            <h2 class="text-2xl sm:text-3xl font-medium mb-3">
-              Two Variants. One Recipe System.
-            </h2>
-            <p class="text-muted-foreground text-sm max-w-2xl mx-auto">
-              Two bases built by the same pipeline. A/B immutable by default.
-              Mutable mode is optional.
-            </p>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-6">
-            <OSCard
-              variant="levitate"
-              name="LevitateOS"
-              stack="glibc / systemd / GNU"
-              description="Maximum software compatibility. If it runs on Linux, it runs here. Systemd handles services, timers, and boot."
-              features={[
-                "Broadest package compatibility",
-                "Comprehensive service management",
-                "Core system from signed Fedora 45 RPMs",
-                "Familiar to most Linux users",
-              ]}
-              logo="/levitateos-trace.svg"
-            />
-
-            <OSCard
-              variant="acorn"
-              name="AcornOS"
-              stack="musl / OpenRC / busybox"
-              description="A mirror build of LevitateOS with a different toolchain. Smaller binaries, faster boot, simpler init. For those who prefer knowing exactly what's running on their system."
-              features={[
-                "Leaner compiled binaries",
-                "Straightforward init scripts",
-                "Core system from Alpine Linux APKs",
-                "Less complexity under the hood",
-              ]}
-              logo="/acorn-trace.svg"
-            />
-          </div>
-        </div>
-      </section>
-
-      <!-- Recipe System -->
-      <section id="recipe" class="py-16">
-        <div class="container max-w-4xl">
-          <SplitSection>
-            <SectionHeader title="Recipes, Not Repositories" />
-            <p class="text-muted-foreground text-sm mb-3">
-              Instead of <code class="bg-muted px-1.5 py-0.5">apt</code> or <code
-                class="bg-muted px-1.5 py-0.5">dnf</code
-              >, LevitateOS uses <code class="bg-muted px-1.5 py-0.5"
-                >recipe</code
-              >.
-            </p>
-            <p class="text-muted-foreground text-sm mb-4">
-              A recipe is a <code class="bg-muted px-1.5 py-0.5"
-                >.rhai</code
-              > script that describes how to acquire, build, and install a package.
-              Rhai is a small scripting language embedded in Rust, readable in
-              seconds. Each step checks the real files before it runs, so an
-              interrupted build picks up where it stopped.
-            </p>
-            <p class="text-muted-foreground text-sm mb-4">
-              Recipes run inside a <a
-                href="https://github.com/gmkurtzer/ginux"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="ui-link">Ginux</a
-              > domain: a userspace kernel that gives each build only the inputs,
-              network hosts and resources it was granted. On A/B systems, recipe
-              changes compose the inactive slot, never the system you are running.
-            </p>
-            <CheckList items={recipeAdvantages} />
-            <Fragment slot="demo">
-              <CodeBlock code={recipeCode} language="rust" />
-              <p class="text-sm text-muted-foreground mt-3 text-center">
-                Everything a package does, in one readable file.
-              </p>
-            </Fragment>
-          </SplitSection>
-        </div>
-      </section>
-
-      <!-- Atomic Updates -->
-      <section id="updates" class="py-16 section-surface">
-        <div class="container max-w-4xl">
-          <SplitSection reverse={true}>
-            <Fragment slot="demo">
-              <CodeBlock code={updateCode} language="bash" />
-            </Fragment>
-            <SectionHeader title="Updates You Can Undo" />
-            <p class="text-muted-foreground text-sm mb-3">
-              The disk holds two system slots and one running system. An update
-              never changes the slot you are booted from.
-            </p>
-            <p class="text-muted-foreground text-sm mb-4">
-              <code class="bg-muted px-1.5 py-0.5">recab</code> writes the new
-              system into the other slot, carries your hostname, users and
-              enabled services across, and boots it once. Mutable mode exists,
-              but it is an explicit, unsafe opt-in.
-            </p>
-            <CheckList items={updateSteps} />
-          </SplitSection>
-        </div>
-      </section>
-
-      <!-- Documentation -->
-      <section id="docs" class="py-16">
-        <div class="container max-w-3xl text-center">
-          <SectionHeader title="Embedded Documentation" centered={true} />
-          <p class="text-muted-foreground text-sm max-w-2xl mx-auto mb-6">
-            LevitateOS installs the Arch way, one step at a time, with a guide
-            beside you. The live ISO boots into an install screen: a guided app
-            for each step, and a shell one key away for anyone who would rather
-            type the commands.
-          </p>
-          <HighlightBox class="text-left">
-            <p class="text-foreground text-sm mb-3">
-              The install guide sits <strong>right next to your shell</strong
-              >:
-            </p>
-            <ul class="space-y-2 text-muted-foreground text-sm">
-              {
-                docsFeatures.map((feature) => (
-                  <li class="flex items-start gap-2">
-                    <svg
-                      class="size-4 shrink-0 mt-0.5 text-[color:var(--accent)]"
-                      viewBox="0 0 256 256"
-                      fill="currentColor"
-                    >
-                      <path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
-                    </svg>
-                    <span set:html={feature} />
-                  </li>
-                ))
-              }
-            </ul>
-          </HighlightBox>
-        </div>
-      </section>
-
-      <!-- Get Started -->
-      <section id="verdict" class="py-16 section-surface">
-        <div class="container max-w-3xl text-center">
-          <h2 class="text-2xl sm:text-3xl font-medium mb-4">Ready to Build?</h2>
-          <p class="text-sm text-muted-foreground mb-3">
-            LevitateOS is for engineers who want to understand their system —
-            and have the tools to shape it.
-          </p>
-          <p class="text-lg text-foreground font-medium mb-6">
-            A clean base. Readable recipes. Rollback in one reboot.<br />
-            <span class="text-primary">Your system, your way.</span>
-          </p>
-          <CTAButtons
-            primaryHref="/download/"
-            primaryText="Download"
-            secondaryHref="https://github.com/LevitateOS/LevitateOS"
-            secondaryText="View on GitHub"
-            centered={true}
-          />
-        </div>
-      </section>
-
-      <!-- Standing on Giants -->
-      <section id="thanks" class="py-16">
-        <div class="container max-w-4xl">
-          <div class="text-center mb-6">
-            <h2 class="text-xl font-medium">
-              Standing on the Shoulders of Giants
-            </h2>
-          </div>
-          <div class="grid gap-4 sm:grid-cols-3 text-left">
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://archlinux.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link"
-                >Arch Linux</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For the blueprint on user-controlled distributions and manual
-                installation.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://fedoraproject.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link"
-                >Fedora</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For the signed, maintained packages our core system is
-                extracted from.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://alpinelinux.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link"
-                >Alpine Linux</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For proving that musl and simplicity can power production
-                systems.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://nixos.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link">Nix</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For pioneering dependency management and reproducible builds.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://gentoo.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link"
-                >Gentoo</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For USE flags and the philosophy of compile-time customization.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://universal-blue.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link"
-                >Universal Blue</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For demonstrating image-based atomicity on the desktop.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://claude.ai/claude-code"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link"
-                >Claude Code</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For AI-assisted development that accelerated this project.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://github.com/gmkurtzer/ginux"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link">Ginux</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For the userspace kernel every recipe builds inside.
-              </p>
-            </div>
-            <div class="ui-panel ui-lift h-full p-4 flex flex-col">
-              <a
-                href="https://rust-lang.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm font-medium ui-link">Rust</a
-              >
-              <p class="text-sm text-muted-foreground mt-1">
-                For a compiler that catches memory bugs before they happen.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-    <Footer />
-  </div>
+		<section class="section" aria-labelledby="thanks-title">
+			<div class="wrap">
+				<div class="section-head">
+					<p class="eyebrow">Acknowledgments</p>
+					<h2 id="thanks-title">Standing on the shoulders of giants.</h2>
+				</div>
+				<ul class="ack-list">
+					{acknowledgments.map((item) => (
+						<li>
+							<a href={item.href}>{item.name}</a>
+							<p>{item.text}</p>
+						</li>
+					))}
+				</ul>
+			</div>
+		</section>
+	</main>
+	<Footer />
 </BaseLayout>

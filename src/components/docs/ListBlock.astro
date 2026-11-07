@@ -13,52 +13,42 @@ function isListItem(item: string | RichText | ListItem): item is ListItem {
 }
 ---
 
-{
-	list.ordered ? (
-		<ol class="mb-4 list-decimal list-inside space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-			{list.items.map((item) =>
-				isListItem(item) ? (
-					<li>
-						<InlineContent content={item.text} />
-						{item.children && (
-							<ul class="mt-1 ml-4 list-disc list-inside space-y-1">
-								{item.children.map((child) => (
-									<li>
-										<InlineContent content={child} />
-									</li>
-								))}
-							</ul>
-						)}
-					</li>
-				) : (
-					<li>
-						<InlineContent content={item} />
-					</li>
-				)
-			)}
-		</ol>
-	) : (
-		<ul class="mb-4 list-disc list-inside space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-			{list.items.map((item) =>
-				isListItem(item) ? (
-					<li>
-						<InlineContent content={item.text} />
-						{item.children && (
-							<ul class="mt-1 ml-4 list-disc list-inside space-y-1">
-								{item.children.map((child) => (
-									<li>
-										<InlineContent content={child} />
-									</li>
-								))}
-							</ul>
-						)}
-					</li>
-				) : (
-					<li>
-						<InlineContent content={item} />
-					</li>
-				)
-			)}
-		</ul>
-	)
-}
+{list.ordered ? (
+	<ol class="docs-list">
+		{list.items.map((item) =>
+			isListItem(item) ? (
+				<li>
+					<InlineContent content={item.text} />
+					{item.children && (
+						<ul>
+							{item.children.map((child) => (
+								<li><InlineContent content={child} /></li>
+							))}
+						</ul>
+					)}
+				</li>
+			) : (
+				<li><InlineContent content={item} /></li>
+			)
+		)}
+	</ol>
+) : (
+	<ul class="docs-list">
+		{list.items.map((item) =>
+			isListItem(item) ? (
+				<li>
+					<InlineContent content={item.text} />
+					{item.children && (
+						<ul>
+							{item.children.map((child) => (
+								<li><InlineContent content={child} /></li>
+							))}
+						</ul>
+					)}
+				</li>
+			) : (
+				<li><InlineContent content={item} /></li>
+			)
+		)}
+	</ul>
+)}

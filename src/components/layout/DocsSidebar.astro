@@ -1,5 +1,6 @@
 ---
 import { docsNav, contentBySlug } from "@levitate/docs-content/live"
+import { toAnchor } from "../../lib/anchor"
 
 interface Props {
 	currentSlug: string
@@ -7,102 +8,32 @@ interface Props {
 
 const { currentSlug } = Astro.props
 const currentPath = `/docs/${currentSlug}`
-
-function toAnchor(title: string): string {
-	return title
-		.toLowerCase()
-		.replace(/[^a-z0-9\s-]/g, "")
-		.replace(/\s+/g, "-")
-}
-
 const currentTitle =
 	docsNav.flatMap((section) => section.items).find((item) => item.href === currentPath)?.title || "Documentation"
+
+// Only long pages get an in-page contents list under their nav entry.
+const MIN_SECTIONS_FOR_CONTENTS = 4
 ---
 
-<div class="md:hidden mb-6">
-	<button
-		type="button"
-		id="docs-nav-toggle"
-		class="ui-panel ui-panel-muted w-full flex items-center justify-between px-4 py-3 text-left"
-		aria-expanded="false"
-	>
-		<div class="flex items-center gap-2">
-			<span class="ui-label">Docs</span>
-			<span class="text-sm font-medium">{currentTitle}</span>
-		</div>
-		<svg class="docs-nav-chevron size-5 text-muted-foreground transition-transform" viewBox="0 0 256 256" fill="currentColor">
-			<path d="M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z" />
-		</svg>
-	</button>
-	<nav id="docs-nav-mobile" class="hidden mt-2 ui-panel ui-panel-muted overflow-hidden">
-		{docsNav.map((section) => (
-			<div class="border-b border-border last:border-b-0">
-				<h3 class="ui-label px-4 py-2">{section.title}</h3>
-				<ul>
-					{section.items.map((item) => {
-						const isActive = currentPath === item.href
-						return (
-							<li>
-								<a
-									href={item.href}
-									class:list={[
-										"block border-l-2 px-4 py-2 text-sm transition-colors",
-										isActive
-											? "border-[color:var(--accent)] bg-secondary text-foreground"
-											: "border-transparent text-muted-foreground hover:bg-card hover:text-foreground",
-									]}
-								>
-									{item.title}
-								</a>
-							</li>
-						)
-					})}
-				</ul>
-			</div>
-		))}
-	</nav>
-</div>
-
-<aside class="hidden md:block w-60 shrink-0 sticky top-16 h-[calc(100vh-5rem)] ui-panel ui-panel-muted overflow-hidden">
-	<div class="h-full overflow-y-auto p-4 pr-2">
-		<nav class="space-y-4 text-sm">
+{/* One navigation, rendered twice: a column on wide screens, a disclosure before the article on compact ones. */}
+{[false, true].map((compact) => {
+	const nav = (
+		<nav class="docs-nav" aria-label={compact ? "Documentation (compact)" : "Documentation"}>
 			{docsNav.map((section) => (
-				<div>
-					<h3 class="ui-label mb-2">{section.title}</h3>
-					<ul class="space-y-1">
+				<section>
+					<h2>{section.title}</h2>
+					<ul>
 						{section.items.map((item) => {
 							const isActive = currentPath === item.href
-							const slug = item.href.replace("/docs/", "")
-							const content = contentBySlug[slug]
-							const sections = content?.sections || []
-
+							const sections = contentBySlug[item.href.replace("/docs/", "")]?.sections ?? []
+							const showContents = !compact && isActive && sections.length >= MIN_SECTIONS_FOR_CONTENTS
 							return (
 								<li>
-									<a
-										href={item.href}
-										class:list={[
-											"block border-l-2 px-3 py-1.5 transition-colors",
-											isActive
-												? "border-[color:var(--accent)] bg-secondary text-foreground"
-												: "border-transparent text-muted-foreground hover:bg-card hover:text-foreground",
-										]}
-									>
-										{item.title}
-									</a>
-									{isActive && sections.length > 0 && (
-										<ul class="mt-1 ml-3 border-l border-border space-y-1">
-											{sections.map((s) => (
-												<li>
-													<a
-														href={`#${toAnchor(s.title)}`}
-														class:list={[
-															"block px-3 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground",
-															(s.level ?? 2) === 3 ? "pl-5" : "",
-														]}
-													>
-														{s.title}
-													</a>
-												</li>
+									<a href={item.href} aria-current={isActive ? "page" : undefined}>{item.title}</a>
+									{showContents && (
+										<ul class="docs-nav__sub" aria-label="On this page">
+											{sections.filter((s) => (s.level ?? 2) === 2).map((s) => (
+												<li><a href={`#${toAnchor(s.title)}`}>{s.title}</a></li>
 											))}
 										</ul>
 									)}
@@ -110,21 +41,14 @@ const currentTitle =
 							)
 						})}
 					</ul>
-				</div>
+				</section>
 			))}
 		</nav>
-	</div>
-</aside>
-
-<script>
-	const docsNavToggle = document.getElementById("docs-nav-toggle")
-	const docsNavMobile = document.getElementById("docs-nav-mobile")
-	const docsNavChevron = document.querySelector(".docs-nav-chevron")
-
-	docsNavToggle?.addEventListener("click", () => {
-		const isOpen = docsNavMobile?.classList.contains("hidden") === false
-		docsNavMobile?.classList.toggle("hidden")
-		docsNavChevron?.classList.toggle("rotate-180")
-		docsNavToggle.setAttribute("aria-expanded", String(!isOpen))
-	})
-</script>
+	)
+	return compact ? (
+		<details class="docs-nav-compact">
+			<summary><span>Docs: {currentTitle}</span></summary>
+			{nav}
+		</details>
+	) : nav
+})}

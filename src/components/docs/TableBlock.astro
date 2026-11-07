@@ -9,24 +9,20 @@ interface Props {
 const { table } = Astro.props
 ---
 
-<div class="relative mb-5 w-full overflow-x-auto ui-panel">
-	<table class="w-full caption-bottom text-sm">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Table">
+	<table class="data-table">
 		<thead>
-			<tr class="border-b-2 border-border-strong bg-secondary/60">
+			<tr>
 				{table.headers.map((header) => (
-					<th class="h-10 px-3 text-left align-middle font-semibold whitespace-nowrap">
-						<InlineContent content={header} />
-					</th>
+					<th scope="col"><InlineContent content={header} /></th>
 				))}
 			</tr>
 		</thead>
 		<tbody>
 			{table.rows.map((row) => (
-				<tr class="border-b border-border last:border-b-0 hover:bg-muted/40 transition-colors">
+				<tr>
 					{row.map((cell, j) => (
-						<td class:list={["px-3 py-2 align-middle whitespace-nowrap", j === table.monospaceCol ? "font-mono text-xs" : ""]}>
-							<InlineContent content={cell} />
-						</td>
+						<td class:list={{ "is-mono": j === table.monospaceCol }}><InlineContent content={cell} /></td>
 					))}
 				</tr>
 			))}

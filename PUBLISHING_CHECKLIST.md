@@ -78,7 +78,7 @@ Use this as the source of truth for launch readiness and first growth phases.
 - [ ] Text contrast passes WCAG AA for primary content and CTAs.
 - [ ] Keyboard navigation works for nav, toggles, links, and buttons.
 - [ ] Focus styles are visible on interactive elements.
-- [ ] Theme toggle works and persists.
+- [ ] Appearance selector (System / Light / Dark) works and persists.
 - [ ] `prefers-reduced-motion` behavior is respected (including background/parallax effects).
 - [ ] Images have meaningful `alt` text where needed.
 

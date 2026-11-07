@@ -1,113 +1,83 @@
 ---
-import ThemeToggle from "../ThemeToggle.astro"
-import LevitateTextLogo from "../brand/LevitateTextLogo.astro"
-
 const path = Astro.url.pathname
 
-function normalizePath(input: string): string {
+function normalize(input: string): string {
 	if (input === "/") return "/"
 	return input.endsWith("/") ? input.slice(0, -1) : input
 }
 
-function active(href: string): boolean {
-	const normalizedPath = normalizePath(path)
-	const normalizedHref = normalizePath(href)
-	if (normalizedHref === "/") return normalizedPath === "/"
-	return normalizedPath === normalizedHref || normalizedPath.startsWith(`${normalizedHref}/`)
+/** The page a nav item stands for, matched by its section where it has one. */
+function isCurrent(item: { href: string; match?: string }): boolean {
+	const current = normalize(path)
+	const target = normalize(item.match ?? item.href)
+	if (target === "/") return current === "/"
+	return current === target || current.startsWith(`${target}/`)
 }
 
 const navItems = [
-	{ href: "/", label: "Home" },
-	{ href: "/download/", label: "Download" },
-	{ href: "/docs/getting-started/", label: "Docs" },
+	{ href: "/download/", label: "Downloads" },
+	{ href: "/docs/getting-started/", label: "Docs", match: "/docs" },
 	{ href: "/docs/recipe-format/", label: "Recipes" },
+	{ href: "https://github.com/LevitateOS/LevitateOS", label: "Source" },
 ]
+
+// Recipes is a docs page; mark it current instead of Docs while it is open.
+const onRecipes = normalize(path) === "/docs/recipe-format"
+function current(item: (typeof navItems)[number]): boolean {
+	if (item.label === "Docs" && onRecipes) return false
+	return isCurrent(item)
+}
 ---
 
-<header class="sticky top-0 z-50 w-full border-b-2 border-border-strong bg-background/96">
-	<div class="container flex h-14 items-center justify-between px-3 sm:px-4">
-		<a href="/" class="inline-flex items-center gap-2 min-w-0">
-			<LevitateTextLogo className="text-base sm:text-lg" />
+<header class="site-head">
+	<div class="wrap head-row">
+		<a class="head-brand" href="/" aria-label="LevitateOS home">
+			<img class="logo-light" src="/brand/levitate-lockup-color.svg" width="265" height="48" alt="" />
+			<img class="logo-dark" src="/brand/levitate-lockup-reversed.svg" width="265" height="48" alt="" />
 		</a>
 
-		<nav class="hidden md:flex items-center gap-2">
-			{navItems.map((item) => (
-				<a
-					href={item.href}
-					class:list={[
-						"inline-flex h-9 items-center px-3 ui-label tracking-[0.10em] transition-colors border border-transparent",
-						active(item.href)
-							? "bg-card text-foreground border-border"
-							: "text-muted-foreground hover:text-foreground hover:border-border",
-					]}
-				>
-					{item.label}
-				</a>
-			))}
+		<nav class="head-nav" aria-label="Main">
+			<ul>
+				{navItems.map((item) => (
+					<li>
+						<a class="nav-link" href={item.href} aria-current={current(item) ? "page" : undefined}>
+							{item.label}
+						</a>
+					</li>
+				))}
+			</ul>
 		</nav>
 
-		<div class="flex min-w-0 items-center gap-1 sm:gap-2">
-			<ThemeToggle />
-			<a
-				href="https://github.com/LevitateOS/LevitateOS"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="hidden sm:inline-flex size-9 items-center justify-center border border-transparent text-muted-foreground transition-colors hover:border-border hover:text-foreground"
-				aria-label="GitHub"
-			>
-				<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-					<path
-						d="M208.31 75.68A59.78 59.78 0 0 0 202.93 28a8 8 0 0 0-6.93-4a59.75 59.75 0 0 0-48 24h-24a59.75 59.75 0 0 0-48-24a8 8 0 0 0-6.93 4a59.78 59.78 0 0 0-5.38 47.68A58.14 58.14 0 0 0 56 104v8a56.06 56.06 0 0 0 48.44 55.47A39.8 39.8 0 0 0 96 192v8H72a24 24 0 0 1-24-24a40 40 0 0 0-40-40a8 8 0 0 0 0 16a24 24 0 0 1 24 24a40 40 0 0 0 40 40h24v16a8 8 0 0 0 16 0v-40a24 24 0 0 1 48 0v40a8 8 0 0 0 16 0v-40a39.8 39.8 0 0 0-8.44-24.53A56.06 56.06 0 0 0 216 112v-8a58.14 58.14 0 0 0-7.69-28.32ZM200 112a40 40 0 0 1-40 40h-48a40 40 0 0 1-40-40v-8a41.74 41.74 0 0 1 6.9-22.48a8 8 0 0 0 1.1-7.69a43.81 43.81 0 0 1 .79-33.58a43.88 43.88 0 0 1 32.32 20.06a8 8 0 0 0 6.71 3.69h32.35a8 8 0 0 0 6.74-3.69a43.87 43.87 0 0 1 32.32-20.06a43.81 43.81 0 0 1 .77 33.58a8.09 8.09 0 0 0 1 7.65a41.72 41.72 0 0 1 7 22.52Z"
-					></path>
-				</svg>
-			</a>
-			<button
-				type="button"
-				id="mobile-menu-btn"
-				class="md:hidden inline-flex size-9 items-center justify-center border border-transparent text-muted-foreground transition-colors hover:border-border hover:text-foreground"
-				aria-label="Open menu"
-				aria-expanded="false"
-			>
-				<svg class="hamburger-icon size-5" viewBox="0 0 256 256" fill="currentColor">
-					<path d="M224 128a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h176a8 8 0 0 1 8 8ZM40 72h176a8 8 0 0 0 0-16H40a8 8 0 0 0 0 16Zm176 112H40a8 8 0 0 0 0 16h176a8 8 0 0 0 0-16Z" />
-				</svg>
-				<svg class="close-icon hidden size-5" viewBox="0 0 256 256" fill="currentColor">
-					<path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z" />
-				</svg>
-			</button>
-		</div>
+		<button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
 	</div>
 
-	<nav id="mobile-menu" class="hidden md:hidden border-t border-border-strong bg-card">
-		<div class="container px-4 py-3 flex flex-col gap-2">
+	<nav class="mobile-menu" id="mobile-menu" aria-label="Main">
+		<ul class="wrap">
 			{navItems.map((item) => (
-				<a
-					href={item.href}
-					class:list={[
-						"inline-flex h-9 items-center px-3 ui-label tracking-[0.10em] transition-colors border",
-						active(item.href)
-							? "border-border bg-secondary text-foreground"
-							: "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
-					]}
-				>
-					{item.label}
-				</a>
+				<li>
+					<a class="nav-link" href={item.href} aria-current={current(item) ? "page" : undefined}>
+						{item.label}
+					</a>
+				</li>
 			))}
-		</div>
+		</ul>
 	</nav>
 </header>
 
 <script>
-	const menuBtn = document.getElementById("mobile-menu-btn")
-	const mobileMenu = document.getElementById("mobile-menu")
-	const hamburgerIcon = menuBtn?.querySelector(".hamburger-icon")
-	const closeIcon = menuBtn?.querySelector(".close-icon")
-
-	menuBtn?.addEventListener("click", () => {
-		const isOpen = mobileMenu?.classList.contains("hidden") === false
-		mobileMenu?.classList.toggle("hidden")
-		hamburgerIcon?.classList.toggle("hidden")
-		closeIcon?.classList.toggle("hidden")
-		menuBtn.setAttribute("aria-expanded", String(!isOpen))
+	// Compact navigation: a disclosure that expands in the page flow. Without JavaScript
+	// the list is simply shown.
+	const toggle = document.getElementById("menu-toggle")
+	const menu = document.getElementById("mobile-menu")
+	function setOpen(open: boolean) {
+		toggle?.setAttribute("aria-expanded", String(open))
+		menu?.classList.toggle("is-open", open)
+	}
+	toggle?.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"))
+	document.addEventListener("keydown", (event) => {
+		if (event.key !== "Escape" || toggle?.getAttribute("aria-expanded") !== "true") return
+		const inside = menu?.contains(document.activeElement) || document.activeElement === toggle
+		setOpen(false)
+		if (inside) toggle?.focus()
 	})
 </script>

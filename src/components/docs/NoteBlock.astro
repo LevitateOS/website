@@ -9,21 +9,19 @@ interface Props {
 const { block } = Astro.props
 
 const variantClasses: Record<NoteBlock["variant"], string> = {
-	info: "border-[color:var(--accent)]",
-	warning: "border-[color:var(--spectrum-1)]",
-	danger: "border-[color:var(--spectrum-6)]",
+	info: "",
+	warning: "callout--warning",
+	danger: "callout--error",
 }
 
 const variantLabel: Record<NoteBlock["variant"], string> = {
-	info: "NOTE",
-	warning: "WARNING",
-	danger: "DANGER",
+	info: "Note",
+	warning: "Warning",
+	danger: "Caution",
 }
 ---
 
-<div class:list={["ui-panel ui-panel-muted mb-4 border-l-[8px] p-4", variantClasses[block.variant]]}>
-	<p class="ui-label mb-2">{variantLabel[block.variant]}</p>
-	<div class="text-sm leading-relaxed text-muted-foreground">
-		<InlineContent content={block.content} />
-	</div>
+<div class:list={["callout", variantClasses[block.variant]]}>
+	<strong class="callout__label">{variantLabel[block.variant]}</strong>
+	<div><InlineContent content={block.content} /></div>
 </div>

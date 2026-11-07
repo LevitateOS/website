@@ -17,6 +17,7 @@ interface Props {
 const { block } = Astro.props
 ---
 
+<div class="docs-block">
 {
 	block.type === "text" && <TextBlock content={block.content} />
 }
@@ -25,7 +26,7 @@ const { block } = Astro.props
 		<CodeBlock
 			code={block.content}
 			language={block.language}
-			filename={block.filename}
+			label={block.filename}
 		/>
 	)
 }
@@ -56,3 +57,4 @@ const { block } = Astro.props
 {
 	block.type === "note" && <NoteBlock block={block} />
 }
+</div>

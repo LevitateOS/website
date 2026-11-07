@@ -1,7 +1,6 @@
 ---
 import type { CommandBlock } from "@levitate/docs-content"
-import { Code } from "astro:components"
-import { INDUSTRIAL_PASTEL_1984_THEMES } from "@levitate/docs-content/syntax-theme"
+import CodeBlock from "../CodeBlock.astro"
 
 interface Props {
 	block: CommandBlock
@@ -9,41 +8,6 @@ interface Props {
 
 const { block } = Astro.props
 const commandText = Array.isArray(block.command) ? block.command.join("\n") : block.command
-const codeLanguage = block.language === "rhai" ? "rust" : block.language
 ---
 
-<div class="mb-4 code-plate overflow-hidden">
-	<div class="code-plate__header flex items-center justify-between gap-2 px-4 py-2 text-muted-foreground">
-		<span class="truncate">{block.description}</span>
-		<button
-			type="button"
-			class="command-copy-btn inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors shrink-0 select-none"
-			data-code={commandText}
-		>
-			<svg class="copy-icon size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-				<path d="M216 32H88a8 8 0 0 0-8 8v40H40a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h128a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V40a8 8 0 0 0-8-8Zm-56 176H48V96h112Zm48-48h-32V88a8 8 0 0 0-8-8H96V48h112Z" />
-			</svg>
-			<svg class="check-icon hidden size-3.5" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-				<path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69l122.34-122.35a8 8 0 0 1 11.32 11.32Z" />
-			</svg>
-			<span class="copy-text">COPY</span>
-		</button>
-	</div>
-	<div class="code-plate__body overflow-x-auto">
-		<div class="p-4 min-w-fit [&>pre]:p-0 [&>pre]:min-w-fit [&>pre]:text-sm">
-			<Code code={commandText} lang={codeLanguage} themes={INDUSTRIAL_PASTEL_1984_THEMES} />
-		</div>
-	</div>
-	{block.output && (
-		<div class="border-t border-dashed border-border bg-background/50 px-4 py-2 overflow-x-auto">
-			<p class="ui-label mb-1">OUTPUT</p>
-			<pre class="min-w-fit text-sm text-muted-foreground/85">{block.output}</pre>
-		</div>
-	)}
-</div>
-
-<script>
-	import { bindCopyButtons } from "../../scripts/copyButtons"
-
-	bindCopyButtons(".command-copy-btn")
-</script>
+<CodeBlock code={commandText} language={block.language ?? "bash"} label={block.description} output={block.output} />

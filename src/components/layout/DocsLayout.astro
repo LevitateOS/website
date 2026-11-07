@@ -11,19 +11,16 @@ interface Props {
 }
 
 const { title, currentSlug, description } = Astro.props
-const pageDescription = description || `${title} - LevitateOS documentation. Learn how to install, configure, and use LevitateOS.`
+const pageDescription = description || `${title}: LevitateOS documentation.`
 ---
 
-<BaseLayout title={`${title} - LevitateOS Docs`} description={pageDescription}>
+<BaseLayout title={`${title} · LevitateOS docs`} description={pageDescription}>
 	<Header />
-	<div class="container py-8">
-		<div class="md:flex md:gap-6">
-			<DocsSidebar currentSlug={currentSlug} />
-			<article class="ui-panel flex-1 min-w-0 overflow-hidden p-6 md:p-7">
-				<div class="ui-divider -mx-6 mb-6 md:-mx-7" />
-				<slot />
-			</article>
-		</div>
+	<div class="wrap docs-layout">
+		<DocsSidebar currentSlug={currentSlug} />
+		<main id="main" class="docs-article">
+			<slot />
+		</main>
 	</div>
 	<Footer />
 </BaseLayout>

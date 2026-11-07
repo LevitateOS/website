@@ -2,145 +2,132 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
-import DownloadCard, { type Props as DownloadCardProps } from "../components/DownloadCard.astro"
+import { variants } from "../lib/variants"
 
-const variants: DownloadCardProps[] = [
-	{
-		variant: "levitate",
-		title: "LevitateOS",
-		logo: "/levitateos-trace.svg",
-		stack: "glibc / systemd / GNU",
-		description: "The pragmatic choice. Run any Linux software without patching, use familiar tools, and find answers to every question online. Pick this if you want things to just work.",
-		pros: [
-			"All Linux software works",
-			"Core system from signed Fedora 45 RPMs",
-			"systemd service management",
-			"Familiar GNU tools",
-		],
-		cons: [
-			"Larger binaries",
-			"Slower boot time",
-			"More RAM usage",
-		],
-		status: "coming-soon",
-		x86_64Date: "2027",
-		aarch64Date: "After x86_64",
-		minRam: "16 GB",
-		recRam: "32 GB",
-		minDisk: "64 GB",
-		recDisk: "256 GB",
-	},
-	{
-		variant: "acorn",
-		title: "AcornOS",
-		logo: "/acorn-trace.svg",
-		stack: "musl / OpenRC / busybox",
-		description: "The purist choice. Boots in seconds, uses less memory, and keeps things simple. You'll occasionally patch or compile software yourself, but you'll understand exactly what's running.",
-		pros: [
-			"Faster boot time",
-			"Lower RAM usage",
-			"Smaller disk footprint",
-			"Simpler init system",
-		],
-		cons: [
-			"Some software needs patching",
-			"Fewer pre-built packages",
-			"Less documentation online",
-		],
-		status: "coming-soon",
-		x86_64Date: "2027",
-		aarch64Date: "After x86_64",
-		minRam: "4 GB",
-		recRam: "8 GB",
-		minDisk: "32 GB",
-		recDisk: "128 GB",
-	},
-]
+const statusClass = { available: "status--available", "in-development": "", planned: "status--planned" } as const
 ---
 
 <BaseLayout
-	title="Download - LevitateOS"
-	description="Download LevitateOS and AcornOS. Both ship as live UEFI ISOs that install an A/B immutable system by default, mutable optional."
+	title="Downloads & status · LevitateOS"
+	description="Release status and system requirements for LevitateOS and AcornOS. Both are in development; first releases are planned for 2027, x86_64 first."
 >
-	<div class="flex min-h-screen flex-col">
-		<Header />
-		<main class="flex-1">
-			<div class="container py-8">
-				<h1 class="text-2xl font-medium mb-3">Download</h1>
-				<p class="text-sm text-muted-foreground mb-6">
-					Two variants, one pipeline: recipe-built systems with atomic A/B updates by default. First releases are planned for 2027, x86_64 first.
-				</p>
-
-					<!-- Global requirements -->
-					<div class="ui-panel ui-panel-muted px-5 py-4 mb-6 overflow-hidden">
-						<div class="ui-divider -mx-5 mb-4" />
-						<h2 class="font-medium text-sm mb-3">Requirements (all variants)</h2>
-						<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-							<div class="flex sm:block gap-2">
-								<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">CPU</div>
-							<div>
-								<div>x86-64-v3: Intel Haswell+</div>
-								<div>or AMD Zen+</div>
-							</div>
-						</div>
-						<div class="flex sm:block gap-2">
-							<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">Boot</div>
-							<div>
-								<div>UEFI required</div>
-								<div>Secure Boot disabled</div>
-								<div>NVMe disk</div>
-							</div>
-						</div>
-						<div class="flex sm:block gap-2">
-							<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">Arch</div>
-							<div>
-								<div>x86_64</div>
-								<div>AArch64 later</div>
-							</div>
-						</div>
-					</div>
+	<Header />
+	<main id="main">
+		<section class="section">
+			<div class="wrap">
+				<div class="section-head">
+					<p class="eyebrow">Downloads &amp; status</p>
+					<h1>Not released yet.</h1>
+					<p class="lead">
+						LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default. First releases are planned for 2027, x86_64 first.
+					</p>
 				</div>
 
-				<!-- Variant cards -->
-				<div class="flex flex-col gap-4 mb-6">
-					{variants.map((variant) => (
-						<DownloadCard {...variant} />
-					))}
-				</div>
-
-					<!-- Security disclaimer -->
-					<div class="ui-panel ui-panel-muted px-5 py-4 overflow-hidden">
-						<div class="ui-divider -mx-5 mb-4" />
-						<h2 class="font-medium text-sm mb-2 flex items-center gap-2">
-							<svg class="size-5" viewBox="0 0 256 256" fill="currentColor">
-								<path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88Zm-8-80V80a8 8 0 0 1 16 0v56a8 8 0 0 1-16 0Zm20 36a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z"/>
-						</svg>
-						Before Installing
-					</h2>
-					<p class="text-sm text-muted-foreground">
-						LevitateOS has full hardware access and can overwrite disk contents.
-						<strong class="text-foreground">Back up important data.</strong>
-						No telemetry collected.
-						<a href="/docs/getting-started/#download" class="ui-link">Verify checksums</a> before installing.
-						<a href="https://github.com/LevitateOS/LevitateOS" target="_blank" rel="noopener" class="ui-link">Source on GitHub</a>.
-					</p>
-					</div>
-
-					<!-- Installation -->
-					<div class="ui-panel px-5 py-4 mt-6 mb-6 overflow-hidden">
-						<div class="ui-divider -mx-5 mb-4" />
-						<h2 class="font-medium text-sm mb-2">Installation</h2>
-						<p class="text-sm text-muted-foreground mb-3">
-							Each variant ships as a live ISO that boots into the install screen: a guided app for each step, with a shell and the full guide beside it.
-							Prefer typing? Follow the <a href="/docs/installation/" class="ui-link">Installation Guide</a>:
-						partition with recpart, extract with recstrap, write fstab with recfstab, configure and set up boot with recsetup. A/B is the default layout.
-					</p>
-					<div class="text-sm text-muted-foreground font-mono">
-						Ctrl-]: switch pane | j/k: scroll docs | Ctrl-q: leave the install screen
-					</div>
+				<div class="callout">
+					<strong class="callout__label">Note</strong>
+					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href="/docs/getting-started/">documentation</a> describes the system and its installation.</p>
 				</div>
 			</div>
-		</main>
-		<Footer />
-	</div>
+		</section>
+
+		<section class="section" aria-labelledby="requirements-title">
+			<div class="wrap">
+				<div class="section-head">
+					<h2 id="requirements-title">Requirements for both variants</h2>
+				</div>
+				<div class="table-scroll" role="region" tabindex="0" aria-labelledby="requirements-title">
+					<table class="data-table">
+						<thead>
+							<tr><th scope="col">Component</th><th scope="col">Requirement</th></tr>
+						</thead>
+						<tbody>
+							<tr><th scope="row">CPU</th><td>x86-64-v3: Intel Haswell or newer, AMD Zen or newer</td></tr>
+							<tr><th scope="row">Firmware</th><td>UEFI, with Secure Boot disabled (the boot files are unsigned)</td></tr>
+							<tr><th scope="row">Disk</th><td>An NVMe disk</td></tr>
+							<tr><th scope="row">Architecture</th><td>x86_64 first; AArch64 after</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="variants-title">
+			<div class="wrap">
+				<h2 id="variants-title" class="sr-only">Variants</h2>
+				<div class="release-list">
+					{variants.map((variant) => (
+						<article class="release" id={variant.id} aria-labelledby={`release-${variant.id}`}>
+							<div class="release__intro">
+								<h3 class="lockup" id={`release-${variant.id}`}>
+									<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="48" alt={variant.name} />
+									<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="48" alt={variant.name} />
+								</h3>
+								<p class:list={["status", statusClass[variant.status]]}>{variant.statusLabel} · {variant.release}</p>
+								<p>{variant.description}</p>
+							</div>
+							<div class="release__details">
+								<dl class="facts">
+									<dt>Stack</dt>
+									<dd>{variant.stack}</dd>
+									<dt>Base</dt>
+									<dd>{variant.base}</dd>
+									<dt>Format</dt>
+									<dd>{variant.format}</dd>
+									<dt>Arch</dt>
+									<dd>{variant.architectures}</dd>
+									<dt>Version</dt>
+									<dd>None released</dd>
+								</dl>
+								<div class="tradeoffs">
+									<div>
+										<h4>Strengths</h4>
+										<ul>{variant.strengths.map((item) => <li>{item}</li>)}</ul>
+									</div>
+									<div>
+										<h4>Trade-offs</h4>
+										<ul>{variant.tradeoffs.map((item) => <li>{item}</li>)}</ul>
+									</div>
+								</div>
+								<div class="table-scroll" role="region" tabindex="0" aria-label={`${variant.name} memory and disk`}>
+									<table class="data-table">
+										<thead>
+											<tr><th scope="col">Resource</th><th scope="col">Minimum</th><th scope="col">Recommended</th></tr>
+										</thead>
+										<tbody>
+											<tr><th scope="row">RAM</th><td>{variant.ram.minimum}</td><td>{variant.ram.recommended}</td></tr>
+											<tr><th scope="row">Disk</th><td>{variant.disk.minimum}</td><td>{variant.disk.recommended}</td></tr>
+										</tbody>
+									</table>
+								</div>
+								<p><a class="text-action" href="/docs/variants/">Compare the variants in the docs</a></p>
+							</div>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="install-title">
+			<div class="wrap split">
+				<div class="split__copy">
+					<h2 id="install-title">Before installing</h2>
+					<p>Installing overwrites the target disk. Back up anything you need first. LevitateOS collects no telemetry.</p>
+					<p>Each ISO boots into the install screen: a shell beside the full installation guide. <kbd class="inline-code">Ctrl-]</kbd> switches pane, <kbd class="inline-code">j</kbd>/<kbd class="inline-code">k</kbd> scroll the guide, and <kbd class="inline-code">Ctrl-q</kbd> leaves the install screen.</p>
+					<div class="actions">
+						<a class="button button--secondary" href="/docs/installation/">Read the installation guide</a>
+					</div>
+				</div>
+				<div class="split__example">
+					<p class="eyebrow">Steps</p>
+					<ol class="docs-steps">
+						<li><span class="docs-steps__number" aria-hidden="true">01</span><p>Partition the disk with <code class="inline-code">recpart</code>. The A/B layout is the default.</p></li>
+						<li><span class="docs-steps__number" aria-hidden="true">02</span><p>Extract the system with <code class="inline-code">recstrap</code>.</p></li>
+						<li><span class="docs-steps__number" aria-hidden="true">03</span><p>Write the fstab with <code class="inline-code">recfstab</code>.</p></li>
+						<li><span class="docs-steps__number" aria-hidden="true">04</span><p>Configure the system and its boot entries with <code class="inline-code">recsetup</code>.</p></li>
+					</ol>
+				</div>
+			</div>
+		</section>
+	</main>
+	<Footer />
 </BaseLayout>
