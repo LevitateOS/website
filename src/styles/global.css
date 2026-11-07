@@ -876,7 +876,15 @@
 		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
 	}
 
-	/* ---------- Code: a dark ink panel in both appearances ---------- */
+	/* ---------- Code: a dark ink specimen, annotated in the margin ---------- */
+
+	.code-specimen {
+		/* Fixed code metrics, shared with the margin notes so each can point at its line. */
+		--code-lh: 22px;
+		--code-pad: 16px;
+		container-type: inline-size;
+		min-width: 0;
+	}
 
 	.code-shell {
 		/* Shiki's css-variables theme reads these. */
@@ -891,14 +899,11 @@
 		--astro-code-token-parameter: var(--fn-code-text);
 		--astro-code-token-punctuation: var(--fn-code-secondary);
 		--astro-code-token-link: var(--fn-code-keyword);
-		position: relative;
 		min-width: 0;
 		background: var(--fn-code-surface);
 		color: var(--fn-code-text);
 		border: var(--fn-rule-width) solid var(--fn-code-rule);
-		border-top: 3px solid var(--fn-code-keyword);
 		border-radius: var(--fn-radius);
-		box-shadow: 0 1px 0 color-mix(in srgb, var(--fn-code-surface) 30%, transparent), 0 18px 36px -24px rgb(10 20 14 / 0.55);
 	}
 
 	.code-shell :focus-visible {
@@ -910,34 +915,18 @@
 		align-items: center;
 		gap: var(--fn-space-3);
 		min-height: 44px;
-		padding: var(--fn-space-1) var(--fn-space-1) var(--fn-space-1) var(--fn-space-4);
-		background: var(--fn-code-bar);
+		padding: 0 var(--fn-space-1) 0 var(--fn-space-4);
 		border-bottom: var(--fn-rule-width) solid var(--fn-code-rule);
 		font-size: var(--fn-text-label);
 		min-width: 0;
 	}
 
-	.code-head__kind {
-		flex: none;
-		padding: 2px 6px;
-		border: var(--fn-rule-width) solid var(--fn-code-rule);
-		color: var(--fn-code-keyword);
-		font-size: var(--fn-text-kicker);
-		font-weight: 500;
-		letter-spacing: 0.14em;
-		line-height: 1.4;
-		text-transform: uppercase;
-	}
-
 	.code-head__label {
 		flex: 1;
 		min-width: 0;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
-		gap: 0 var(--fn-space-2);
-		overflow-wrap: anywhere;
+		padding-block: var(--fn-space-2);
 		line-height: 1.35;
+		overflow-wrap: anywhere;
 	}
 
 	.code-head__name {
@@ -946,9 +935,8 @@
 	}
 
 	.code-head__source {
+		margin-left: var(--fn-space-2);
 		color: var(--fn-code-secondary);
-		font-family: var(--fn-font-code);
-		font-size: 0.6875rem;
 	}
 
 	.copy-button {
@@ -963,14 +951,15 @@
 		font-size: var(--fn-text-label);
 		font-weight: 500;
 		cursor: pointer;
-		transition:
-			background-color var(--fn-duration-control) var(--fn-ease),
-			border-color var(--fn-duration-control) var(--fn-ease);
+		transition: background-color var(--fn-duration-control) var(--fn-ease);
 	}
 
 	.copy-button:hover {
 		background: var(--fn-code-rule);
-		border-color: var(--fn-code-secondary);
+	}
+
+	.code-body {
+		position: relative;
 	}
 
 	.code-region {
@@ -984,11 +973,11 @@
 
 	.code-shell pre {
 		margin: 0;
-		padding: var(--fn-space-4) var(--fn-space-5) var(--fn-space-5) var(--fn-space-4);
+		padding: var(--code-pad) var(--fn-space-5) var(--code-pad) var(--fn-space-4);
 		width: max-content;
 		min-width: 100%;
-		font-size: 0.8125rem;
-		line-height: 1.7;
+		font-size: 13px;
+		line-height: var(--code-lh);
 		background: transparent !important;
 		color: var(--fn-code-text);
 		tab-size: 4;
@@ -996,7 +985,6 @@
 
 	.code-shell pre code {
 		font: inherit;
-		counter-reset: code-line;
 	}
 
 	.code-shell ::selection {
@@ -1015,26 +1003,128 @@
 		display: inline-block;
 		width: 1.75ch;
 		margin-left: -1.75ch;
-		color: var(--fn-code-prompt);
-		font-weight: 600;
+		color: var(--fn-code-secondary);
 		user-select: none;
 	}
 
-	/* Comments in shell examples read as notes on the step that follows. */
-	.code-shell[data-kind="shell"] .line.is-comment {
+	/* The annotated lines: a faint band, numbered where the notes sit below. */
+	.code-marks {
+		position: absolute;
+		inset: var(--code-pad) 0 auto;
+		pointer-events: none;
+	}
+
+	.code-mark {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: calc((var(--line) - 1) * var(--code-lh));
+		height: var(--code-lh);
+		background: color-mix(in srgb, var(--fn-code-constant) 9%, transparent);
+		border-left: 2px solid var(--fn-code-constant);
+		font-family: var(--fn-font-ui);
+		font-size: var(--fn-text-kicker);
+		font-weight: 500;
+		line-height: var(--code-lh);
+		color: var(--fn-code-constant);
+	}
+
+	/* Narrow: the number sits in a gutter left of the code, matching the list below. */
+	.code-mark span {
+		position: absolute;
+		left: 6px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.code-specimen[data-annotated] .code-shell pre {
+		padding-left: 34px;
+	}
+
+	.code-notes {
+		list-style: none;
+		margin: var(--fn-space-4) 0 0;
+		padding: 0;
+		display: grid;
+		gap: var(--fn-space-3);
+	}
+
+	.code-notes li {
+		display: grid;
+		grid-template-columns: 1.75rem minmax(0, 1fr);
+		align-items: baseline;
+	}
+
+	.code-notes__n {
+		font-size: var(--fn-text-kicker);
+		font-weight: 500;
+		color: var(--fn-annotation);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.code-notes__text {
+		font-family: var(--fn-font-editorial);
+		font-size: 1.0625rem;
 		font-style: italic;
+		line-height: 1.3;
+		color: var(--fn-brand);
+		text-wrap: pretty;
 	}
 
-	/* Files: line numbers in a quiet gutter. */
-	.code-shell[data-numbered] .line::before {
-		counter-increment: code-line;
-		content: counter(code-line);
-		display: inline-block;
-		width: 2.5ch;
-		margin-right: 2ch;
-		color: var(--fn-code-gutter);
-		text-align: right;
-		user-select: none;
+	/* Wide enough: each note moves into the margin, beside its line. */
+	@container (min-width: 620px) {
+		.code-specimen[data-annotated] .code-specimen__grid {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 10.5rem;
+			column-gap: var(--fn-space-5);
+		}
+
+		.code-specimen[data-annotated] .code-mark span {
+			display: none;
+		}
+
+		.code-specimen[data-annotated] .code-shell pre {
+			padding-left: var(--fn-space-4);
+		}
+
+		/* A fixed bar height, so each note lines up with its line. */
+		.code-specimen[data-annotated] .code-head {
+			height: 44px;
+		}
+
+		.code-specimen[data-annotated] .code-head__label {
+			padding-block: 0;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.code-notes {
+			position: relative;
+			margin: 0;
+			display: block;
+		}
+
+		.code-notes li {
+			position: absolute;
+			left: 0;
+			right: 0;
+			/* head (44px + 1px rule) + top padding + the line's offset */
+			top: calc(45px + var(--code-pad) + (var(--line) - 1) * var(--code-lh) + 3px);
+			display: block;
+		}
+
+		.code-notes li::before {
+			content: "";
+			position: absolute;
+			top: 0.62em;
+			left: calc(-1 * var(--fn-space-5) - 1px);
+			width: calc(var(--fn-space-5) - 6px);
+			border-top: var(--fn-rule-width) solid var(--fn-annotation);
+		}
+
+		.code-notes__n {
+			display: none;
+		}
 	}
 
 	.code-output {
@@ -1045,11 +1135,8 @@
 
 	.code-output__label {
 		margin-bottom: var(--fn-space-1);
-		color: var(--fn-code-keyword);
-		font-size: var(--fn-text-kicker);
-		font-weight: 500;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
+		color: var(--fn-code-secondary);
+		font-size: var(--fn-text-label);
 	}
 
 	.code-output pre {
@@ -1057,7 +1144,7 @@
 		padding: 0;
 		width: auto;
 		color: var(--fn-code-secondary);
-		font-size: 0.8125rem;
+		font-size: 13px;
 		line-height: 1.6;
 	}
 

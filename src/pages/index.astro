@@ -44,35 +44,52 @@ fn remove(ctx) {
     ctx
 }`
 
-// The update example from tools/recab/README.md, one step per comment.
-const updateCode = `# Write the next system into the inactive slot
-recab stage --rootfs /mnt/live/filesystem.erofs \\
+// The update example from tools/recab/README.md. The margin notes explain it.
+const updateCode = `recab stage --rootfs /mnt/live/filesystem.erofs \\
     --kernel /mnt/boot/vmlinuz \\
     --initrd /mnt/boot/initramfs.img
 
-# Boot the staged slot once, as a trial
+
 recab set-next B
 reboot
 
-# Healthy: B is committed. Not healthy: you are back on A.
-# Later, if you want the old system back while A still holds it:
+
+
 recab rollback`
+const updateNotes = [
+	{ line: 1, text: "Written to the other slot. The running system is never touched." },
+	{ line: 6, text: "One trial boot. If B does not come up healthy, you are back on A." },
+	{ line: 11, text: "Changed your mind? Back to A, while A still holds it." },
+]
 
-// The install commands from the repository README, one step per comment.
-const installCode = `# Partition: A/B layout by default, mounted at /mnt
-# (add --mode mutable for a single root)
-recpart apply --disk /dev/nvme0n1 --confirm DESTROY
+// The install commands from the repository README. The margin notes explain them.
+const installCode = `recpart apply --disk /dev/nvme0n1 --confirm DESTROY
 
-# Extract the system and record its mounts
+
+
 recstrap /mnt
 recfstab /mnt >> /mnt/etc/fstab
 
-# See the target configuration, then apply machine settings
+
 recsetup inspect --root /mnt --json
 recsetup apply --root /mnt --hostname myhostname
 
-# Set the installed system's root password
+
 recchroot /mnt -- passwd`
+const installNotes = [
+	{ line: 1, text: "Nothing is wiped until you type the word yourself." },
+	{ line: 5, text: "The whole system, laid down from the live ISO." },
+	{ line: 9, text: "See what it will configure before it does." },
+	{ line: 13, text: "Inside your new system, before its first boot." },
+]
+
+// Notes on hello.rhai, each beside the line it explains.
+const recipeNotes = [
+	{ line: 1, text: "Every recipe names the API it was written for." },
+	{ line: 14, text: "Asks the files on disk, not a database. An interrupted install resumes here." },
+	{ line: 23, text: "Runs inside a Ginux domain, never on the system you are using." },
+	{ line: 31, text: "Removal is in the recipe too. You can read what it deletes." },
+]
 
 const recipePoints = [
 	"Pin exact versions: downloads need a SHA-256, git checkouts a full commit.",
@@ -168,7 +185,7 @@ const principles = [
 					</div>
 					<div class="split__example">
 						<ImageFrame art="circuit" class="frame-host--inset frame-host--compact">
-							<CodeBlock code={recipeCode} language="rhai" label="hello.rhai" source="tools/recipe/WRITING_RECIPES.md" />
+							<CodeBlock code={recipeCode} language="rhai" label="hello.rhai" source="tools/recipe/WRITING_RECIPES.md" notes={recipeNotes} />
 						</ImageFrame>
 					</div>
 				</div>
@@ -193,7 +210,7 @@ const principles = [
 						</div>
 					</div>
 					<div class="split__example">
-						<CodeBlock code={updateCode} language="bash" label="An update" source="tools/recab/README.md" />
+						<CodeBlock code={updateCode} language="bash" label="An update" source="tools/recab/README.md" notes={updateNotes} />
 					</div>
 				</div>
 			</section>
@@ -210,7 +227,7 @@ const principles = [
 						</div>
 					</div>
 					<div class="split__example">
-						<CodeBlock code={installCode} language="bash" label="Installing" source="README.md" />
+						<CodeBlock code={installCode} language="bash" label="Installing" source="README.md" notes={installNotes} />
 					</div>
 				</div>
 			</section>

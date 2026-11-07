@@ -2,6 +2,12 @@
 import { Code } from "astro:components"
 import type { ShikiTransformer } from "shiki"
 
+interface Note {
+	/** 1-based line the note points at. Keep notes at least three lines apart. */
+	line: number
+	text: string
+}
+
 interface Props {
 	code: string
 	/** Shiki language; rhai is highlighted with the Rust grammar. */
@@ -14,27 +20,22 @@ interface Props {
 	copyText?: string
 	/** Command output shown under the code. */
 	output?: string
+	/** Margin notes, each pointing at one line: the specimen's annotations. */
+	notes?: Note[]
 }
 
-const { code, language, label, source, copyText, output } = Astro.props
+const { code, language, label, source, copyText, output, notes = [] } = Astro.props
 const lang = language === "rhai" ? "rust" : language
-
-// Shell examples are typed at a prompt; anything else is a file with line numbers.
 const isShell = ["bash", "sh", "shell", "console", "zsh"].includes(language)
-const kind = isShell ? "Shell" : language.length <= 4 ? language.toUpperCase() : language[0].toUpperCase() + language.slice(1)
-const lines = code.split("\n")
-const numbered = !isShell && lines.length > 3
 
-// Mark the lines that start a command, so CSS can draw a prompt the copy button
-// never copies. Comments, blank lines and continuations of a previous line get none.
+// Shell lines that start a command get a prompt drawn in CSS, so Copy never
+// copies it. Comments, blank lines and continuations get none.
 const commandLines = new Set<number>()
-const commentLines = new Set<number>()
 if (isShell) {
 	let continued = false
-	lines.forEach((text, index) => {
+	code.split("\n").forEach((text, index) => {
 		const trimmed = text.trim()
-		if (trimmed.startsWith("#")) commentLines.add(index + 1)
-		else if (!continued && trimmed !== "") commandLines.add(index + 1)
+		if (!continued && trimmed !== "" && !trimmed.startsWith("#")) commandLines.add(index + 1)
 		continued = trimmed.endsWith("\\")
 	})
 }
@@ -42,32 +43,54 @@ const transformers: ShikiTransformer[] = [
 	{
 		line(node, line) {
 			if (commandLines.has(line)) this.addClassToHast(node, "is-command")
-			if (commentLines.has(line)) this.addClassToHast(node, "is-comment")
 		},
 	},
 ]
 
-const regionLabel = label ? `Code: ${label}` : `${kind} code`
+const ordered = [...notes].sort((a, b) => a.line - b.line)
+const number = (index: number) => String(index + 1).padStart(2, "0")
+const regionLabel = label ? `Code: ${label}` : `${language} code`
 ---
 
-<div class="code-shell" data-kind={isShell ? "shell" : "file"} data-numbered={numbered ? "" : undefined}>
-	<div class="code-head">
-		<span class="code-head__kind">{kind}</span>
-		<span class="code-head__label">
-			{label && <span class="code-head__name">{label}</span>}
-			{source && <span class="code-head__source">{source}</span>}
-		</span>
-		<button type="button" class="copy-button" data-code={copyText ?? code} aria-label={label ? `Copy ${label}` : "Copy code"}>Copy</button>
-	</div>
-	<div role="region" tabindex="0" aria-label={regionLabel} class="code-region">
-		<Code code={code} lang={lang as any} theme="css-variables" transformers={transformers} />
-	</div>
-	{output && (
-		<div class="code-output">
-			<p class="code-output__label">Output</p>
-			<pre>{output}</pre>
+<div class="code-specimen" data-annotated={ordered.length ? "" : undefined}>
+	<div class="code-specimen__grid">
+		<div class="code-shell" data-kind={isShell ? "shell" : "file"}>
+			<div class="code-head">
+				<span class="code-head__label">
+					{label && <span class="code-head__name">{label}</span>}
+					{source && <span class="code-head__source">{source}</span>}
+				</span>
+				<button type="button" class="copy-button" data-code={copyText ?? code} aria-label={label ? `Copy ${label}` : "Copy code"}>Copy</button>
+			</div>
+			<div class="code-body">
+				<div role="region" tabindex="0" aria-label={regionLabel} class="code-region">
+					<Code code={code} lang={lang as any} theme="css-variables" transformers={transformers} />
+				</div>
+				{ordered.length > 0 && (
+					<div class="code-marks" aria-hidden="true">
+						{ordered.map((note, index) => <span class="code-mark" style={`--line: ${note.line}`}><span>{number(index)}</span></span>)}
+					</div>
+				)}
+			</div>
+			{output && (
+				<div class="code-output">
+					<p class="code-output__label">Output</p>
+					<pre>{output}</pre>
+				</div>
+			)}
 		</div>
-	)}
+		{ordered.length > 0 && (
+			<ol class="code-notes" aria-label={label ? `Notes on ${label}` : "Notes on the code"}>
+				{ordered.map((note, index) => (
+					<li style={`--line: ${note.line}`}>
+						<span class="code-notes__n">{number(index)}</span>
+						<span class="sr-only">Line {note.line}: </span>
+						<span class="code-notes__text">{note.text}</span>
+					</li>
+				))}
+			</ol>
+		)}
+	</div>
 </div>
 
 <script>
