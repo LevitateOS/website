@@ -3,6 +3,7 @@ import type { DocsContent, Section, ContentBlock } from "@levitate/docs-content"
 import DocsLayout from "../layout/DocsLayout.astro"
 import InlineContent from "./InlineContent.astro"
 import RenderBlock from "./RenderBlock.astro"
+import ImageFrame from "../ImageFrame.astro"
 import { toAnchor } from "../../lib/anchor"
 
 interface Props {
@@ -30,10 +31,20 @@ const description = extractPlainText(content.intro)
 ---
 
 <DocsLayout title={content.title} currentSlug={slug} description={description}>
-	<p class="eyebrow">Documentation</p>
-	<h1>{content.title}</h1>
-	{content.intro && (
-		<p class="docs-intro"><InlineContent content={content.intro} /></p>
+	{slug === "getting-started" ? (
+		<ImageFrame art="paper" class="frame-host--inset frame-host--compact frame-host--docs">
+			<div>
+				<p class="eyebrow">Documentation</p>
+				<h1>{content.title}</h1>
+				{content.intro && <p class="docs-intro"><InlineContent content={content.intro} /></p>}
+			</div>
+		</ImageFrame>
+	) : (
+		<>
+			<p class="eyebrow">Documentation</p>
+			<h1>{content.title}</h1>
+			{content.intro && <p class="docs-intro"><InlineContent content={content.intro} /></p>}
+		</>
 	)}
 	{content.sections.map((section: Section) => {
 		const level = section.level ?? 2

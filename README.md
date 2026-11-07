@@ -73,11 +73,12 @@ action per page and the occasional note. Square corners throughout.
 - Every surface sets its own foreground. Light lettering appears only on the red
   action and the pine ending and footer; the footer stays pine in both
   appearances.
-- `public/art/levitate-frame.webp` is drawn as a CSS `border-image` around live
-  paper (`ImageFrame.astro`, slices `15% 10%`, no `fill`). It appears at the
-  homepage hero, the introductory statement, and the downloads status heading.
-  Its thickness follows each container's width; long reading sections and
-  documentation pages stay on plain paper.
+- `ImageFrame.astro` draws six distinct pieces of artwork as CSS `border-image`
+  around live paper (slices `15% 10%`, no `fill`). The original botanical hero
+  is joined by fern, circuit, mineral, folded paper and contour-map frames in
+  `public/art/`. They mark different kinds of content at different scales across
+  the homepage, downloads and getting-started guide. Frame thickness follows
+  each container's width; long reading sections stay on plain paper.
 - `public/brand/` holds the selected marks (standard and micro) and the outlined
   monochrome lockups: `-ink` on paper, `-paper` on dark surfaces. Use them as
   supplied.

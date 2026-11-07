@@ -114,7 +114,7 @@ const principles = [
 
 		<div class="wrap">
 			<section class="story-section" id="principles" aria-labelledby="principles-title">
-				<ImageFrame class="frame-host--inset frame-host--editorial">
+				<ImageFrame art="fern" class="frame-host--inset frame-host--editorial">
 					<div class="intro">
 						<div>
 							<p class="eyebrow">Nothing hidden</p>
@@ -151,7 +151,9 @@ const principles = [
 						</div>
 					</div>
 					<div class="split__example">
-						<CodeBlock code={recipeCode} language="rhai" label="hello.rhai · tools/recipe/WRITING_RECIPES.md" />
+						<ImageFrame art="circuit" class="frame-host--inset frame-host--compact">
+							<CodeBlock code={recipeCode} language="rhai" label="hello.rhai · tools/recipe/WRITING_RECIPES.md" />
+						</ImageFrame>
 					</div>
 				</div>
 			</section>
@@ -159,9 +161,13 @@ const principles = [
 			<section class="story-section" id="updates" aria-labelledby="updates-title">
 				<div class="split">
 					<div class="split__copy">
-						<p class="eyebrow">Atomic updates</p>
-						<h2 id="updates-title">Updates <em>you can undo.</em></h2>
-						<p>The disk holds two system slots and one running system. An update never changes the slot you are booted from.</p>
+						<ImageFrame art="mineral" class="frame-host--inset frame-host--aside">
+							<div>
+								<p class="eyebrow">Atomic updates</p>
+								<h2 id="updates-title">Updates <em>you can undo.</em></h2>
+								<p>The disk holds two system slots and one running system. An update never changes the slot you are booted from.</p>
+							</div>
+						</ImageFrame>
 						<p><code class="inline-code">recab</code> writes the new system into the other slot, carries your hostname, users and enabled services across, and boots it once. Mutable mode exists, but it is an explicit opt-in without that safety net.</p>
 						<ul class="notes">
 							{updatePoints.map((point) => <li>{point}</li>)}

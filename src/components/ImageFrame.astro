@@ -1,12 +1,13 @@
 ---
 interface Props {
 	class?: string
+	art?: "botanical" | "fern" | "circuit" | "mineral" | "paper" | "atlas"
 }
 
-const { class: className } = Astro.props
+const { class: className, art = "botanical" } = Astro.props
 ---
 
-<div class:list={["frame-host", className]}>
+<div class:list={["frame-host", className]} data-frame={art}>
 	<div class="image-frame">
 		<div class="frame-paper"><slot /></div>
 	</div>

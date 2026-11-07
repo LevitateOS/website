@@ -542,11 +542,17 @@
 		padding: 0;
 	}
 
+	.frame-host[data-frame="fern"] { --frame-art: url("/art/frame-fern.webp"); }
+	.frame-host[data-frame="circuit"] { --frame-art: url("/art/frame-circuit.webp"); }
+	.frame-host[data-frame="mineral"] { --frame-art: url("/art/frame-mineral.webp"); }
+	.frame-host[data-frame="paper"] { --frame-art: url("/art/frame-paper.webp"); }
+	.frame-host[data-frame="atlas"] { --frame-art: url("/art/frame-atlas.webp"); }
+
 	/* The artwork is the border of a real surface; the centre is not painted. */
 	.image-frame {
 		border: solid transparent;
 		border-width: var(--fn-frame-width);
-		border-image-source: var(--fn-frame-image);
+		border-image-source: var(--frame-art, var(--fn-frame-image));
 		border-image-slice: var(--fn-frame-slice);
 		border-image-width: 1;
 		border-image-repeat: stretch;
@@ -584,6 +590,42 @@
 
 	.frame-host--editorial + .callout {
 		margin-top: var(--fn-space-6);
+	}
+
+	.frame-host--compact .image-frame {
+		border-width: clamp(12px, 3cqi, 28px);
+	}
+
+	.frame-host--compact .frame-paper {
+		padding: clamp(10px, 1.5cqi, 18px);
+	}
+
+	.frame-host--compact .frame-paper > * {
+		width: 100%;
+	}
+
+	.frame-host--aside .image-frame {
+		border-width: clamp(12px, 4cqi, 32px);
+	}
+
+	.frame-host--aside .frame-paper {
+		padding: clamp(16px, 2.5cqi, 28px);
+	}
+
+	.frame-host--aside .frame-paper > * {
+		width: 100%;
+	}
+
+	.frame-host--aside h2 + p {
+		margin-top: var(--fn-space-4);
+	}
+
+	.frame-host--aside + p {
+		margin-top: var(--fn-space-4);
+	}
+
+	.frame-host--docs .docs-intro {
+		margin-bottom: 0;
 	}
 
 	.frame-leaf {
