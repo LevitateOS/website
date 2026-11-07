@@ -1,0 +1,13 @@
+---
+interface Props {
+	class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<div class:list={["frame-host", className]}>
+	<div class="image-frame">
+		<div class="frame-paper"><slot /></div>
+	</div>
+</div>

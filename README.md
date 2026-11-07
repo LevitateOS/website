@@ -73,9 +73,11 @@ action per page and the occasional note. Square corners throughout.
 - Every surface sets its own foreground. Light lettering appears only on the red
   action and the pine ending and footer; the footer stays pine in both
   appearances.
-- `public/art/levitate-frame.webp` is the frame, drawn as a CSS `border-image`
-  around live paper (`.frame-hero`, slices `15% 10%`, no `fill`). Use it once,
-  at the homepage hero; reading and documentation pages stay on plain paper.
+- `public/art/levitate-frame.webp` is drawn as a CSS `border-image` around live
+  paper (`ImageFrame.astro`, slices `15% 10%`, no `fill`). It appears at the
+  homepage hero, the introductory statement, and the downloads status heading.
+  Its thickness follows each container's width; long reading sections and
+  documentation pages stay on plain paper.
 - `public/brand/` holds the selected marks (standard and micro) and the outlined
   monochrome lockups: `-ink` on paper, `-paper` on dark surfaces. Use them as
   supplied.

@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
 import PageIndex from "../components/PageIndex.astro"
+import ImageFrame from "../components/ImageFrame.astro"
 import { variants } from "../lib/variants"
 
 const sections = [
@@ -22,11 +23,13 @@ const sections = [
 		<PageIndex items={sections} />
 		<main id="main" class="atlas__main">
 			<section class="story-section" id="status" aria-labelledby="status-title">
-				<div class="section-head">
-					<p class="eyebrow">Downloads &amp; status</p>
-					<h1 id="status-title">Not released <em>yet.</em></h1>
-					<p class="lead">LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default. First releases are planned for 2027, x86_64 first.</p>
-				</div>
+				<ImageFrame class="frame-host--inset frame-host--editorial">
+					<div class="section-head">
+						<p class="eyebrow">Downloads &amp; status</p>
+						<h1 id="status-title">Not released <em>yet.</em></h1>
+						<p class="lead">LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default. First releases are planned for 2027, x86_64 first.</p>
+					</div>
+				</ImageFrame>
 				<div class="callout">
 					<strong class="callout__label">Note</strong>
 					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href="/docs/getting-started/">documentation</a> describes the system and its installation.</p>

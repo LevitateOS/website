@@ -4,6 +4,7 @@ import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
 import CodeBlock from "../components/CodeBlock.astro"
 import ProductEntry from "../components/ProductEntry.astro"
+import ImageFrame from "../components/ImageFrame.astro"
 import { variants } from "../lib/variants"
 
 // The runnable example from tools/recipe/WRITING_RECIPES.md.
@@ -95,9 +96,8 @@ const principles = [
 >
 	<Header />
 	<main id="main" class="home">
-		<div class="frame-host">
-			<section class="frame-hero" aria-labelledby="hero-title">
-				<div class="frame-paper">
+		<section aria-labelledby="hero-title">
+			<ImageFrame class="frame-host--hero">
 					<span class="frame-leaf">
 						<img class="logo-light" src="/brand/levitate-ink.svg" width="56" height="56" alt="" />
 						<img class="logo-dark" src="/brand/levitate-paper.svg" width="56" height="56" alt="" />
@@ -109,19 +109,20 @@ const principles = [
 						<a class="button" href="#recipe">Read a recipe</a>
 						<a class="text-action" href="/docs/getting-started/">Read the docs</a>
 					</div>
-				</div>
-			</section>
-		</div>
+			</ImageFrame>
+		</section>
 
 		<div class="wrap">
 			<section class="story-section" id="principles" aria-labelledby="principles-title">
-				<div class="intro">
-					<div>
-						<p class="eyebrow">Nothing hidden</p>
-						<h2 id="principles-title"><span>Read every package.</span> <span>Undo every update.</span></h2>
+				<ImageFrame class="frame-host--inset frame-host--editorial">
+					<div class="intro">
+						<div>
+							<p class="eyebrow">Nothing hidden</p>
+							<h2 id="principles-title"><span>Read every package.</span> <span>Undo every update.</span></h2>
+						</div>
+						<p class="intro__deck">Most systems ask you to trust the package manager and hope the update boots. LevitateOS shows you the recipe, builds it in isolation, and keeps the previous system one reboot away.</p>
 					</div>
-					<p class="intro__deck">Most systems ask you to trust the package manager and hope the update boots. LevitateOS shows you the recipe, builds it in isolation, and keeps the previous system one reboot away.</p>
-				</div>
+				</ImageFrame>
 				<ol class="principles">
 					{principles.map((item, index) => (
 						<li>
