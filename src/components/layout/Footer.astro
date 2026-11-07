@@ -37,9 +37,8 @@ const columns = [
 	<div class="wrap">
 		<div class="foot-grid">
 			<div class="foot-brand">
-				<img class="logo-light" src="/brand/levitate-lockup-ink.svg" width="149" height="28" alt="LevitateOS" />
-				<img class="logo-dark" src="/brand/levitate-lockup-paper.svg" width="149" height="28" alt="LevitateOS" />
-				<p class="muted">Be your own package maintainer.</p>
+				<img src="/brand/levitate-lockup-paper.svg" width="149" height="28" alt="LevitateOS" />
+				<p>Be your own package maintainer.</p>
 			</div>
 			{columns.map((column) => (
 				<nav aria-labelledby={`foot-${column.title.toLowerCase().replace(/\s+/g, "-")}`}>
@@ -55,7 +54,7 @@ const columns = [
 
 		<div class="foot-base">
 			<div class="foot-links">
-				<span class="muted">&copy; {year} LevitateOS</span>
+				<span>&copy; {year} LevitateOS</span>
 				<a href="/privacy/">Privacy</a>
 				<a href="https://github.com/LevitateOS/LevitateOS/issues">Report an issue</a>
 				<a href="https://github.com/LevitateOS/LevitateOS/blob/master/LICENSE">MIT or Apache-2.0</a>

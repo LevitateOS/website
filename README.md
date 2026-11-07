@@ -55,24 +55,35 @@ Prerequisites:
 
 ## Visual identity
 
-The site uses Field Atlas (identity v2) for LevitateOS and AcornOS: flat paper,
-a separate dark ink per product (pine for LevitateOS, roasted brown for
-AcornOS), Newsreader for wordmarks and headlines, Instrument Sans for reading and
-controls, and a native monospace for code. Red is kept for the active index
-entry and editorial notes.
+The site uses Field Notes v3 for LevitateOS and AcornOS: warm paper, pine for
+LevitateOS and brown for AcornOS, Newsreader for statements and headings,
+Instrument Sans for reading and controls, and a native monospace for code. The
+homepage opens inside a dark botanical frame; red is kept for the one primary
+action per page and the occasional note. Square corners throughout.
 
-- `src/styles/field-atlas/tokens.json` is the single source for palette, type,
-  shape, spacing, layout and motion. After editing it, run
+- `design/field-notes-v3/` holds the identity kit's handoff, its tokens as
+  delivered, the font sources and the original frame artwork with its
+  generation brief. It is reference material and is not served.
+- `src/styles/field-notes/tokens.json` is the site's single source for palette,
+  type, shape, spacing, layout, frame and motion; the night palette is a site
+  addition the kit does not define. After editing it, run
   `python3 scripts/export-tokens.py` to regenerate `tokens.css`. Components use
-  the `--fa-*` role tokens, never raw hex values. `data-product="acorn"` on an
-  element switches `--fa-brand` to the AcornOS ink inside it.
+  the `--fn-*` role tokens, never raw hex values. `data-product="acorn"` on an
+  element switches `--fn-brand` to the AcornOS brown inside it.
+- Every surface sets its own foreground. Light lettering appears only on the red
+  action and the pine ending and footer; the footer stays pine in both
+  appearances.
+- `public/art/levitate-frame.webp` is the frame, drawn as a CSS `border-image`
+  around live paper (`.frame-hero`, slices `15% 10%`, no `fill`). Use it once,
+  at the homepage hero; reading and documentation pages stay on plain paper.
 - `public/brand/` holds the selected marks (standard and micro) and the outlined
-  monochrome lockups: `-ink` on paper, `-paper` at night. Use them as supplied.
-- `public/fonts/field-atlas/` holds the self-hosted WOFF2 files (Latin subsets)
+  monochrome lockups: `-ink` on paper, `-paper` on dark surfaces. Use them as
+  supplied.
+- `public/fonts/field-notes/` holds the self-hosted WOFF2 files (Latin subsets)
   and their SIL OFL licenses. Fonts are never loaded from a third-party CDN.
 - Pages with several sections use the numbered margin index
   (`src/components/PageIndex.astro`); the entry for the section in view is
-  marked with the annotation color and an underline.
+  marked in pine with an underline.
 - Appearance follows the system unless the visitor picks Light or Dark in the
   footer; the choice is kept in `localStorage` and applied before first paint
   through `data-theme` on `<html>`.

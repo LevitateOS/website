@@ -1,0 +1,117 @@
+/* Generated from tokens.json by scripts/export-tokens.py. Do not edit by hand. */
+:root {
+  --fn-font-editorial: "Newsreader", Georgia, serif;
+  --fn-font-ui: "Instrument Sans", Arial, sans-serif;
+  --fn-font-code: ui-monospace, "SFMono-Regular", "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  --fn-text-hero: clamp(42px, 9.7cqi, 100px);
+  --fn-leading-hero: 0.94;
+  --fn-tracking-hero: -0.045em;
+  --fn-text-headline: clamp(2.25rem, 5vw, 3.375rem);
+  --fn-leading-headline: 1.02;
+  --fn-tracking-headline: -0.03em;
+  --fn-text-section: clamp(1.9375rem, 4.1vw, 2.6875rem);
+  --fn-leading-section: 1.08;
+  --fn-tracking-section: -0.025em;
+  --fn-text-body: 1rem;
+  --fn-leading-body: 1.65;
+  --fn-text-lead: 1.0625rem;
+  --fn-text-action: 0.8125rem;
+  --fn-text-support: 0.875rem;
+  --fn-text-label: 0.75rem;
+  --fn-text-kicker: 0.6875rem;
+  --fn-radius: 0px;
+  --fn-rule-width: 1px;
+  --fn-control-min: 44px;
+  --fn-space-1: 4px;
+  --fn-space-2: 8px;
+  --fn-space-3: 12px;
+  --fn-space-4: 16px;
+  --fn-space-5: 24px;
+  --fn-space-6: 32px;
+  --fn-space-7: 48px;
+  --fn-space-8: 64px;
+  --fn-space-9: 96px;
+  --fn-page-padding: 40px;
+  --fn-index-width: 108px;
+  --fn-index-gutter: 34px;
+  --fn-reading-max: 620px;
+  --fn-deck-max: 370px;
+  --fn-hero-leaf: 56px;
+  --fn-frame-image: url("/art/levitate-frame.webp");
+  --fn-frame-width: clamp(20px, calc(8.24cqi - 6.37px), 78px);
+  --fn-frame-slice: 15% 10%;
+  --fn-duration-control: 160ms;
+  --fn-ease: ease;
+  --fn-lockup-height: 34px;
+  --fn-lockup-height-compact: 28px;
+}
+:root, :root[data-theme="light"] {
+  color-scheme: light;
+  --fn-surface: #F2EEE4;
+  --fn-surface-raised: #FCFAF5;
+  --fn-text: #14221A;
+  --fn-text-secondary: #59645B;
+  --fn-rule: #BFC6B8;
+  --fn-boundary: #7A8075;
+  --fn-annotation: #B22F27;
+  --fn-levitate: #214438;
+  --fn-acorn: #644532;
+  --fn-action: #B22F27;
+  --fn-action-hover: #95271F;
+  --fn-on-action: #F2EEE4;
+  --fn-ending: #214438;
+  --fn-on-ending: #F2EEE4;
+  --fn-on-ending-secondary: #C3CEBF;
+  --fn-frame: #214438;
+  --fn-brand: var(--fn-levitate);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --fn-surface: #14221A;
+  --fn-surface-raised: #1D2D24;
+  --fn-text: #F2EEE4;
+  --fn-text-secondary: #BAC5B7;
+  --fn-rule: #3A4B40;
+  --fn-boundary: #7A8075;
+  --fn-annotation: #F0A497;
+  --fn-levitate: #C7D9BA;
+  --fn-acorn: #E4CBA6;
+  --fn-action: #B22F27;
+  --fn-action-hover: #95271F;
+  --fn-on-action: #F2EEE4;
+  --fn-ending: #214438;
+  --fn-on-ending: #F2EEE4;
+  --fn-on-ending-secondary: #C3CEBF;
+  --fn-frame: #214438;
+  --fn-brand: var(--fn-levitate);
+}
+@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]):not([data-theme="dark"]) {
+  color-scheme: dark;
+  --fn-surface: #14221A;
+  --fn-surface-raised: #1D2D24;
+  --fn-text: #F2EEE4;
+  --fn-text-secondary: #BAC5B7;
+  --fn-rule: #3A4B40;
+  --fn-boundary: #7A8075;
+  --fn-annotation: #F0A497;
+  --fn-levitate: #C7D9BA;
+  --fn-acorn: #E4CBA6;
+  --fn-action: #B22F27;
+  --fn-action-hover: #95271F;
+  --fn-on-action: #F2EEE4;
+  --fn-ending: #214438;
+  --fn-on-ending: #F2EEE4;
+  --fn-on-ending-secondary: #C3CEBF;
+  --fn-frame: #214438;
+  --fn-brand: var(--fn-levitate);
+}
+}
+[data-product="acorn"] {
+  --fn-brand: var(--fn-acorn);
+}
+@media (prefers-reduced-motion: reduce) {
+:root {
+  --fn-duration-control: 0ms;
+}
+}

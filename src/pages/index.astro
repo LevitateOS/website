@@ -4,7 +4,6 @@ import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
 import CodeBlock from "../components/CodeBlock.astro"
 import ProductEntry from "../components/ProductEntry.astro"
-import PageIndex from "../components/PageIndex.astro"
 import { variants } from "../lib/variants"
 
 // The runnable example from tools/recipe/WRITING_RECIPES.md.
@@ -83,50 +82,57 @@ const acknowledgments = [
 	{ name: "Claude Code", href: "https://claude.ai/claude-code", text: "For AI-assisted development that accelerated this project." },
 	{ name: "Rust", href: "https://rust-lang.org", text: "For the language the rec* tools and recipe are written in." },
 ]
-const sections = [
-	{ id: "variants", label: "Variants" },
-	{ id: "recipe", label: "Recipes" },
-	{ id: "updates", label: "Updates" },
-	{ id: "install", label: "Installing" },
-	{ id: "releases", label: "Releases" },
-	{ id: "thanks", label: "Thanks" },
+const principles = [
+	{ href: "#recipe", title: "Read the recipe.", text: "Every package is a Rhai file with its version, its checksum and the steps that build it. Open it before you install it." },
+	{ href: "#updates", title: "Try the update.", text: "The next system boots once, as a trial, in the other slot. Keep it if it comes up healthy; fall back if it does not." },
+	{ href: "#install", title: "Install with the guide open.", text: "The live ISO puts the installation guide beside your shell, so each step is one you chose and can explain." },
 ]
 ---
 
 <BaseLayout
-	title="LevitateOS: a system of your own"
+	title="LevitateOS: know what you run"
 	description="A Linux distribution built around readable package recipes and explicit control: recipes built in isolated Ginux domains and atomic A/B updates by default."
 >
 	<Header />
-	<div class="wrap atlas">
-		<PageIndex items={sections} />
-		<main id="main" class="atlas__main">
-			<section class="story-section hero" aria-labelledby="hero-title">
-				<div>
+	<main id="main" class="home">
+		<div class="frame-host">
+			<section class="frame-hero" aria-labelledby="hero-title">
+				<div class="frame-paper">
+					<span class="frame-leaf">
+						<img class="logo-light" src="/brand/levitate-ink.svg" width="56" height="56" alt="" />
+						<img class="logo-dark" src="/brand/levitate-paper.svg" width="56" height="56" alt="" />
+					</span>
 					<p class="eyebrow">Be your own package maintainer</p>
-					<h1 id="hero-title">A system <em>of your own.</em></h1>
-					<p class="lead">A Linux distribution built around readable package recipes and explicit control.</p>
+					<h1 class="hero-title" id="hero-title"><span>Know what</span> <span>you <em>run.</em></span></h1>
+					<p class="hero-deck">A Linux distribution where every package is a recipe you can read, and every update is a trial you can undo.</p>
 					<div class="actions">
-						<a class="button" href="#recipe">Explore recipes</a>
+						<a class="button" href="#recipe">Read a recipe</a>
 						<a class="text-action" href="/docs/getting-started/">Read the docs</a>
 					</div>
 				</div>
-				<figure class="specimen">
-					<img class="logo-light" src="/brand/levitate-ink.svg" width="112" height="112" alt="" />
-					<img class="logo-dark" src="/brand/levitate-paper.svg" width="112" height="112" alt="" />
-					<figcaption>The hovering leaf</figcaption>
-				</figure>
 			</section>
+		</div>
 
-			<section class="story-section" id="variants" aria-labelledby="variants-title">
-				<div class="section-head">
-					<p class="eyebrow">Two variants, one pipeline</p>
-					<h2 id="variants-title">Choose a foundation.</h2>
-					<p>Both variants are built from their own declarations by the same pipeline. Both install as A/B systems by default; a mutable install is an explicit opt-in.</p>
+		<div class="wrap">
+			<section class="story-section" id="principles" aria-labelledby="principles-title">
+				<div class="intro">
+					<div>
+						<p class="eyebrow">Nothing hidden</p>
+						<h2 id="principles-title"><span>Read every package.</span> <span>Undo every update.</span></h2>
+					</div>
+					<p class="intro__deck">Most systems ask you to trust the package manager and hope the update boots. LevitateOS shows you the recipe, builds it in isolation, and keeps the previous system one reboot away.</p>
 				</div>
-				<div class="entries">
-					{variants.map((variant) => <ProductEntry variant={variant} />)}
-				</div>
+				<ol class="principles">
+					{principles.map((item, index) => (
+						<li>
+							<span class="principles__n" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+							<div>
+								<h3><a href={item.href}>{item.title}</a></h3>
+								<p>{item.text}</p>
+							</div>
+						</li>
+					))}
+				</ol>
 			</section>
 
 			<section class="story-section" id="recipe" aria-labelledby="recipe-title">
@@ -186,15 +192,14 @@ const sections = [
 				</div>
 			</section>
 
-			<section class="story-section" id="releases" aria-labelledby="releases-title">
+			<section class="story-section" id="variants" aria-labelledby="variants-title">
 				<div class="section-head">
-					<p class="eyebrow">Releases</p>
-					<h2 id="releases-title">Not released yet.</h2>
-					<p>The first releases of LevitateOS and AcornOS are planned for 2027, x86_64 first. The status page tracks each variant and its requirements; the source is public now.</p>
+					<p class="eyebrow">Two variants, one pipeline</p>
+					<h2 id="variants-title">Choose a foundation.</h2>
+					<p>Both variants are built from their own declarations by the same pipeline. Both install as A/B systems by default; a mutable install is an explicit opt-in.</p>
 				</div>
-				<div class="actions">
-					<a class="button" href="/download/">Downloads &amp; status</a>
-					<a class="text-action" href="https://github.com/LevitateOS/LevitateOS">View the source</a>
+				<div class="entries">
+					{variants.map((variant) => <ProductEntry variant={variant} />)}
 				</div>
 			</section>
 
@@ -212,7 +217,20 @@ const sections = [
 					))}
 				</ul>
 			</section>
-		</main>
-	</div>
+		</div>
+
+		<section class="ending" id="releases" aria-labelledby="releases-title">
+			<div class="wrap ending__row">
+				<div>
+					<h2 id="releases-title">Not released yet. <em>Planned for 2027.</em></h2>
+					<p>LevitateOS and AcornOS ship first for x86_64. The source is public now, and the status page tracks each variant.</p>
+				</div>
+				<div class="actions">
+					<a class="text-action" href="/download/">Downloads &amp; status</a>
+					<a class="text-action" href="https://github.com/LevitateOS/LevitateOS">View the source</a>
+				</div>
+			</div>
+		</section>
+	</main>
 	<Footer />
 </BaseLayout>

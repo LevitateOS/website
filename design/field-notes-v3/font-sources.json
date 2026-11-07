@@ -1,0 +1,39 @@
+{
+  "provider_stylesheet": "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Instrument+Sans:wght@400..600&display=swap",
+  "files": [
+    {
+      "family": "Instrument Sans",
+      "style": "normal",
+      "filename": "instrument-sans.woff2",
+      "source": "https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2",
+      "bytes": 30092,
+      "weight_rule": "400 600"
+    },
+    {
+      "family": "Newsreader",
+      "style": "italic",
+      "filename": "newsreader-italic.woff2",
+      "source": "https://fonts.gstatic.com/s/newsreader/v26/cY9CfjOCX1hbuyalUrK439vCjohC.woff2",
+      "bytes": 146872,
+      "weight_rule": "400 600"
+    },
+    {
+      "family": "Newsreader",
+      "style": "normal",
+      "filename": "newsreader-normal.woff2",
+      "source": "https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2",
+      "bytes": 132000,
+      "weight_rule": "400 600"
+    }
+  ],
+  "licenses": [
+    {
+      "filename": "newsreader-OFL.txt",
+      "url": "https://raw.githubusercontent.com/productiontype/Newsreader/master/OFL.txt"
+    },
+    {
+      "filename": "instrument-sans-OFL.txt",
+      "url": "https://raw.githubusercontent.com/Instrument/instrument-sans/master/OFL.txt"
+    }
+  ]
+}
