@@ -2,9 +2,15 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
+import PageIndex from "../components/PageIndex.astro"
 import { variants } from "../lib/variants"
 
-const statusClass = { available: "status--available", "in-development": "", planned: "status--planned" } as const
+const sections = [
+	{ id: "status", label: "Status" },
+	{ id: "requirements", label: "Requirements" },
+	...variants.map((variant) => ({ id: variant.id, label: variant.name })),
+	{ id: "before-installing", label: "Installing" },
+]
 ---
 
 <BaseLayout
@@ -12,30 +18,26 @@ const statusClass = { available: "status--available", "in-development": "", plan
 	description="Release status and system requirements for LevitateOS and AcornOS. Both are in development; first releases are planned for 2027, x86_64 first."
 >
 	<Header />
-	<main id="main">
-		<section class="section">
-			<div class="wrap">
+	<div class="wrap atlas">
+		<PageIndex items={sections} />
+		<main id="main" class="atlas__main">
+			<section class="story-section" id="status" aria-labelledby="status-title">
 				<div class="section-head">
 					<p class="eyebrow">Downloads &amp; status</p>
-					<h1>Not released yet.</h1>
-					<p class="lead">
-						LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default. First releases are planned for 2027, x86_64 first.
-					</p>
+					<h1 id="status-title">Not released <em>yet.</em></h1>
+					<p class="lead">LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default. First releases are planned for 2027, x86_64 first.</p>
 				</div>
-
 				<div class="callout">
 					<strong class="callout__label">Note</strong>
 					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href="/docs/getting-started/">documentation</a> describes the system and its installation.</p>
 				</div>
-			</div>
-		</section>
+			</section>
 
-		<section class="section" aria-labelledby="requirements-title">
-			<div class="wrap">
+			<section class="story-section" id="requirements" aria-labelledby="requirements-title">
 				<div class="section-head">
 					<h2 id="requirements-title">Requirements for both variants</h2>
 				</div>
-				<div class="table-scroll" role="region" tabindex="0" aria-labelledby="requirements-title">
+				<div class="table-scroll prose" role="region" tabindex="0" aria-labelledby="requirements-title">
 					<table class="data-table">
 						<thead>
 							<tr><th scope="col">Component</th><th scope="col">Requirement</th></tr>
@@ -48,86 +50,79 @@ const statusClass = { available: "status--available", "in-development": "", plan
 						</tbody>
 					</table>
 				</div>
-			</div>
-		</section>
+			</section>
 
-		<section class="section" aria-labelledby="variants-title">
-			<div class="wrap">
-				<h2 id="variants-title" class="sr-only">Variants</h2>
-				<div class="release-list">
-					{variants.map((variant) => (
-						<article class="release" id={variant.id} aria-labelledby={`release-${variant.id}`}>
-							<div class="release__intro">
-								<h3 class="lockup" id={`release-${variant.id}`}>
-									<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="48" alt={variant.name} />
-									<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="48" alt={variant.name} />
-								</h3>
-								<p class:list={["status", statusClass[variant.status]]}>{variant.statusLabel} · {variant.release}</p>
-								<p>{variant.description}</p>
+			{variants.map((variant) => (
+				<section class="story-section release" id={variant.id} data-product={variant.id} aria-labelledby={`release-${variant.id}`}>
+					<div class="release__intro">
+						<h2 class="lockup" id={`release-${variant.id}`}>
+							<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="40" alt={variant.name} />
+							<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="40" alt={variant.name} />
+						</h2>
+						<p class:list={["status", { "status--available": variant.status === "available" }]}>{variant.statusLabel} · {variant.release}</p>
+						<p>{variant.description}</p>
+					</div>
+					<div class="release__details">
+						<dl class="facts">
+							<dt>Stack</dt>
+							<dd>{variant.stack}</dd>
+							<dt>Base</dt>
+							<dd>{variant.base}</dd>
+							<dt>Format</dt>
+							<dd>{variant.format}</dd>
+							<dt>Architecture</dt>
+							<dd>{variant.architectures}</dd>
+							<dt>Version</dt>
+							<dd>None released</dd>
+						</dl>
+						<div class="tradeoffs">
+							<div>
+								<h3>Strengths</h3>
+								<ul>{variant.strengths.map((item) => <li>{item}</li>)}</ul>
 							</div>
-							<div class="release__details">
-								<dl class="facts">
-									<dt>Stack</dt>
-									<dd>{variant.stack}</dd>
-									<dt>Base</dt>
-									<dd>{variant.base}</dd>
-									<dt>Format</dt>
-									<dd>{variant.format}</dd>
-									<dt>Arch</dt>
-									<dd>{variant.architectures}</dd>
-									<dt>Version</dt>
-									<dd>None released</dd>
-								</dl>
-								<div class="tradeoffs">
-									<div>
-										<h4>Strengths</h4>
-										<ul>{variant.strengths.map((item) => <li>{item}</li>)}</ul>
-									</div>
-									<div>
-										<h4>Trade-offs</h4>
-										<ul>{variant.tradeoffs.map((item) => <li>{item}</li>)}</ul>
-									</div>
-								</div>
-								<div class="table-scroll" role="region" tabindex="0" aria-label={`${variant.name} memory and disk`}>
-									<table class="data-table">
-										<thead>
-											<tr><th scope="col">Resource</th><th scope="col">Minimum</th><th scope="col">Recommended</th></tr>
-										</thead>
-										<tbody>
-											<tr><th scope="row">RAM</th><td>{variant.ram.minimum}</td><td>{variant.ram.recommended}</td></tr>
-											<tr><th scope="row">Disk</th><td>{variant.disk.minimum}</td><td>{variant.disk.recommended}</td></tr>
-										</tbody>
-									</table>
-								</div>
-								<p><a class="text-action" href="/docs/variants/">Compare the variants in the docs</a></p>
+							<div>
+								<h3>Trade-offs</h3>
+								<ul>{variant.tradeoffs.map((item) => <li>{item}</li>)}</ul>
 							</div>
-						</article>
-					))}
-				</div>
-			</div>
-		</section>
+						</div>
+						<div class="table-scroll" role="region" tabindex="0" aria-label={`${variant.name} memory and disk`}>
+							<table class="data-table">
+								<thead>
+									<tr><th scope="col">Resource</th><th scope="col">Minimum</th><th scope="col">Recommended</th></tr>
+								</thead>
+								<tbody>
+									<tr><th scope="row">RAM</th><td>{variant.ram.minimum}</td><td>{variant.ram.recommended}</td></tr>
+									<tr><th scope="row">Disk</th><td>{variant.disk.minimum}</td><td>{variant.disk.recommended}</td></tr>
+								</tbody>
+							</table>
+						</div>
+						<p><a class="text-action" href="/docs/variants/">Compare the variants</a></p>
+					</div>
+				</section>
+			))}
 
-		<section class="section" aria-labelledby="install-title">
-			<div class="wrap split">
-				<div class="split__copy">
-					<h2 id="install-title">Before installing</h2>
-					<p>Installing overwrites the target disk. Back up anything you need first. LevitateOS collects no telemetry.</p>
-					<p>Each ISO boots into the install screen: a shell beside the full installation guide. <kbd class="inline-code">Ctrl-]</kbd> switches pane, <kbd class="inline-code">j</kbd>/<kbd class="inline-code">k</kbd> scroll the guide, and <kbd class="inline-code">Ctrl-q</kbd> leaves the install screen.</p>
-					<div class="actions">
-						<a class="button button--secondary" href="/docs/installation/">Read the installation guide</a>
+			<section class="story-section" id="before-installing" aria-labelledby="install-title">
+				<div class="split">
+					<div class="split__copy">
+						<h2 id="install-title">Before installing</h2>
+						<p>Installing overwrites the target disk. Back up anything you need first. LevitateOS collects no telemetry.</p>
+						<p>Each ISO boots into the install screen: a shell beside the full installation guide. <kbd class="inline-code">Ctrl-]</kbd> switches pane, <kbd class="inline-code">j</kbd>/<kbd class="inline-code">k</kbd> scroll the guide, and <kbd class="inline-code">Ctrl-q</kbd> leaves the install screen.</p>
+						<div class="actions">
+							<a class="text-action" href="/docs/installation/">Read the installation guide</a>
+						</div>
+					</div>
+					<div class="split__example">
+						<p class="eyebrow">Steps</p>
+						<ol class="docs-steps">
+							<li><span class="docs-steps__number" aria-hidden="true">01</span><p>Partition the disk with <code class="inline-code">recpart</code>. The A/B layout is the default.</p></li>
+							<li><span class="docs-steps__number" aria-hidden="true">02</span><p>Extract the system with <code class="inline-code">recstrap</code>.</p></li>
+							<li><span class="docs-steps__number" aria-hidden="true">03</span><p>Write the fstab with <code class="inline-code">recfstab</code>.</p></li>
+							<li><span class="docs-steps__number" aria-hidden="true">04</span><p>Configure the system and its boot entries with <code class="inline-code">recsetup</code>.</p></li>
+						</ol>
 					</div>
 				</div>
-				<div class="split__example">
-					<p class="eyebrow">Steps</p>
-					<ol class="docs-steps">
-						<li><span class="docs-steps__number" aria-hidden="true">01</span><p>Partition the disk with <code class="inline-code">recpart</code>. The A/B layout is the default.</p></li>
-						<li><span class="docs-steps__number" aria-hidden="true">02</span><p>Extract the system with <code class="inline-code">recstrap</code>.</p></li>
-						<li><span class="docs-steps__number" aria-hidden="true">03</span><p>Write the fstab with <code class="inline-code">recfstab</code>.</p></li>
-						<li><span class="docs-steps__number" aria-hidden="true">04</span><p>Configure the system and its boot entries with <code class="inline-code">recsetup</code>.</p></li>
-					</ol>
-				</div>
-			</div>
-		</section>
-	</main>
+			</section>
+		</main>
+	</div>
 	<Footer />
 </BaseLayout>

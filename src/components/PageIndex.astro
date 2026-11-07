@@ -1,0 +1,52 @@
+---
+interface Props {
+	items: { id: string; label: string }[]
+	label?: string
+}
+
+const { items, label = "On this page" } = Astro.props
+---
+
+<nav class="page-index" aria-label={label} data-page-index>
+	<ol>
+		{items.map((item, i) => (
+			<li>
+				<a href={`#${item.id}`}>
+					<span class="page-index__n">{String(i + 1).padStart(2, "0")}</span>
+					<span>{item.label}</span>
+				</a>
+			</li>
+		))}
+	</ol>
+</nav>
+
+<script>
+	// Mark the index entry for the section currently in view (and the one just
+	// followed); the active entry gets the annotation color and an underline.
+	for (const index of document.querySelectorAll<HTMLElement>("[data-page-index]")) {
+		const links = [...index.querySelectorAll<HTMLAnchorElement>("a[href^='#']")]
+		const sections = links
+			.map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+			.filter((el): el is HTMLElement => el !== null)
+
+		const setActive = (id: string) => {
+			for (const link of links) {
+				if (link.hash === `#${id}`) link.setAttribute("aria-current", "true")
+				else link.removeAttribute("aria-current")
+			}
+		}
+
+		const visible = new Map<string, number>()
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) visible.set(entry.target.id, entry.intersectionRatio)
+				// The first section, in page order, that is meaningfully on screen.
+				const current = sections.find((section) => (visible.get(section.id) ?? 0) > 0)
+				if (current) setActive(current.id)
+			},
+			{ rootMargin: "-20% 0px -55% 0px", threshold: [0, 0.01] },
+		)
+		sections.forEach((section) => observer.observe(section))
+		links.forEach((link) => link.addEventListener("click", () => setActive(link.hash.slice(1))))
+	}
+</script>

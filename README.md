@@ -55,21 +55,24 @@ Prerequisites:
 
 ## Visual identity
 
-The site uses the Field Notes identity for LevitateOS and AcornOS: warm paper,
-forest ink, restrained red, Source Serif 4 display headings, Source Sans 3 for
-reading and Source Code Pro for code.
+The site uses Field Atlas (identity v2) for LevitateOS and AcornOS: flat paper,
+a separate dark ink per product (pine for LevitateOS, roasted brown for
+AcornOS), Newsreader for wordmarks and headlines, Instrument Sans for reading and
+controls, and a native monospace for code. Red is kept for the active index
+entry and editorial notes.
 
-- `src/styles/field-notes/tokens.json` is the single source for colors, type,
-  spacing, layout and motion. After editing it, run
+- `src/styles/field-atlas/tokens.json` is the single source for palette, type,
+  shape, spacing, layout and motion. After editing it, run
   `python3 scripts/export-tokens.py` to regenerate `tokens.css`. Components use
-  the `--fn-*` role tokens, never raw hex values.
-- `public/brand/` holds the selected marks and outlined lockups
-  (hovering leaf for LevitateOS, sculpted acorn for AcornOS). Use them as
-  supplied; pick the `-color` lockup on light surfaces and `-reversed` on dark.
-- `public/fonts/field-notes/` holds the self-hosted WOFF2 files and their
-  licenses. Fonts are never loaded from a third-party CDN.
-- `public/illustrations/oak-engraving.png` is the one botanical illustration,
-  tinted through a CSS mask on the homepage hero only.
+  the `--fa-*` role tokens, never raw hex values. `data-product="acorn"` on an
+  element switches `--fa-brand` to the AcornOS ink inside it.
+- `public/brand/` holds the selected marks (standard and micro) and the outlined
+  monochrome lockups: `-ink` on paper, `-paper` at night. Use them as supplied.
+- `public/fonts/field-atlas/` holds the self-hosted WOFF2 files (Latin subsets)
+  and their SIL OFL licenses. Fonts are never loaded from a third-party CDN.
+- Pages with several sections use the numbered margin index
+  (`src/components/PageIndex.astro`); the entry for the section in view is
+  marked with the annotation color and an underline.
 - Appearance follows the system unless the visitor picks Light or Dark in the
   footer; the choice is kept in `localStorage` and applied before first paint
   through `data-theme` on `<html>`.

@@ -4,6 +4,7 @@ import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
 import CodeBlock from "../components/CodeBlock.astro"
 import ProductEntry from "../components/ProductEntry.astro"
+import PageIndex from "../components/PageIndex.astro"
 import { variants } from "../lib/variants"
 
 // The runnable example from tools/recipe/WRITING_RECIPES.md.
@@ -82,6 +83,14 @@ const acknowledgments = [
 	{ name: "Claude Code", href: "https://claude.ai/claude-code", text: "For AI-assisted development that accelerated this project." },
 	{ name: "Rust", href: "https://rust-lang.org", text: "For the language the rec* tools and recipe are written in." },
 ]
+const sections = [
+	{ id: "variants", label: "Variants" },
+	{ id: "recipe", label: "Recipes" },
+	{ id: "updates", label: "Updates" },
+	{ id: "install", label: "Installing" },
+	{ id: "releases", label: "Releases" },
+	{ id: "thanks", label: "Thanks" },
+]
 ---
 
 <BaseLayout
@@ -89,113 +98,110 @@ const acknowledgments = [
 	description="A Linux distribution built around readable package recipes and explicit control: recipes built in isolated Ginux domains and atomic A/B updates by default."
 >
 	<Header />
-	<main id="main">
-		<section class="section">
-			<div class="wrap hero">
-				<div class="hero__copy">
+	<div class="wrap atlas">
+		<PageIndex items={sections} />
+		<main id="main" class="atlas__main">
+			<section class="story-section hero" aria-labelledby="hero-title">
+				<div>
 					<p class="eyebrow">Be your own package maintainer</p>
-					<h1 class="hero__title">A system of your own.</h1>
+					<h1 id="hero-title">A system <em>of your own.</em></h1>
 					<p class="lead">A Linux distribution built around readable package recipes and explicit control.</p>
 					<div class="actions">
-						<a class="button" href="/#recipe">Explore recipes</a>
-						<a href="/docs/getting-started/">Read the docs</a>
+						<a class="button" href="#recipe">Explore recipes</a>
+						<a class="text-action" href="/docs/getting-started/">Read the docs</a>
 					</div>
 				</div>
-				<div class="hero__art" aria-hidden="true"></div>
-			</div>
-		</section>
+				<figure class="specimen">
+					<img class="logo-light" src="/brand/levitate-ink.svg" width="112" height="112" alt="" />
+					<img class="logo-dark" src="/brand/levitate-paper.svg" width="112" height="112" alt="" />
+					<figcaption>The hovering leaf</figcaption>
+				</figure>
+			</section>
 
-		<section class="section" id="variants" aria-labelledby="variants-title">
-			<div class="wrap">
+			<section class="story-section" id="variants" aria-labelledby="variants-title">
 				<div class="section-head">
-					<p class="eyebrow">Two variants / one pipeline</p>
+					<p class="eyebrow">Two variants, one pipeline</p>
 					<h2 id="variants-title">Choose a foundation.</h2>
 					<p>Both variants are built from their own declarations by the same pipeline. Both install as A/B systems by default; a mutable install is an explicit opt-in.</p>
 				</div>
 				<div class="entries">
-					{variants.map((variant) => (
-						<ProductEntry variant={variant} />
-					))}
+					{variants.map((variant) => <ProductEntry variant={variant} />)}
 				</div>
-			</div>
-		</section>
+			</section>
 
-		<section class="section" id="recipe" aria-labelledby="recipe-title">
-			<div class="wrap split">
-				<div class="split__copy">
-					<p class="eyebrow">Recipes, not repositories</p>
-					<h2 id="recipe-title">Every package is a file you can read.</h2>
-					<p>Instead of <code class="inline-code">apt</code> or <code class="inline-code">dnf</code>, LevitateOS uses <code class="inline-code">recipe</code>. A recipe is a Rhai script with the package's facts, checks that inspect the real files, and hooks that acquire, build and install it.</p>
-					<p>Recipes run inside a <a href="https://github.com/gmkurtzer/ginux">Ginux</a> domain, a userspace kernel that gives each build only the inputs, network hosts and resources it was granted. On an A/B system, recipe changes compose the inactive slot, never the system you are running.</p>
-					<ul class="checklist">
-						{recipePoints.map((point) => <li>{point}</li>)}
-					</ul>
-					<div class="actions">
-						<a href="/docs/recipe-format/">Read the recipe format</a>
+			<section class="story-section" id="recipe" aria-labelledby="recipe-title">
+				<div class="split">
+					<div class="split__copy">
+						<p class="eyebrow">Recipes, not repositories</p>
+						<h2 id="recipe-title">Every package is a file <em>you can read.</em></h2>
+						<p>Instead of <code class="inline-code">apt</code> or <code class="inline-code">dnf</code>, LevitateOS uses <code class="inline-code">recipe</code>. A recipe is a Rhai script with the package's facts, checks that inspect the real files, and hooks that acquire, build and install it.</p>
+						<p>Recipes run inside a <a href="https://github.com/gmkurtzer/ginux">Ginux</a> domain, a userspace kernel that gives each build only the inputs, network hosts and resources it was granted. On an A/B system, recipe changes compose the inactive slot, never the system you are running.</p>
+						<ul class="notes">
+							{recipePoints.map((point) => <li>{point}</li>)}
+						</ul>
+						<div class="actions">
+							<a class="text-action" href="/docs/recipe-format/">Read the recipe format</a>
+						</div>
+					</div>
+					<div class="split__example">
+						<CodeBlock code={recipeCode} language="rhai" label="hello.rhai · tools/recipe/WRITING_RECIPES.md" />
 					</div>
 				</div>
-				<div class="split__example">
-					<CodeBlock code={recipeCode} language="rhai" label="hello.rhai · tools/recipe/WRITING_RECIPES.md" />
-				</div>
-			</div>
-		</section>
+			</section>
 
-		<section class="section" id="updates" aria-labelledby="updates-title">
-			<div class="wrap split">
-				<div class="split__copy">
-					<p class="eyebrow">Atomic updates</p>
-					<h2 id="updates-title">Updates you can undo.</h2>
-					<p>The disk holds two system slots and one running system. An update never changes the slot you are booted from.</p>
-					<p><code class="inline-code">recab</code> writes the new system into the other slot, carries your hostname, users and enabled services across, and boots it once. Mutable mode exists, but it is an explicit opt-in without that safety net.</p>
-					<ul class="checklist">
-						{updatePoints.map((point) => <li>{point}</li>)}
-					</ul>
-					<div class="actions">
-						<a href="/docs/atomic-updates/">Read about A/B updates</a>
+			<section class="story-section" id="updates" aria-labelledby="updates-title">
+				<div class="split">
+					<div class="split__copy">
+						<p class="eyebrow">Atomic updates</p>
+						<h2 id="updates-title">Updates <em>you can undo.</em></h2>
+						<p>The disk holds two system slots and one running system. An update never changes the slot you are booted from.</p>
+						<p><code class="inline-code">recab</code> writes the new system into the other slot, carries your hostname, users and enabled services across, and boots it once. Mutable mode exists, but it is an explicit opt-in without that safety net.</p>
+						<ul class="notes">
+							{updatePoints.map((point) => <li>{point}</li>)}
+						</ul>
+						<div class="actions">
+							<a class="text-action" href="/docs/atomic-updates/">Read about A/B updates</a>
+						</div>
+					</div>
+					<div class="split__example">
+						<CodeBlock code={updateCode} language="bash" label="An update · tools/recab/README.md" />
 					</div>
 				</div>
-				<div class="split__example">
-					<CodeBlock code={updateCode} language="bash" label="An update · tools/recab/README.md" />
-				</div>
-			</div>
-		</section>
+			</section>
 
-		<section class="section" id="docs" aria-labelledby="docs-title">
-			<div class="wrap split">
-				<div class="split__copy">
-					<p class="eyebrow">Installation</p>
-					<h2 id="docs-title">The guide sits beside your shell.</h2>
-					<p>LevitateOS installs the Arch way, one step at a time. The live ISO boots into an install screen: a shell on one side and the full installation guide on the other, with <kbd class="inline-code">Ctrl-]</kbd> switching between them.</p>
-					<p>The same pages are on this site, so you can read ahead before you boot.</p>
-					<div class="actions">
-						<a class="button button--secondary" href="/docs/installation/">Read the installation guide</a>
+			<section class="story-section" id="install" aria-labelledby="install-title">
+				<div class="split">
+					<div class="split__copy">
+						<p class="eyebrow">Installation</p>
+						<h2 id="install-title">The guide sits <em>beside your shell.</em></h2>
+						<p>LevitateOS installs the Arch way, one step at a time. The live ISO boots into an install screen: a shell on one side and the full installation guide on the other, with <kbd class="inline-code">Ctrl-]</kbd> switching between them.</p>
+						<p>The same pages are on this site, so you can read ahead before you boot.</p>
+						<div class="actions">
+							<a class="text-action" href="/docs/installation/">Read the installation guide</a>
+						</div>
+					</div>
+					<div class="split__example">
+						<CodeBlock code={installCode} language="bash" label="Installing · README.md" />
 					</div>
 				</div>
-				<div class="split__example">
-					<CodeBlock code={installCode} language="bash" label="Installing · README.md" />
-				</div>
-			</div>
-		</section>
+			</section>
 
-		<section class="section" aria-labelledby="status-title">
-			<div class="wrap">
+			<section class="story-section" id="releases" aria-labelledby="releases-title">
 				<div class="section-head">
 					<p class="eyebrow">Releases</p>
-					<h2 id="status-title">Not released yet.</h2>
-					<p>The first releases of LevitateOS and AcornOS are planned for 2027, x86_64 first. The downloads page tracks each variant's status and requirements; the source is public now.</p>
+					<h2 id="releases-title">Not released yet.</h2>
+					<p>The first releases of LevitateOS and AcornOS are planned for 2027, x86_64 first. The status page tracks each variant and its requirements; the source is public now.</p>
 				</div>
-				<div class="actions actions--flush">
+				<div class="actions">
 					<a class="button" href="/download/">Downloads &amp; status</a>
-					<a href="https://github.com/LevitateOS/LevitateOS">View the source</a>
+					<a class="text-action" href="https://github.com/LevitateOS/LevitateOS">View the source</a>
 				</div>
-			</div>
-		</section>
+			</section>
 
-		<section class="section" aria-labelledby="thanks-title">
-			<div class="wrap">
+			<section class="story-section" id="thanks" aria-labelledby="thanks-title">
 				<div class="section-head">
 					<p class="eyebrow">Acknowledgments</p>
-					<h2 id="thanks-title">Standing on the shoulders of giants.</h2>
+					<h2 id="thanks-title">Standing on the shoulders <em>of giants.</em></h2>
 				</div>
 				<ul class="ack-list">
 					{acknowledgments.map((item) => (
@@ -205,8 +211,8 @@ const acknowledgments = [
 						</li>
 					))}
 				</ul>
-			</div>
-		</section>
-	</main>
+			</section>
+		</main>
+	</div>
 	<Footer />
 </BaseLayout>

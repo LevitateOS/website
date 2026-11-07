@@ -27,7 +27,7 @@ export const variants: Variant[] = [
 	{
 		id: "levitate",
 		name: "LevitateOS",
-		lockup: { light: "/brand/levitate-lockup-color.svg", dark: "/brand/levitate-lockup-reversed.svg", width: 265.026 },
+		lockup: { light: "/brand/levitate-lockup-ink.svg", dark: "/brand/levitate-lockup-paper.svg", width: 213.026 },
 		role: "The broad-compatibility choice, on a core system from signed Fedora RPMs.",
 		description:
 			"Run Linux software without patching, use familiar GNU tools, and find answers to most questions online. Choose it if you want the widest software compatibility.",
@@ -47,7 +47,7 @@ export const variants: Variant[] = [
 	{
 		id: "acorn",
 		name: "AcornOS",
-		lockup: { light: "/brand/acorn-lockup-color.svg", dark: "/brand/acorn-lockup-reversed.svg", width: 230.028 },
+		lockup: { light: "/brand/acorn-lockup-ink.svg", dark: "/brand/acorn-lockup-paper.svg", width: 180.947 },
 		role: "The musl and OpenRC sibling in the LevitateOS family.",
 		description:
 			"A smaller, simpler base built by the same pipeline. Some software needs patching or compiling yourself, and you can see exactly what is running.",

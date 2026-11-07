@@ -1,6 +1,5 @@
 ---
 import { Code } from "astro:components"
-import { fieldNotesCodeTheme } from "../lib/codeTheme"
 
 interface Props {
 	code: string
@@ -25,11 +24,11 @@ const regionLabel = label ? `Code: ${label}` : `${language} code`
 		<button type="button" class="copy-button" data-code={copyText ?? code} aria-label={label ? `Copy ${label}` : "Copy code"}>Copy</button>
 	</div>
 	<div role="region" tabindex="0" aria-label={regionLabel} class="code-region">
-		<Code code={code} lang={lang as any} theme={fieldNotesCodeTheme as any} />
+		<Code code={code} lang={lang as any} theme="css-variables" />
 	</div>
 	{output && (
 		<div class="code-output">
-			<p class="caption">Output</p>
+			<p class="support">Output</p>
 			<pre>{output}</pre>
 		</div>
 	)}
