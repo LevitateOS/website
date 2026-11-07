@@ -876,42 +876,79 @@
 		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
 	}
 
-	/* ---------- Code ---------- */
+	/* ---------- Code: a dark ink panel in both appearances ---------- */
 
 	.code-shell {
 		/* Shiki's css-variables theme reads these. */
-		--astro-code-foreground: var(--fn-text);
+		--astro-code-foreground: var(--fn-code-text);
 		--astro-code-background: transparent;
-		--astro-code-token-comment: var(--fn-text-secondary);
-		--astro-code-token-keyword: var(--fn-levitate);
-		--astro-code-token-constant: var(--fn-acorn);
-		--astro-code-token-string: var(--fn-acorn);
-		--astro-code-token-string-expression: var(--fn-acorn);
-		--astro-code-token-function: var(--fn-text);
-		--astro-code-token-parameter: var(--fn-text);
-		--astro-code-token-punctuation: var(--fn-text);
-		--astro-code-token-link: var(--fn-levitate);
-		background: var(--fn-surface-raised);
-		border: var(--fn-rule-width) solid var(--fn-rule);
-		border-radius: var(--fn-radius);
+		--astro-code-token-comment: var(--fn-code-secondary);
+		--astro-code-token-keyword: var(--fn-code-keyword);
+		--astro-code-token-constant: var(--fn-code-constant);
+		--astro-code-token-string: var(--fn-code-string);
+		--astro-code-token-string-expression: var(--fn-code-string);
+		--astro-code-token-function: var(--fn-code-text);
+		--astro-code-token-parameter: var(--fn-code-text);
+		--astro-code-token-punctuation: var(--fn-code-secondary);
+		--astro-code-token-link: var(--fn-code-keyword);
+		position: relative;
 		min-width: 0;
+		background: var(--fn-code-surface);
+		color: var(--fn-code-text);
+		border: var(--fn-rule-width) solid var(--fn-code-rule);
+		border-top: 3px solid var(--fn-code-keyword);
+		border-radius: var(--fn-radius);
+		box-shadow: 0 1px 0 color-mix(in srgb, var(--fn-code-surface) 30%, transparent), 0 18px 36px -24px rgb(10 20 14 / 0.55);
+	}
+
+	.code-shell :focus-visible {
+		outline-color: var(--fn-code-text);
 	}
 
 	.code-head {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
 		gap: var(--fn-space-3);
+		min-height: 44px;
 		padding: var(--fn-space-1) var(--fn-space-1) var(--fn-space-1) var(--fn-space-4);
-		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
+		background: var(--fn-code-bar);
+		border-bottom: var(--fn-rule-width) solid var(--fn-code-rule);
 		font-size: var(--fn-text-label);
-		color: var(--fn-text-secondary);
 		min-width: 0;
 	}
 
+	.code-head__kind {
+		flex: none;
+		padding: 2px 6px;
+		border: var(--fn-rule-width) solid var(--fn-code-rule);
+		color: var(--fn-code-keyword);
+		font-size: var(--fn-text-kicker);
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		line-height: 1.4;
+		text-transform: uppercase;
+	}
+
 	.code-head__label {
+		flex: 1;
 		min-width: 0;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0 var(--fn-space-2);
 		overflow-wrap: anywhere;
+		line-height: 1.35;
+	}
+
+	.code-head__name {
+		color: var(--fn-code-text);
+		font-weight: 500;
+	}
+
+	.code-head__source {
+		color: var(--fn-code-secondary);
+		font-family: var(--fn-font-code);
+		font-size: 0.6875rem;
 	}
 
 	.copy-button {
@@ -919,52 +956,109 @@
 		min-width: 64px;
 		min-height: 36px;
 		padding: var(--fn-space-1) var(--fn-space-3);
-		border: var(--fn-rule-width) solid var(--fn-boundary);
+		border: var(--fn-rule-width) solid var(--fn-code-gutter);
 		border-radius: var(--fn-radius);
 		background: transparent;
-		color: var(--fn-text);
+		color: var(--fn-code-text);
 		font-size: var(--fn-text-label);
 		font-weight: 500;
 		cursor: pointer;
-		transition: background-color var(--fn-duration-control) var(--fn-ease);
+		transition:
+			background-color var(--fn-duration-control) var(--fn-ease),
+			border-color var(--fn-duration-control) var(--fn-ease);
 	}
 
 	.copy-button:hover {
-		background: var(--fn-surface);
+		background: var(--fn-code-rule);
+		border-color: var(--fn-code-secondary);
 	}
 
 	.code-region {
 		overflow-x: auto;
+		scrollbar-color: var(--fn-code-gutter) transparent;
 	}
 
 	.code-region:focus-visible {
-		outline-offset: -2px;
+		outline-offset: -3px;
 	}
 
 	.code-shell pre {
 		margin: 0;
-		padding: var(--fn-space-4);
+		padding: var(--fn-space-4) var(--fn-space-5) var(--fn-space-5) var(--fn-space-4);
 		width: max-content;
 		min-width: 100%;
 		font-size: 0.8125rem;
-		line-height: 1.65;
+		line-height: 1.7;
 		background: transparent !important;
+		color: var(--fn-code-text);
 		tab-size: 4;
 	}
 
 	.code-shell pre code {
 		font: inherit;
+		counter-reset: code-line;
+	}
+
+	.code-shell ::selection {
+		background: var(--fn-code-selection);
+		color: var(--fn-code-text);
+	}
+
+	/* Shell: a prompt before each command, drawn by CSS so it is never copied. */
+	.code-shell[data-kind="shell"] .line {
+		display: inline-block;
+		padding-left: 1.75ch;
+	}
+
+	.code-shell[data-kind="shell"] .line.is-command::before {
+		content: "$";
+		display: inline-block;
+		width: 1.75ch;
+		margin-left: -1.75ch;
+		color: var(--fn-code-prompt);
+		font-weight: 600;
+		user-select: none;
+	}
+
+	/* Comments in shell examples read as notes on the step that follows. */
+	.code-shell[data-kind="shell"] .line.is-comment {
+		font-style: italic;
+	}
+
+	/* Files: line numbers in a quiet gutter. */
+	.code-shell[data-numbered] .line::before {
+		counter-increment: code-line;
+		content: counter(code-line);
+		display: inline-block;
+		width: 2.5ch;
+		margin-right: 2ch;
+		color: var(--fn-code-gutter);
+		text-align: right;
+		user-select: none;
 	}
 
 	.code-output {
-		border-top: var(--fn-rule-width) solid var(--fn-rule);
-		padding: var(--fn-space-3) var(--fn-space-4);
+		border-top: var(--fn-rule-width) dashed var(--fn-code-rule);
+		padding: var(--fn-space-3) var(--fn-space-4) var(--fn-space-4);
 		overflow-x: auto;
 	}
 
+	.code-output__label {
+		margin-bottom: var(--fn-space-1);
+		color: var(--fn-code-keyword);
+		font-size: var(--fn-text-kicker);
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
 	.code-output pre {
+		margin: 0;
 		padding: 0;
-		color: var(--fn-text-secondary);
+		width: auto;
+		color: var(--fn-code-secondary);
+		font-size: 0.8125rem;
+		line-height: 1.6;
 	}
 
 	/* ---------- Notes, tables, lists ---------- */

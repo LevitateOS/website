@@ -63,6 +63,17 @@
   --fn-on-ending: #F2EEE4;
   --fn-on-ending-secondary: #C3CEBF;
   --fn-frame: #214438;
+  --fn-code-surface: #14221A;
+  --fn-code-bar: #1B2C23;
+  --fn-code-rule: #2E4136;
+  --fn-code-text: #F2EEE4;
+  --fn-code-secondary: #9AA89D;
+  --fn-code-gutter: #6E7F73;
+  --fn-code-keyword: #A9CF9A;
+  --fn-code-string: #E4CBA6;
+  --fn-code-constant: #F0A497;
+  --fn-code-prompt: #A9CF9A;
+  --fn-code-selection: #33503F;
   --fn-brand: var(--fn-levitate);
 }
 :root[data-theme="dark"] {
@@ -83,6 +94,17 @@
   --fn-on-ending: #F2EEE4;
   --fn-on-ending-secondary: #C3CEBF;
   --fn-frame: #214438;
+  --fn-code-surface: #0D1711;
+  --fn-code-bar: #14221A;
+  --fn-code-rule: #2A3B31;
+  --fn-code-text: #F2EEE4;
+  --fn-code-secondary: #9AA89D;
+  --fn-code-gutter: #6E7F73;
+  --fn-code-keyword: #A9CF9A;
+  --fn-code-string: #E4CBA6;
+  --fn-code-constant: #F0A497;
+  --fn-code-prompt: #A9CF9A;
+  --fn-code-selection: #33503F;
   --fn-brand: var(--fn-levitate);
 }
 @media (prefers-color-scheme: dark) {
@@ -104,6 +126,17 @@
   --fn-on-ending: #F2EEE4;
   --fn-on-ending-secondary: #C3CEBF;
   --fn-frame: #214438;
+  --fn-code-surface: #0D1711;
+  --fn-code-bar: #14221A;
+  --fn-code-rule: #2A3B31;
+  --fn-code-text: #F2EEE4;
+  --fn-code-secondary: #9AA89D;
+  --fn-code-gutter: #6E7F73;
+  --fn-code-keyword: #A9CF9A;
+  --fn-code-string: #E4CBA6;
+  --fn-code-constant: #F0A497;
+  --fn-code-prompt: #A9CF9A;
+  --fn-code-selection: #33503F;
   --fn-brand: var(--fn-levitate);
 }
 }
