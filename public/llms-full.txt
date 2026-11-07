@@ -1,12 +1,14 @@
 # LevitateOS
 
-> LevitateOS is a Linux distribution where users maintain their own packages using Rhai scripts called "recipes." Instead of relying on centralized repositories, you write recipes that declare how to acquire, build, and install software. A local LLM (SmolLM3) assists with recipe generation and dependency resolution. By default, systems are A/B immutable: changes are composed into an inactive slot and activated via trial boot + commit. Mutable mode exists as an explicit opt-in for daredevils; it's unsafe if you let an LLM author recipes without review.
+> LevitateOS is a Linux distribution where you maintain your own packages. Packages are Rhai scripts called "recipes" that declare how to acquire, build and install each piece of software, and every recipe runs inside an isolated Ginux domain. The installed system updates atomically: A/B slots are the default, each update is trial-booted before it is kept, and mutable mode is an explicit opt-in.
 
-LevitateOS targets power users who want full control over their system. It follows the Arch Linux philosophy of manual installation and user-built configuration, but replaces traditional package managers with a recipe-based system.
+LevitateOS targets power users who want full control over their system. It follows the Arch Linux philosophy of a manual, step-by-step installation from a live ISO, but takes its core system pre-built from signed packages and replaces the traditional package manager with recipes.
 
-Variants:
-- **LevitateOS**: glibc, systemd, GNU toolchain - daily-driver desktop, maximum compatibility
-- **AcornOS**: musl, OpenRC, busybox - daily-driver desktop, minimal and fast
+Variants (built by the same pipeline):
+- **LevitateOS**: glibc, systemd, GNU. Core system from signed Fedora 45 RPMs. Maximum compatibility.
+- **AcornOS**: musl, OpenRC, busybox. Core system from Alpine Linux APKs. A smaller, simpler base.
+
+Hardware baseline: x86-64-v3 (Intel Haswell or AMD Zen or newer), 16 GB RAM, NVMe disk, UEFI with Secure Boot disabled. First releases are planned for 2027, x86_64 first.
 
 ---
 
@@ -14,183 +16,193 @@ Variants:
 
 ### What is a Recipe?
 
-A recipe is a `.rhai` script that defines how to acquire, build, and install a package. Rhai is a safe, sandboxed scripting language embedded in Rust. Recipes are readable, auditable, and impossible to hide malicious code in.
+A recipe is a `.rhai` script that declares a package's facts and how to acquire, build and install it. Rhai is a small scripting language embedded in Rust. Every recipe runs inside an isolated Ginux domain (https://github.com/gmkurtzer/ginux): it sees only the inputs it is given at `/inputs/NAME`, reaches only the network hosts it is granted, and never runs on the host system. Downloads require a SHA-256 and git checkouts a full commit.
 
 ### Recipe Structure
 
-Every recipe has a context map (`ctx`) and paired lifecycle functions:
+Every recipe declares `const RECIPE_API = 2;`, a context map (`ctx`) and paired check/phase hooks. Checks return `ready(ctx)` or `needs_work(ctx, "reason")`; phase hooks return the updated `ctx`. Products are named in `ctx.outputs`.
 
 ```rhai
+const RECIPE_API = 2;
+
 let ctx = #{
     name: "ripgrep",
-    version: "14.1.0",
-    repo: "BurntSushi/ripgrep",
+    version: "14.1.1",
+    url: "https://github.com/BurntSushi/ripgrep/archive/14.1.1.tar.gz",
+    sha256: "<pinned sha256>",
+    src: join_path(RUNTIME.paths.build, "ripgrep-14.1.1"),
+    bin: join_path(RUNTIME.paths.output, "usr/bin/rg"),
 };
 
 fn is_acquired(ctx) {
-    // Check if source exists, return ctx or throw
-    is_file(join_path(BUILD_DIR, "rg/Cargo.toml"))
+    if !is_file(join_path(ctx.src, "Cargo.toml")) {
+        return needs_work(ctx, "source not unpacked");
+    }
+    ready(ctx)
 }
 
 fn acquire(ctx) {
-    let tarball = github_download_release(ctx.repo, ctx.version, "*.tar.gz");
-    extract(tarball, BUILD_DIR);
+    let dest = join_path(ctx.runtime.paths.build, "ripgrep.tar.gz");
+    extract(download(ctx.url, dest, ctx.sha256), ctx.runtime.paths.build);
+    ctx
 }
 
 fn is_built(ctx) {
-    is_file(join_path(BUILD_DIR, "rg/target/release/rg"))
+    if !is_file(join_path(ctx.src, "target/release/rg")) {
+        return needs_work(ctx, "rg not built");
+    }
+    ready(ctx)
 }
 
 fn build(ctx) {
-    shell_in(BUILD_DIR + "/rg", "cargo build --release");
+    shell_in(ctx.src, "cargo build --release --locked");
+    ctx
 }
 
 fn is_installed(ctx) {
-    is_file("/usr/bin/rg")
+    if !is_file(ctx.bin) { return needs_work(ctx, "rg not installed"); }
+    ctx.outputs.rg = ctx.bin;
+    ready(ctx)
 }
 
 fn install(ctx) {
-    let bin = BUILD_DIR + "/rg/target/release/rg";
-    shell("install -Dm755 " + bin + " $OUT/usr/bin/rg");
+    mkdir(dirname(ctx.bin));
+    copy_file(join_path(ctx.src, "target/release/rg"), ctx.bin);
+    chmod(ctx.bin, 0o755);
+    ctx.outputs.rg = ctx.bin;
+    ctx
 }
 ```
 
 ### Lifecycle Phases
 
-1. **Acquire**: Download source code (tarball, git clone, etc.)
-2. **Build**: Compile the software (make, cargo, meson, etc.)
-3. **Install**: Copy files to `$OUT` staging directory
+1. **Acquire**: fetch pinned sources (checksummed downloads, exact git commits)
+2. **Build**: compile in `/work/build`
+3. **Install**: place the product under `/out` and name it in `ctx.outputs`
 
-Each phase has an `is_*` check function that returns true if already complete.
+Each phase has an `is_*` check that inspects the real files. Only `ctx.state` and its filesystem checkpoint are kept between runs, so an interrupted build resumes where it stopped.
 
-### Key Environment Variables
+### Runtime Paths
 
-- `BUILD_DIR`: Temporary build directory (cleaned between builds)
-- `OUT_DIR` / `$OUT`: Staging directory for installed files
-- `RECIPE_DIR`: Directory containing the recipe file
+- `/inputs/NAME`: explicitly imported, read-only inputs
+- `/work/build` (`runtime.paths.build`): owned build work
+- `/work/tools` (`runtime.paths.tools`): shared dependency products
+- `/out` (`runtime.paths.output`, `runtime.paths.target`): the product / target tree
+
+---
+
+## Atomic Updates
+
+The disk holds two system slots (A and B) and a `/var` state partition. `recab` writes the next system into the inactive slot, carries the machine's configuration across (hostname, users, enabled services, network connections), and boots it once as a trial. A healthy trial is committed and becomes the default; a failed one falls back to the previous slot. `recab rollback` returns to the previous slot later. Recipe changes compose the inactive slot, never the running system. Mutable mode (one root, changed in place) is an explicit, unsafe opt-in.
+
+```bash
+recab stage --rootfs next.erofs --kernel vmlinuz --initrd initramfs.img
+recab set-next B      # one trial boot of the staged slot
+reboot                # committed if healthy, else back to A
+recab rollback        # later, while A still holds its system
+```
 
 ---
 
 ## Installation Process
 
-LevitateOS installs manually like Arch Linux:
+The live ISO boots into the install screen: a guided app for each step, with a shell and the full guide beside it. The same steps by hand:
 
-1. Boot the live ISO (split tmux: shell left, docs right)
-2. Partition disk (UEFI GPT: EFI + system-a + system-b + var)
-3. Format and mount partitions
-4. Extract rootfs with `recstrap /mnt`
-5. Generate fstab with `recfstab /mnt > /mnt/etc/fstab`
-6. Chroot with `recchroot /mnt`
-7. Configure timezone, locale, hostname, users
-8. Install bootloader (systemd-boot)
-9. Exit chroot, unmount, reboot
+```bash
+recpart apply --disk /dev/nvme0n1 --confirm DESTROY   # A/B layout, mounted at /mnt (--mode mutable for one root)
+recstrap /mnt                                          # extract the system
+recfstab /mnt >> /mnt/etc/fstab
+recsetup inspect --root /mnt --json                    # choose target configuration
+recsetup apply --root /mnt --hostname myhostname        # time zone, locale, accounts, boot, services
+recchroot /mnt -- passwd                               # set the root password
+```
 
 ### System Requirements
 
-- CPU: x86_64, Intel Haswell (2013) or AMD Zen (2017) or newer
-- RAM: 16GB minimum, 32GB+ recommended for local LLM
-- Storage: 512GB NVMe SSD minimum
-- GPU: NVIDIA RTX 3060+ (12GB VRAM) for LLM acceleration, or CPU-only with 32GB+ RAM
-- Boot: UEFI required (Secure Boot disabled)
+- CPU: x86-64-v3 (Intel Haswell or AMD Zen or newer)
+- RAM: 16 GB
+- Storage: NVMe disk
+- Boot: UEFI, Secure Boot disabled (boot files are unsigned)
 
 ---
 
 ## Package Manager Commands
 
 ```bash
-recipe install <name>      # Install a package from recipe
-recipe build <name>        # Build without installing
-recipe remove <name>       # Remove installed package
-recipe search <query>      # Search available recipes
-recipe list                # List installed packages
-recipe update              # Rebuild all packages
-recipe llm "<prompt>"      # Generate recipe with AI assistance
-recipe llm fix <name>      # AI suggests fixes for failed build
+recipe install <recipe>       # acquire, build and install, publishing ctx.outputs
+recipe remove <recipe>        # remove the product from the owned target
+recipe cleanup <recipe>       # clean up build artifacts
+recipe isinstalled <recipe>   # run is_installed(ctx)
+recipe isbuilt <recipe>       # run is_built(ctx)
+recipe isacquired <recipe>    # run is_acquired(ctx)
+recipe list                   # list recipes in the recipes directory
+recipe info <recipe>          # show declared recipe metadata
 ```
 
----
-
-## Helper Functions Reference
-
-### Acquire Helpers
-- `github_download_release(repo, tag, pattern)` - Download from GitHub releases
-- `git_clone(url, dest)` - Clone git repository
-- `curl_download(url, dest)` - Download file via HTTP
-- `extract(archive, dest)` - Extract tar/zip archives
-
-### Build Helpers
-- `shell(cmd)` - Run shell command
-- `shell_in(dir, cmd)` - Run command in directory
-- `make(args)` - Run make with arguments
-- `cargo_build(args)` - Run cargo build
-- `meson(args)` - Run meson build system
-
-### Install Helpers
-- `install_bin(src, name)` - Install binary to /usr/bin
-- `install_lib(src, name)` - Install library to /usr/lib
-- `install_config(src, dest)` - Install config file
-
-### Filesystem Helpers
-- `is_file(path)` - Check if file exists
-- `is_dir(path)` - Check if directory exists
-- `mkdir(path)` - Create directory
-- `copy(src, dest)` - Copy file
-- `symlink(target, link)` - Create symbolic link
-
-### Path Helpers
-- `join_path(a, b)` - Join path components
-- `basename(path)` - Get filename from path
-- `dirname(path)` - Get directory from path
-- `with_extension(path, ext)` - Change file extension
-
-### LLM Helpers
-- `llm_query(prompt)` - Query local LLM
-- `llm_suggest_fix(error)` - Get fix suggestion for build error
-- `llm_explain_error(log)` - Explain error in build log
+Common options: `--input NAME=PATH`, `--build-dir`, `--state-dir`, `--define KEY=VALUE`, `--json-output`, `--no-persist-state`.
 
 ---
 
 ## Documentation Links
 
 ### Getting Started
-- [Getting Started](/docs/getting-started): Download and create bootable installation media
-- [Installation Overview](/docs/installation): Step-by-step installation process
-- [Disk Partitioning](/docs/installation-disk): UEFI partition layout with GPT
-- [Base System](/docs/installation-base): Extract rootfs with recstrap
-- [System Configuration](/docs/installation-config): Timezone, locale, hostname, users
-- [Bootloader](/docs/installation-boot): systemd-boot EFI stub installation
-- [Post-Installation](/docs/post-installation): Desktop environment, drivers, networking
+
+- [Getting Started](/docs/getting-started): Download the live ISO and create installation media
+- [Installation](/docs/installation): The installation steps at a glance
+- [Disk Preparation](/docs/installation-disk): Partition the disk with recpart (A/B layout by default)
+- [Base System](/docs/installation-base): Extract the system with recstrap and write fstab with recfstab
+- [Configuration](/docs/installation-config): Time zone, locale, keymap, hostname and users with recsetup
+- [Bootloader & Finish](/docs/installation-boot): systemd-boot and the A/B boot entries, then reboot
+- [Post-Installation](/docs/post-installation): First boot, networking and A/B updates
 - [Troubleshooting](/docs/troubleshooting): Common issues and solutions
 
 ### Package Manager
-- [CLI Reference](/docs/cli-reference): recipe install, build, search, llm commands
-- [Recipe Format](/docs/recipe-format): Rhai script structure with ctx map and lifecycle functions
+
+- [CLI Reference](/docs/cli-reference): recipe install, remove, cleanup, isinstalled, isbuilt, isacquired, list, info
+- [Recipe Format](/docs/recipe-format): RECIPE_API 2 recipes: package facts, readiness checks and acquire/build/install hooks
 
 ### Rhai Helper Functions
-- [Helpers Overview](/docs/helpers-overview): Available functions in recipe scripts
-- [Acquire Helpers](/docs/helpers-acquire): github_download_release, git_clone, curl_download
-- [Build Helpers](/docs/helpers-build): shell, shell_in, make, cargo_build, meson
-- [Install Helpers](/docs/helpers-install): install_bin, install_lib, install_config
-- [Filesystem Helpers](/docs/helpers-filesystem): is_file, is_dir, mkdir, copy, symlink
-- [Environment Helpers](/docs/helpers-environment): getenv, setenv, BUILD_DIR, OUT_DIR
-- [Command Helpers](/docs/helpers-commands): shell, shell_in, which, run_silent
-- [HTTP Helpers](/docs/helpers-http): http_get, http_download, curl_download
-- [Path Helpers](/docs/helpers-paths): join_path, basename, dirname, with_extension
-- [LLM Helpers](/docs/helpers-llm): llm_query, llm_suggest_fix, llm_explain_error
+
+- [Helpers Overview](/docs/helpers-overview): Functions available to recipe scripts
+- [Acquire Helpers](/docs/helpers-acquire): download, git_checkout, github_download_release, checksum verification
+- [Build Helpers](/docs/helpers-build): extract, extract_with_format and the target_* package-extraction helpers
+- [Install Helpers](/docs/helpers-install): copy_file, copy_tree_contents and the dnf/apk package helpers
+- [Filesystem Helpers](/docs/helpers-filesystem): is_file, is_dir, mkdir, read_file, write_file, ln, rm, chmod
+- [Environment Helpers](/docs/helpers-environment): env, command_exists and logging
+- [Command Helpers](/docs/helpers-commands): exec, exec_checked, exec_output, shell, shell_in
+- [HTTP Helpers](/docs/helpers-http): http_get, github_latest_release, github_latest_tag
+- [Path Helpers](/docs/helpers-paths): join_path, basename, dirname and string helpers
 
 ### Architecture
-- [FAQ](/docs/faq): Frequently asked questions about design decisions
-- [How We Compare](/docs/how-we-compare): Comparison with Arch, NixOS, Gentoo, Alpine
 
-### Installation Tools
-- [Tools Overview](/docs/installation-tools-overview): recstrap, recfstab, recchroot
-- [recstrap](/docs/recstrap): Extract LevitateOS rootfs to target directory (like pacstrap)
+- [Architecture FAQ](/docs/faq): Design decisions
+- [How We Compare](/docs/how-we-compare): Comparison with Arch, NixOS, Gentoo and Alpine
+- [Atomic Updates (A/B)](/docs/atomic-updates): Two system slots, trial boot, commit and rollback
+- [Variants](/docs/variants): LevitateOS and AcornOS
+
+### rec* Tooling
+
+- [rec* Tooling Overview](/docs/rec-tooling-overview): Every rec* tool and what it does
+- [Installation Tools Overview](/docs/installation-tools-overview): The tools used during installation
+- [recpart](/docs/recpart): Partition planning and apply (like a scripted fdisk)
+- [recstrap](/docs/recstrap): Extract the system image to a target directory (like pacstrap)
 - [recfstab](/docs/recfstab): Generate fstab from mounted filesystems (like genfstab)
-- [recchroot](/docs/recchroot): Enter chroot with proper mount bindings (like arch-chroot)
+- [recsetup](/docs/recsetup): Configure an extracted system: time zone, locale, accounts, boot, services
+- [recchroot](/docs/recchroot): Enter a chroot with the right bind mounts (like arch-chroot)
+- [recab](/docs/recab): A/B slot manager: stage, trial boot, commit, rollback
+- [recinit](/docs/recinit): Rootless initramfs builder
+- [recuki](/docs/recuki): Unified Kernel Image builder
+- [reciso](/docs/reciso): Bootable UEFI ISO builder
+- [recqemu](/docs/recqemu): Runs test VMs as libvirt domains
+
+### Optional
+
+- [Download Page](/download): Variants, release targets and system requirements
+- [Privacy Policy](/privacy): No tracking, no cookies, no data collection
 
 ---
 
 ## Source Code
 
 - GitHub: https://github.com/LevitateOS/LevitateOS
-- License: MIT / Apache-2.0
+- License: MIT OR Apache-2.0 for LevitateOS's own code; built images contain packages under their own licenses

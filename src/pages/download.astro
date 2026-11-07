@@ -13,7 +13,7 @@ const variants: DownloadCardProps[] = [
 		description: "The pragmatic choice. Run any Linux software without patching, use familiar tools, and find answers to every question online. Pick this if you want things to just work.",
 		pros: [
 			"All Linux software works",
-			"Core system from Fedora RPMs",
+			"Core system from signed Fedora 45 RPMs",
 			"systemd service management",
 			"Familiar GNU tools",
 		],
@@ -23,10 +23,10 @@ const variants: DownloadCardProps[] = [
 			"More RAM usage",
 		],
 		status: "coming-soon",
-		x86_64Date: "Mar/Apr 2026",
-		aarch64Date: "Apr/May 2026",
-		minRam: "8 GB",
-		recRam: "16 GB",
+		x86_64Date: "2027",
+		aarch64Date: "After x86_64",
+		minRam: "16 GB",
+		recRam: "32 GB",
 		minDisk: "64 GB",
 		recDisk: "256 GB",
 	},
@@ -47,9 +47,9 @@ const variants: DownloadCardProps[] = [
 			"Fewer pre-built packages",
 			"Less documentation online",
 		],
-		status: "planned",
-		x86_64Date: "Apr/Jun 2026",
-		aarch64Date: "May/Jul 2026",
+		status: "coming-soon",
+		x86_64Date: "2027",
+		aarch64Date: "After x86_64",
 		minRam: "4 GB",
 		recRam: "8 GB",
 		minDisk: "32 GB",
@@ -60,7 +60,7 @@ const variants: DownloadCardProps[] = [
 
 <BaseLayout
 	title="Download - LevitateOS"
-	description="Download LevitateOS variants. Desktops ship as live ISOs; appliances ship as disk images. A/B immutable by default, mutable optional."
+	description="Download LevitateOS and AcornOS. Both ship as live UEFI ISOs that install an A/B immutable system by default, mutable optional."
 >
 	<div class="flex min-h-screen flex-col">
 		<Header />
@@ -68,7 +68,7 @@ const variants: DownloadCardProps[] = [
 			<div class="container py-8">
 				<h1 class="text-2xl font-medium mb-3">Download</h1>
 				<p class="text-sm text-muted-foreground mb-6">
-					Variants, same philosophy: recipe-built systems with atomic A/B updates by default.
+					Two variants, one pipeline: recipe-built systems with atomic A/B updates by default. First releases are planned for 2027, x86_64 first.
 				</p>
 
 					<!-- Global requirements -->
@@ -79,8 +79,8 @@ const variants: DownloadCardProps[] = [
 							<div class="flex sm:block gap-2">
 								<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">CPU</div>
 							<div>
-								<div>Intel Core 4th gen+ (Haswell)</div>
-								<div>AMD Ryzen 1000+ (Zen)</div>
+								<div>x86-64-v3: Intel Haswell+</div>
+								<div>or AMD Zen+</div>
 							</div>
 						</div>
 						<div class="flex sm:block gap-2">
@@ -88,13 +88,14 @@ const variants: DownloadCardProps[] = [
 							<div>
 								<div>UEFI required</div>
 								<div>Secure Boot disabled</div>
+								<div>NVMe disk</div>
 							</div>
 						</div>
 						<div class="flex sm:block gap-2">
 							<div class="text-muted-foreground mb-0.5 w-16 sm:w-auto shrink-0">Arch</div>
 							<div>
 								<div>x86_64</div>
-								<div>AArch64</div>
+								<div>AArch64 later</div>
 							</div>
 						</div>
 					</div>
@@ -130,12 +131,12 @@ const variants: DownloadCardProps[] = [
 						<div class="ui-divider -mx-5 mb-4" />
 						<h2 class="font-medium text-sm mb-2">Installation</h2>
 						<p class="text-sm text-muted-foreground mb-3">
-							Desktop variants ship as a live ISO that boots into a split-screen tmux session: shell on the left, docs on the right.
-							Follow the <a href="/docs/installation/" class="ui-link">Installation Guide</a> step-by-step.
-						Partition, extract with recstrap, configure, install systemd-boot. A/B is the default layout.
+							Each variant ships as a live ISO that boots into the install screen: a guided app for each step, with a shell and the full guide beside it.
+							Prefer typing? Follow the <a href="/docs/installation/" class="ui-link">Installation Guide</a>:
+						partition with recpart, extract with recstrap, write fstab with recfstab, configure and set up boot with recsetup. A/B is the default layout.
 					</p>
 					<div class="text-sm text-muted-foreground font-mono">
-						Shift+Tab: switch panes | Ctrl+←/→: resize | j/k: scroll docs
+						Ctrl-]: switch pane | j/k: scroll docs | Ctrl-q: leave the install screen
 					</div>
 				</div>
 			</div>

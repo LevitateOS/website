@@ -14,79 +14,81 @@ import HighlightBox from "../components/HighlightBox.astro";
 import LevitateTextLogo from "../components/brand/LevitateTextLogo.astro";
 
 const recipeAdvantages = [
-  "Pin exact versions — your system stays reproducible",
+  "Pin exact versions — downloads need a SHA-256, git checkouts a full commit",
   "Read the build logic in seconds — it's just Rhai script",
   "Add patches directly — your recipes, your rules",
-  "Full audit trail of what's installed and how",
+  "Every build runs isolated, never on your running system",
 ];
 
-const assistantFeatures = [
-  "Drafts .rhai recipes from upstream documentation",
-  "Reads build logs and suggests fixes",
-  "Runs entirely local — your machine, your data",
-  "You review and execute — AI handles the boilerplate",
+const updateSteps = [
+  "The next system is written to the inactive slot",
+  "It boots once as a trial, and is kept only if it comes up healthy",
+  "A failed trial lands you back on the slot you came from",
+  "Roll back later with one command and a reboot",
 ];
 
 const recipeCode = `// recipes/ripgrep.rhai
+const RECIPE_API = 2;
+
 let ctx = #{
     name: "ripgrep",
-    version: "14.1.0",
-    repo: "BurntSushi/ripgrep",
+    version: "14.1.1",
+    url: "https://github.com/BurntSushi/ripgrep/archive/14.1.1.tar.gz",
+    sha256: "<pinned sha256>",
+    src: join_path(RUNTIME.paths.build, "ripgrep-14.1.1"),
+    bin: join_path(RUNTIME.paths.output, "usr/bin/rg"),
 };
 
 fn is_acquired(ctx) {
-    is_file(join_path(BUILD_DIR, "rg/Cargo.toml"))
+    if !is_file(join_path(ctx.src, "Cargo.toml")) {
+        return needs_work(ctx, "source not unpacked");
+    }
+    ready(ctx)
 }
 
 fn acquire(ctx) {
-    let tarball = github_download_release(
-        ctx.repo, ctx.version, "*.tar.gz"
-    );
-    extract(tarball, BUILD_DIR);
+    let dest = join_path(ctx.runtime.paths.build, "ripgrep.tar.gz");
+    extract(download(ctx.url, dest, ctx.sha256), ctx.runtime.paths.build);
+    ctx
+}
+
+fn is_built(ctx) {
+    if !is_file(join_path(ctx.src, "target/release/rg")) {
+        return needs_work(ctx, "rg not built");
+    }
+    ready(ctx)
 }
 
 fn build(ctx) {
-    shell_in(BUILD_DIR + "/rg",
-        "cargo build --release");
+    shell_in(ctx.src, "cargo build --release --locked");
+    ctx
+}
+
+fn is_installed(ctx) {
+    if !is_file(ctx.bin) { return needs_work(ctx, "rg not installed"); }
+    ctx.outputs.rg = ctx.bin;
+    ready(ctx)
 }
 
 fn install(ctx) {
-    let bin = BUILD_DIR + "/rg/target/release/rg";
-    shell("install -Dm755 " + bin + " $OUT/usr/bin/rg");
+    mkdir(dirname(ctx.bin));
+    copy_file(join_path(ctx.src, "target/release/rg"), ctx.bin);
+    chmod(ctx.bin, 0o755);
+    ctx.outputs.rg = ctx.bin;
+    ctx
 }`;
 
-const assistantCode = `$ recipe llm "create a recipe for htop"
+const updateCode = `# running from slot A
+$ recab stage --rootfs next.erofs \\
+      --kernel vmlinuz --initrd initramfs.img
+$ recab set-next B
+$ reboot
 
-Drafting recipe for htop...
+# B boots once as a trial:
+# healthy -> committed, B is the new default
+# not     -> back to A, nothing lost
 
-// recipes/htop.rhai
-let ctx = #{
-    name: "htop",
-    version: "3.3.0",
-    repo: "htop-dev/htop",
-};
-
-fn is_acquired(ctx) {
-    is_file(join_path(BUILD_DIR, "htop/configure.ac"))
-}
-
-fn acquire(ctx) {
-    let tarball = github_download_release(
-        ctx.repo, ctx.version, "*.tar.xz"
-    );
-    extract(tarball, BUILD_DIR);
-}
-
-fn build(ctx) {
-    let src = BUILD_DIR + "/htop";
-    shell_in(src, "./autogen.sh && ./configure && make");
-}
-
-fn install(ctx) {
-    shell_in(BUILD_DIR + "/htop", "make install DESTDIR=$OUT");
-}
-
-Recipe saved. Review and run: recipe install htop`;
+$ recab rollback    # any time, while A still holds its system`;
 
 const docsFeatures = [
   '<strong class="text-foreground">Code</strong> on the left',
@@ -97,7 +99,7 @@ const docsFeatures = [
 
 <BaseLayout
   title="LevitateOS - A Linux Distribution You Actually Control"
-  description="Linux you control end-to-end: recipe-built packages, atomic A/B updates by default, rollback in one reboot. Mutable mode exists for daredevils."
+  description="Linux you control end-to-end: recipe-built packages built in isolation, atomic A/B updates by default, rollback in one reboot. Mutable mode exists for daredevils."
 >
   <div class="flex min-h-screen flex-col">
     <Header />
@@ -131,7 +133,7 @@ const docsFeatures = [
             <p
               class="text-sm font-medium text-primary uppercase tracking-widest mb-3"
             >
-              The first vibe-coded Linux Distribution
+              Be your own package maintainer
             </p>
           </AnimatedSection>
 
@@ -156,23 +158,24 @@ const docsFeatures = [
 
           <AnimatedSection delay={300} class="mt-3 max-w-2xl">
             <p class="text-sm text-muted-foreground leading-relaxed">
-              Atomic A/B updates by default. Build the next system in slot B,
-              boot it once, then commit. Roll back by rebooting.
+              Atomic A/B updates by default. The next system is written to the
+              other slot and boots once as a trial: kept if it comes up healthy,
+              back to the old one if not. Roll back by rebooting.
             </p>
           </AnimatedSection>
 
           <AnimatedSection delay={350} class="mt-3 max-w-2xl">
             <p class="text-sm text-muted-foreground leading-relaxed">
-              Too slow? No worries. This is designed with a locally running LLM
-              (SmolLM3) that generates, customizes and maintains your recipes
-              and handles dependencies.
+              Every recipe builds inside an isolated Ginux domain. It sees only
+              the inputs you hand it, every download is pinned by checksum, and
+              nothing it does touches your running system.
             </p>
           </AnimatedSection>
 
           <AnimatedSection delay={450} class="mt-6">
             <p class="text-lg font-medium">
               Immutable by default. Full control. <span class="text-primary"
-                >AI-assisted packaging</span
+                >Isolated builds</span
               >.
             </p>
           </AnimatedSection>
@@ -199,8 +202,8 @@ const docsFeatures = [
               Two Variants. One Recipe System.
             </h2>
             <p class="text-muted-foreground text-sm max-w-2xl mx-auto">
-              Desktop variants built from the same pipeline. A/B
-              immutable by default. Mutable mode is optional.
+              Two bases built by the same pipeline. A/B immutable by default.
+              Mutable mode is optional.
             </p>
           </div>
 
@@ -213,11 +216,10 @@ const docsFeatures = [
               features={[
                 "Broadest package compatibility",
                 "Comprehensive service management",
-                "Core system from signed Fedora RPMs",
+                "Core system from signed Fedora 45 RPMs",
                 "Familiar to most Linux users",
               ]}
               logo="/levitateos-trace.svg"
-              builderDescription="ISO builder made by Claude Opus 4.5"
             />
 
             <OSCard
@@ -228,11 +230,10 @@ const docsFeatures = [
               features={[
                 "Leaner compiled binaries",
                 "Straightforward init scripts",
-                "Alpine Linux PKGs for dependencies",
+                "Core system from Alpine Linux APKs",
                 "Less complexity under the hood",
               ]}
               logo="/acorn-trace.svg"
-              builderDescription="ISO builder built by experimental coding Agents"
             />
           </div>
         </div>
@@ -251,16 +252,22 @@ const docsFeatures = [
               >.
             </p>
             <p class="text-muted-foreground text-sm mb-4">
-              A recipe is an elaborate <code class="bg-muted px-1.5 py-0.5"
+              A recipe is a <code class="bg-muted px-1.5 py-0.5"
                 >.rhai</code
               > script that describes how to acquire, build, and install a package.
-              Rhai is a safe, sandboxed scripting language embedded in Rust — readable
-              in seconds, impossible to hide malicious code in.
+              Rhai is a small scripting language embedded in Rust, readable in
+              seconds. Each step checks the real files before it runs, so an
+              interrupted build picks up where it stopped.
             </p>
             <p class="text-muted-foreground text-sm mb-4">
-              On immutable systems, recipe changes are applied to the inactive
-              slot (B) first. You trial-boot, then commit. Mutable mode exists,
-              but it is explicitly unsafe.
+              Recipes run inside a <a
+                href="https://github.com/gmkurtzer/ginux"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ui-link">Ginux</a
+              > domain: a userspace kernel that gives each build only the inputs,
+              network hosts and resources it was granted. On A/B systems, recipe
+              changes compose the inactive slot, never the system you are running.
             </p>
             <CheckList items={recipeAdvantages} />
             <Fragment slot="demo">
@@ -273,24 +280,25 @@ const docsFeatures = [
         </div>
       </section>
 
-      <!-- Local Assistant -->
-      <section id="assistant" class="py-16 section-surface">
+      <!-- Atomic Updates -->
+      <section id="updates" class="py-16 section-surface">
         <div class="container max-w-4xl">
           <SplitSection reverse={true}>
             <Fragment slot="demo">
-              <CodeBlock code={assistantCode} language="bash" />
+              <CodeBlock code={updateCode} language="bash" />
             </Fragment>
-            <SectionHeader title="Local Recipe Assistant" />
+            <SectionHeader title="Updates You Can Undo" />
             <p class="text-muted-foreground text-sm mb-3">
-              Writing recipes is straightforward, but you shouldn't have to do
-              it from scratch.
+              The disk holds two system slots and one running system. An update
+              never changes the slot you are booted from.
             </p>
             <p class="text-muted-foreground text-sm mb-4">
-              The recipe assistant is a local LLM that drafts recipes by reading
-              upstream documentation. It runs on your machine — no cloud, no
-              telemetry. You review the output, make adjustments, and run it.
+              <code class="bg-muted px-1.5 py-0.5">recab</code> writes the new
+              system into the other slot, carries your hostname, users and
+              enabled services across, and boots it once. Mutable mode exists,
+              but it is an explicit, unsafe opt-in.
             </p>
-            <CheckList items={assistantFeatures} />
+            <CheckList items={updateSteps} />
           </SplitSection>
         </div>
       </section>
@@ -300,12 +308,14 @@ const docsFeatures = [
         <div class="container max-w-3xl text-center">
           <SectionHeader title="Embedded Documentation" centered={true} />
           <p class="text-muted-foreground text-sm max-w-2xl mx-auto mb-6">
-            LevitateOS installs manually. The documentation lives alongside your
-            terminal in a tmux pane — no browser tabs, no context switching.
+            LevitateOS installs the Arch way, one step at a time, with a guide
+            beside you. The live ISO boots into an install screen: a guided app
+            for each step, and a shell one key away for anyone who would rather
+            type the commands.
           </p>
           <HighlightBox class="text-left">
             <p class="text-foreground text-sm mb-3">
-              The install guide appears <strong>right next to your shell</strong
+              The install guide sits <strong>right next to your shell</strong
               >:
             </p>
             <ul class="space-y-2 text-muted-foreground text-sm">
@@ -337,7 +347,7 @@ const docsFeatures = [
             and have the tools to shape it.
           </p>
           <p class="text-lg text-foreground font-medium mb-6">
-            A clean base. Readable recipes. Local AI assistance.<br />
+            A clean base. Readable recipes. Rollback in one reboot.<br />
             <span class="text-primary">Your system, your way.</span>
           </p>
           <CTAButtons
@@ -447,14 +457,13 @@ const docsFeatures = [
             </div>
             <div class="ui-panel ui-lift h-full p-4 flex flex-col">
               <a
-                href="https://huggingface.co"
+                href="https://github.com/gmkurtzer/ginux"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-sm font-medium ui-link"
-                >Hugging Face</a
+                class="text-sm font-medium ui-link">Ginux</a
               >
               <p class="text-sm text-muted-foreground mt-1">
-                For SmolLM3, the local LLM powering the recipe assistant.
+                For the userspace kernel every recipe builds inside.
               </p>
             </div>
             <div class="ui-panel ui-lift h-full p-4 flex flex-col">
