@@ -6,6 +6,7 @@ import CodeBlock from "../components/CodeBlock.astro"
 import ProductEntry from "../components/ProductEntry.astro"
 import ImageFrame from "../components/ImageFrame.astro"
 import { variants } from "../lib/variants"
+import { commands, EXAMPLE_DISK, EXAMPLE_SETUP } from "@levitate/docs-content/install"
 
 // The runnable example from tools/recipe/WRITING_RECIPES.md.
 const recipeCode = `const RECIPE_API = 2;
@@ -62,26 +63,26 @@ const updateNotes = [
 	{ line: 11, text: "Changed your mind? Back to A, while A still holds it." },
 ]
 
-// The install commands from the repository README. The margin notes explain them.
-const installCode = `recpart apply --disk /dev/nvme0n1 --confirm DESTROY
-
-
-
-recstrap /mnt
-recfstab /mnt >> /mnt/etc/fstab
-
-
-recsetup inspect --root /mnt --json
-recsetup apply --root /mnt --hostname myhostname
-
-
-recchroot /mnt -- passwd`
-const installNotes = [
-	{ line: 1, text: "Nothing is wiped until you type the word yourself." },
-	{ line: 5, text: "The whole system, laid down from the live ISO." },
-	{ line: 9, text: "See what it will configure before it does." },
-	{ line: 13, text: "Inside your new system, before its first boot." },
+// The install commands, from the install procedure the guide and the install screen use.
+// Each group gets a margin note on its first line.
+const example = EXAMPLE_DISK.target
+const installGroups = [
+	{ lines: [commands.partition(EXAMPLE_DISK.disk)], note: "Nothing is wiped until you type the word yourself." },
+	{ lines: [commands.extract(example), commands.fstab(example)], note: "The whole system, laid down from the live ISO." },
+	{
+		lines: [
+			commands.inspect(example, true),
+			commands.configure(example, { timezone: EXAMPLE_SETUP.timezone, locale: EXAMPLE_SETUP.locale }),
+		],
+		note: "See what it will configure before it does.",
+	},
+	{ lines: [commands.password(example)], note: "Inside your new system, before its first boot." },
 ]
+const installCode = installGroups.map((group) => group.lines.join("\n")).join("\n\n\n")
+const installNotes = installGroups.map((group, i) => ({
+	line: 1 + installGroups.slice(0, i).reduce((n, g) => n + g.lines.length + 2, 0),
+	text: group.note,
+}))
 
 // Notes on hello.rhai, each beside the line it explains.
 const recipeNotes = [
@@ -227,7 +228,7 @@ const principles = [
 						</div>
 					</div>
 					<div class="split__example">
-						<CodeBlock code={installCode} language="bash" label="Installing" source="README.md" notes={installNotes} />
+						<CodeBlock code={installCode} language="bash" label="Installing" source="docs/content/src/install.ts" notes={installNotes} />
 					</div>
 				</div>
 			</section>
