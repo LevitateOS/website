@@ -13,6 +13,7 @@ const sections = [
 	{ id: "before-installing", label: "Installing" },
 ]
 import { DISTROS, docLink } from "../lib/docs"
+import { HARDWARE } from "@levitate/docs-content/pages"
 ---
 
 <BaseLayout
@@ -33,7 +34,7 @@ import { DISTROS, docLink } from "../lib/docs"
 				</ImageFrame>
 				<div class="callout">
 					<strong class="callout__label">Note</strong>
-					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href={docLink("getting-started")}>documentation</a> describes the system and its installation.</p>
+					<p>There is nothing to download yet. Until a release exists you can build the ISO from the source with <code class="inline-code">cargo xtask build live-tools &lt;distro&gt;</code>; the <a href={docLink("getting-started")}>getting started guide</a> has the steps. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href={docLink("getting-started")}>documentation</a> describes the system and its installation.</p>
 				</div>
 			</section>
 
@@ -47,9 +48,10 @@ import { DISTROS, docLink } from "../lib/docs"
 							<tr><th scope="col">Component</th><th scope="col">Requirement</th></tr>
 						</thead>
 						<tbody>
-							<tr><th scope="row">CPU</th><td>x86-64-v3: Intel Haswell or newer, AMD Zen or newer</td></tr>
-							<tr><th scope="row">Firmware</th><td>UEFI, with Secure Boot disabled (the boot files are unsigned)</td></tr>
-							<tr><th scope="row">Disk</th><td>An NVMe disk</td></tr>
+							<tr><th scope="row">CPU</th><td>{HARDWARE.cpu}: {HARDWARE.cpuNote}</td></tr>
+							<tr><th scope="row">RAM</th><td>{HARDWARE.ram}</td></tr>
+							<tr><th scope="row">Firmware</th><td>{HARDWARE.firmware}</td></tr>
+							<tr><th scope="row">Disk</th><td>{HARDWARE.disk}, on {HARDWARE.storage}</td></tr>
 							<tr><th scope="row">Architecture</th><td>x86_64 first; AArch64 after</td></tr>
 						</tbody>
 					</table>
@@ -72,6 +74,12 @@ import { DISTROS, docLink } from "../lib/docs"
 							<dd>{variant.stack}</dd>
 							<dt>Base</dt>
 							<dd>{variant.base}</dd>
+							<dt>Administrator</dt>
+							<dd>{variant.admin}</dd>
+							<dt>Desktop</dt>
+							<dd>{variant.desktop}</dd>
+							<dt>Kernel</dt>
+							<dd>{variant.kernel}</dd>
 							<dt>Format</dt>
 							<dd>{variant.format}</dd>
 							<dt>Architecture</dt>

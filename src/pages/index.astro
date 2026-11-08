@@ -48,8 +48,12 @@ fn remove(ctx) {
 
 // The update example: the install procedure's stage command, with its flags on their own lines.
 // The margin notes explain it.
-const updateDistro = DISTROS.find((d) => d.id === "levitate")!
+const updateDistro = DISTROS[0]
 const updateCode = [
+	"# as administrator: " + DISTROS.map((d) => `${d.profile.privilege} on ${d.osName}`).join(", "),
+	"mount -o loop,ro <release>.iso /mnt",
+	"",
+	"",
 	commands.stage(updateDistro).replace(/ --(kernel|initrd)/g, " \\\n    --$1"),
 	"",
 	"",
@@ -61,9 +65,10 @@ const updateCode = [
 	"recab rollback",
 ].join("\n")
 const updateNotes = [
-	{ line: 1, text: "Written to the other slot. The running system is never touched." },
-	{ line: 6, text: "One trial boot. If B does not come up healthy, you are back on A." },
-	{ line: 11, text: "Changed your mind? Back to A, while A still holds it." },
+	{ line: 2, text: "The new release, mounted from its ISO." },
+	{ line: 5, text: "Written to the other slot. The running system is never touched." },
+	{ line: 10, text: "One trial boot. If B does not come up healthy, you are back on A." },
+	{ line: 15, text: "Changed your mind? Back to A, while A still holds it." },
 ]
 
 // The install commands, from the install procedure the guide and the install screen use.
@@ -178,7 +183,7 @@ const principles = [
 					<div class="split__copy">
 						<p class="eyebrow">Recipes, not repositories</p>
 						<h2 id="recipe-title">Every package is a file <em>you can read.</em></h2>
-						<p>Instead of <code class="inline-code">apt</code> or <code class="inline-code">dnf</code>, LevitateOS uses <code class="inline-code">recipe</code>. A recipe is a Rhai script with the package's facts, checks that inspect the real files, and hooks that acquire, build and install it.</p>
+						<p>Instead of <code class="inline-code">apt</code>, <code class="inline-code">dnf</code> or <code class="inline-code">apk</code>, both variants use <code class="inline-code">recipe</code>. A recipe is a Rhai script with the package's facts, checks that inspect the real files, and hooks that acquire, build and install it.</p>
 						<p>Recipes run inside a <a href="https://github.com/gmkurtzer/ginux">Ginux</a> domain, a userspace kernel that gives each build only the inputs, network hosts and resources it was granted. On an A/B system, recipe changes compose the inactive slot, never the system you are running.</p>
 						<ul class="notes">
 							{recipePoints.map((point) => <li>{point}</li>)}
@@ -224,7 +229,7 @@ const principles = [
 					<div class="split__copy">
 						<p class="eyebrow">Installation</p>
 						<h2 id="install-title">The guide sits <em>beside your shell.</em></h2>
-						<p>LevitateOS installs the Arch way, one step at a time. The live ISO boots into an install screen: a shell on one side and the full installation guide on the other, with <kbd class="inline-code">Ctrl-]</kbd> switching between them.</p>
+						<p>Both variants install the Arch way, one step at a time. The live ISO boots into an install screen: a shell on one side and the full installation guide on the other, with <kbd class="inline-code">Ctrl-]</kbd> switching between them.</p>
 						<p>The same pages are on this site, so you can read ahead before you boot.</p>
 						<div class="actions">
 							{DISTROS.map((d) => <a class="text-action" href={docLink("installation", d.id)}>Read the {d.osName} installation guide</a>)}

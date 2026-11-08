@@ -1,7 +1,10 @@
 // One description of each variant, used by the homepage entries and the downloads page.
 // Keep status honest: nothing here is released until a published artifact exists.
 // The hardware both need is the docs' one baseline.
-import { HARDWARE } from "@levitate/docs-content/pages"
+// The stack, init, privilege tool, desktop and kernel come from the generated DISTROS
+// (`cargo xtask gen`); the base release is typed here until the generator emits it.
+import { DISTROS } from "@levitate/docs-content/distros"
+import { DESKTOP_NAME, HARDWARE, INIT_NAME, KERNEL_LINE_NAME } from "@levitate/docs-content/pages"
 
 export type ReleaseStatus = "available" | "in-development" | "planned"
 
@@ -14,6 +17,9 @@ export interface Variant {
 	stack: string
 	base: string
 	init: string
+	admin: string
+	desktop: string
+	kernel: string
 	status: ReleaseStatus
 	statusLabel: string
 	release: string
@@ -25,6 +31,21 @@ export interface Variant {
 	disk: string
 }
 
+const distro = (id: Variant["id"]) => DISTROS.find((d) => d.id === id)!
+const stack = (id: Variant["id"], userland: string) => {
+	const { profile } = distro(id)
+	return `${profile.libc} · ${INIT_NAME[profile.init]} · ${userland}`
+}
+const derived = (id: Variant["id"]) => {
+	const d = distro(id)
+	return {
+		init: INIT_NAME[d.profile.init],
+		admin: d.profile.privilege,
+		desktop: DESKTOP_NAME[d.profile.desktop],
+		kernel: `${d.kernel.version} (${KERNEL_LINE_NAME[d.profile.kernel_line]})`,
+	}
+}
+
 export const variants: Variant[] = [
 	{
 		id: "levitate",
@@ -33,9 +54,9 @@ export const variants: Variant[] = [
 		role: "The broad-compatibility choice, on a core system from signed Fedora RPMs.",
 		description:
 			"Run Linux software without patching, use familiar GNU tools, and find answers to most questions online. Choose it if you want the widest software compatibility.",
-		stack: "glibc · systemd · GNU",
+		stack: stack("levitate", "GNU"),
 		base: "Fedora 45 RPMs, signed and locked",
-		init: "systemd",
+		...derived("levitate"),
 		status: "in-development",
 		statusLabel: "In development",
 		release: "Planned for 2027",
@@ -53,9 +74,9 @@ export const variants: Variant[] = [
 		role: "The musl and OpenRC sibling in the LevitateOS family.",
 		description:
 			"A smaller, simpler base built by the same pipeline. Some software needs patching or compiling yourself, and you can see exactly what is running.",
-		stack: "musl · OpenRC · busybox",
+		stack: stack("acorn", "busybox"),
 		base: "Alpine Linux 3.24 APKs",
-		init: "OpenRC",
+		...derived("acorn"),
 		status: "in-development",
 		statusLabel: "In development",
 		release: "Planned for 2027",
