@@ -7,12 +7,6 @@ interface Props {
 
 const { content } = Astro.props
 
-type InlinePart =
-	| { type: "text"; content: string }
-	| { type: "code"; content: string }
-	| { type: "link"; content: string; href: string }
-	| { type: "bold"; content: string }
-
 function escapeHtml(value: string): string {
 	return value
 		.replaceAll("&", "&amp;")
@@ -38,39 +32,8 @@ function sanitizeHref(rawHref: string): string {
 	return "#"
 }
 
-function parseInlineContent(text: string): InlinePart[] {
-	const parts: InlinePart[] = []
-	const regex = /`([^`]+)`|\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))+\))|\*\*(.+?)\*\*/g
-	let lastIndex = 0
-	let match
-
-	while ((match = regex.exec(text)) !== null) {
-		if (match.index > lastIndex) {
-			parts.push({ type: "text", content: text.slice(lastIndex, match.index) })
-		}
-
-		if (match[1]) {
-			parts.push({ type: "code", content: match[1] })
-		} else if (match[2] && match[3]) {
-			parts.push({ type: "link", content: match[2], href: match[3] })
-		} else if (match[4]) {
-			parts.push({ type: "bold", content: match[4] })
-		}
-
-		lastIndex = match.index + match[0].length
-	}
-
-	if (lastIndex < text.length) {
-		parts.push({ type: "text", content: text.slice(lastIndex) })
-	}
-
-	return parts.length > 0 ? parts : [{ type: "text", content: text }]
-}
-
 function renderInlineNode(node: InlineNode): string {
-	if (typeof node === "string") {
-		return escapeHtml(node)
-	}
+	if (typeof node === "string") return escapeHtml(node)
 	switch (node.type) {
 		case "link":
 			return `<a href="${sanitizeHref(node.href)}">${escapeHtml(node.text)}</a>`
@@ -80,34 +43,14 @@ function renderInlineNode(node: InlineNode): string {
 			return `<code class="inline-code">${escapeHtml(node.text)}</code>`
 		case "italic":
 			return `<em>${escapeHtml(node.text)}</em>`
-		default:
-			return ""
 	}
+	// A new inline kind fails the typecheck here instead of vanishing from the page.
+	const unknown: never = node
+	throw new Error(`unknown inline node ${JSON.stringify(unknown)}`)
 }
 
-function renderContent(content: string | RichText): string {
-	if (Array.isArray(content)) {
-		return content.map(renderInlineNode).join("")
-	}
-
-	const parts = parseInlineContent(content)
-	return parts
-		.map((part) => {
-			if (part.type === "code") {
-				return `<code class="inline-code">${escapeHtml(part.content)}</code>`
-			}
-			if (part.type === "link") {
-				return `<a href="${sanitizeHref(part.href)}">${escapeHtml(part.content)}</a>`
-			}
-			if (part.type === "bold") {
-				return `<strong>${escapeHtml(part.content)}</strong>`
-			}
-			return escapeHtml(part.content)
-		})
-		.join("")
-}
-
-const renderedContent = renderContent(content)
+// A plain string is plain text, as on the install screen.
+const renderedContent = Array.isArray(content) ? content.map(renderInlineNode).join("") : escapeHtml(content)
 ---
 
 <Fragment set:html={renderedContent} />

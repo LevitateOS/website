@@ -1,0 +1,27 @@
+---
+import type { DocsContent } from "@levitate/docs-content"
+import DocsPage from "../../../components/docs/DocsPage.astro"
+import { DISTROS, isDistroPage, localize, pagesOf, type DistroId } from "../../../lib/docs"
+
+// Each distro's own version of every distro page.
+export function getStaticPaths() {
+	return DISTROS.flatMap((distro) =>
+		Object.entries(pagesOf(distro.id))
+			.filter(([slug]) => isDistroPage(slug))
+			.map(([slug, content]) => ({
+				params: { distro: distro.id, slug },
+				props: { content: localize(content, distro.id), slug, distro: distro.id },
+			})),
+	)
+}
+
+interface Props {
+	content: DocsContent
+	slug: string
+	distro: DistroId
+}
+
+const { content, slug, distro } = Astro.props
+---
+
+<DocsPage content={content} slug={slug} distro={distro} />

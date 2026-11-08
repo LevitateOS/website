@@ -1,4 +1,6 @@
 ---
+import { docLink } from "../../lib/docs"
+
 const path = Astro.url.pathname
 
 function normalize(input: string): string {
@@ -16,13 +18,13 @@ function isCurrent(item: { href: string; match?: string }): boolean {
 
 const navItems = [
 	{ href: "/download/", label: "Downloads" },
-	{ href: "/docs/getting-started/", label: "Docs", match: "/docs" },
-	{ href: "/docs/recipe-format/", label: "Recipes" },
+	{ href: docLink("getting-started"), label: "Docs", match: "/docs" },
+	{ href: docLink("recipe-format"), label: "Recipes" },
 	{ href: "https://github.com/LevitateOS/LevitateOS", label: "Source" },
 ]
 
 // Recipes is a docs page; mark it current instead of Docs while it is open.
-const onRecipes = normalize(path) === "/docs/recipe-format"
+const onRecipes = normalize(path) === normalize(docLink("recipe-format"))
 function current(item: (typeof navItems)[number]): boolean {
 	if (item.label === "Docs" && onRecipes) return false
 	return isCurrent(item)

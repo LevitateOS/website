@@ -16,7 +16,8 @@
     "@astrojs/check": "0.9.6",
     "@astrojs/sitemap": "^3.7.0",
     "@levitate/docs-content": "workspace:*",
-    "astro": "5.18.0"
+    "astro": "5.18.0",
+    "shiki": "^3.22.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

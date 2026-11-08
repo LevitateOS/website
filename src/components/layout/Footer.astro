@@ -1,33 +1,35 @@
 ---
+import { DISTROS, docLink } from "../../lib/docs"
+
 const year = new Date().getFullYear()
 
 const columns = [
 	{
 		title: "Getting started",
 		links: [
-			{ href: "/docs/getting-started/", label: "Overview" },
-			{ href: "/docs/installation/", label: "Installation guide" },
-			{ href: "/docs/post-installation/", label: "After installing" },
-			{ href: "/docs/troubleshooting/", label: "Troubleshooting" },
+			{ href: docLink("getting-started"), label: "Overview" },
+			...DISTROS.map((d) => ({ href: docLink("installation", d.id), label: `Installing ${d.osName}` })),
+			{ href: docLink("post-installation"), label: "After installing" },
+			{ href: docLink("troubleshooting"), label: "Troubleshooting" },
 		],
 	},
 	{
 		title: "Recipes",
 		links: [
-			{ href: "/docs/cli-reference/", label: "CLI reference" },
-			{ href: "/docs/recipe-format/", label: "Recipe format" },
-			{ href: "/docs/helpers-overview/", label: "Rhai helpers" },
-			{ href: "/docs/atomic-updates/", label: "Atomic updates" },
+			{ href: docLink("cli-reference"), label: "CLI reference" },
+			{ href: docLink("recipe-format"), label: "Recipe format" },
+			{ href: docLink("helpers-overview"), label: "Rhai helpers" },
+			{ href: docLink("atomic-updates"), label: "Atomic updates" },
 		],
 	},
 	{
 		title: "Tooling",
 		links: [
-			{ href: "/docs/recpart/", label: "recpart" },
-			{ href: "/docs/recstrap/", label: "recstrap" },
-			{ href: "/docs/recsetup/", label: "recsetup" },
-			{ href: "/docs/recab/", label: "recab" },
-			{ href: "/docs/rec-tooling-overview/", label: "All tools" },
+			{ href: docLink("recpart"), label: "recpart" },
+			{ href: docLink("recstrap"), label: "recstrap" },
+			{ href: docLink("recsetup"), label: "recsetup" },
+			{ href: docLink("recab"), label: "recab" },
+			{ href: docLink("rec-tooling-overview"), label: "All tools" },
 		],
 	},
 ]

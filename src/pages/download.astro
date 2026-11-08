@@ -12,6 +12,7 @@ const sections = [
 	...variants.map((variant) => ({ id: variant.id, label: variant.name })),
 	{ id: "before-installing", label: "Installing" },
 ]
+import { DISTROS, docLink } from "../lib/docs"
 ---
 
 <BaseLayout
@@ -32,7 +33,7 @@ const sections = [
 				</ImageFrame>
 				<div class="callout">
 					<strong class="callout__label">Note</strong>
-					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href="/docs/getting-started/">documentation</a> describes the system and its installation.</p>
+					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href={docLink("getting-started")}>documentation</a> describes the system and its installation.</p>
 				</div>
 			</section>
 
@@ -91,15 +92,15 @@ const sections = [
 						<div class="table-scroll" role="region" tabindex="0" aria-label={`${variant.name} memory and disk`}>
 							<table class="data-table">
 								<thead>
-									<tr><th scope="col">Resource</th><th scope="col">Minimum</th><th scope="col">Recommended</th></tr>
+									<tr><th scope="col">Resource</th><th scope="col">Needs</th></tr>
 								</thead>
 								<tbody>
-									<tr><th scope="row">RAM</th><td>{variant.ram.minimum}</td><td>{variant.ram.recommended}</td></tr>
-									<tr><th scope="row">Disk</th><td>{variant.disk.minimum}</td><td>{variant.disk.recommended}</td></tr>
+									<tr><th scope="row">RAM</th><td>{variant.ram}</td></tr>
+									<tr><th scope="row">Disk</th><td>{variant.disk}</td></tr>
 								</tbody>
 							</table>
 						</div>
-						<p><a class="text-action" href="/docs/variants/">Compare the variants</a></p>
+						<p><a class="text-action" href={docLink("variants")}>Compare the variants</a></p>
 					</div>
 				</section>
 			))}
@@ -111,7 +112,7 @@ const sections = [
 						<p>Installing overwrites the target disk. Back up anything you need first. LevitateOS collects no telemetry.</p>
 						<p>Each ISO boots into the install screen: a shell beside the full installation guide. <kbd class="inline-code">Ctrl-]</kbd> switches pane, <kbd class="inline-code">j</kbd>/<kbd class="inline-code">k</kbd> scroll the guide, and <kbd class="inline-code">Ctrl-q</kbd> leaves the install screen.</p>
 						<div class="actions">
-							<a class="text-action" href="/docs/installation/">Read the installation guide</a>
+							{DISTROS.map((d) => <a class="text-action" href={docLink("installation", d.id)}>Read the {d.osName} installation guide</a>)}
 						</div>
 					</div>
 					<div class="split__example">

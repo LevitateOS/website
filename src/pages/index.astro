@@ -6,6 +6,7 @@ import CodeBlock from "../components/CodeBlock.astro"
 import ProductEntry from "../components/ProductEntry.astro"
 import ImageFrame from "../components/ImageFrame.astro"
 import { variants } from "../lib/variants"
+import { DISTROS, docLink } from "../lib/docs"
 import { commands, EXAMPLE_DISK, EXAMPLE_SETUP } from "@levitate/docs-content/install"
 
 // The runnable example from tools/recipe/WRITING_RECIPES.md.
@@ -45,18 +46,20 @@ fn remove(ctx) {
     ctx
 }`
 
-// The update example from tools/recab/README.md. The margin notes explain it.
-const updateCode = `recab stage --rootfs /mnt/live/filesystem.erofs \\
-    --kernel /mnt/boot/vmlinuz \\
-    --initrd /mnt/boot/initramfs.img
-
-
-recab set-next B
-reboot
-
-
-
-recab rollback`
+// The update example: the install procedure's stage command, with its flags on their own lines.
+// The margin notes explain it.
+const updateDistro = DISTROS.find((d) => d.id === "levitate")!
+const updateCode = [
+	commands.stage(updateDistro).replace(/ --(kernel|initrd)/g, " \\\n    --$1"),
+	"",
+	"",
+	"recab set-next B",
+	"reboot",
+	"",
+	"",
+	"",
+	"recab rollback",
+].join("\n")
 const updateNotes = [
 	{ line: 1, text: "Written to the other slot. The running system is never touched." },
 	{ line: 6, text: "One trial boot. If B does not come up healthy, you are back on A." },
@@ -141,7 +144,7 @@ const principles = [
 					<p class="hero-deck">A Linux distribution where every package is a recipe you can read, and every update is a trial you can undo.</p>
 					<div class="actions">
 						<a class="button" href="#recipe">Read a recipe</a>
-						<a class="text-action" href="/docs/getting-started/">Read the docs</a>
+						<a class="text-action" href={docLink("getting-started")}>Read the docs</a>
 					</div>
 			</ImageFrame>
 		</section>
@@ -181,7 +184,7 @@ const principles = [
 							{recipePoints.map((point) => <li>{point}</li>)}
 						</ul>
 						<div class="actions">
-							<a class="text-action" href="/docs/recipe-format/">Read the recipe format</a>
+							<a class="text-action" href={docLink("recipe-format")}>Read the recipe format</a>
 						</div>
 					</div>
 					<div class="split__example">
@@ -207,11 +210,11 @@ const principles = [
 							{updatePoints.map((point) => <li>{point}</li>)}
 						</ul>
 						<div class="actions">
-							<a class="text-action" href="/docs/atomic-updates/">Read about A/B updates</a>
+							<a class="text-action" href={docLink("atomic-updates")}>Read about A/B updates</a>
 						</div>
 					</div>
 					<div class="split__example">
-						<CodeBlock code={updateCode} language="bash" label="An update" source="tools/recab/README.md" notes={updateNotes} />
+						<CodeBlock code={updateCode} language="bash" label="An update" source="docs/content/src/install.ts" notes={updateNotes} />
 					</div>
 				</div>
 			</section>
@@ -224,7 +227,7 @@ const principles = [
 						<p>LevitateOS installs the Arch way, one step at a time. The live ISO boots into an install screen: a shell on one side and the full installation guide on the other, with <kbd class="inline-code">Ctrl-]</kbd> switching between them.</p>
 						<p>The same pages are on this site, so you can read ahead before you boot.</p>
 						<div class="actions">
-							<a class="text-action" href="/docs/installation/">Read the installation guide</a>
+							{DISTROS.map((d) => <a class="text-action" href={docLink("installation", d.id)}>Read the {d.osName} installation guide</a>)}
 						</div>
 					</div>
 					<div class="split__example">

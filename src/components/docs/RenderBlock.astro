@@ -4,7 +4,6 @@ import TextBlock from "./TextBlock.astro"
 import CommandBlockComponent from "./CommandBlock.astro"
 import TableBlock from "./TableBlock.astro"
 import ListBlock from "./ListBlock.astro"
-import ConversationBlock from "./ConversationBlock.astro"
 import InteractiveBlock from "./InteractiveBlock.astro"
 import QABlock from "./QABlock.astro"
 import NoteBlock from "./NoteBlock.astro"
@@ -15,6 +14,13 @@ interface Props {
 }
 
 const { block } = Astro.props
+
+// Every block kind has a branch below; a new kind fails the typecheck here instead of
+// rendering as nothing.
+const RENDERED = ["text", "code", "table", "list", "interactive", "command", "qa", "note"] as const
+type Unrendered = Exclude<ContentBlock["type"], (typeof RENDERED)[number]>
+const everyKind: [Unrendered] extends [never] ? true : Unrendered = true
+if (!RENDERED.includes(block.type) || !everyKind) throw new Error(`unknown block type ${block.type}`)
 ---
 
 <div class="docs-block">
@@ -35,11 +41,6 @@ const { block } = Astro.props
 }
 {
 	block.type === "list" && <ListBlock list={block} />
-}
-{
-	block.type === "conversation" && (
-		<ConversationBlock conversation={block} />
-	)
 }
 {
 	block.type === "interactive" && (

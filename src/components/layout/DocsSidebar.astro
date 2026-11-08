@@ -1,15 +1,18 @@
 ---
-import { docsNav, contentBySlug } from "@levitate/docs-content/live"
+import { docsNav } from "@levitate/docs-content"
 import { toAnchor } from "../../lib/anchor"
+import { DISTROS, docsHref, isDistroPage, pagesOf, type DistroId } from "../../lib/docs"
 
 interface Props {
 	currentSlug: string
+	/** The distro whose version of the distro pages the reader is on, if any. */
+	distro?: DistroId
 }
 
-const { currentSlug } = Astro.props
-const currentPath = `/docs/${currentSlug}`
+const { currentSlug, distro } = Astro.props
+const pages = pagesOf(distro ?? DISTROS[0]!.id) as Record<string, { sections: { title: string; level?: 2 | 3 }[] }>
 const currentTitle =
-	docsNav.flatMap((section) => section.items).find((item) => item.href === currentPath)?.title || "Documentation"
+	docsNav.flatMap((section) => section.items).find((item) => item.slug === currentSlug)?.title || "Documentation"
 
 // Only long pages get an in-page contents list under their nav entry.
 const MIN_SECTIONS_FOR_CONTENTS = 4
@@ -19,17 +22,29 @@ const MIN_SECTIONS_FOR_CONTENTS = 4
 {[false, true].map((compact) => {
 	const nav = (
 		<nav class="docs-nav" aria-label={compact ? "Documentation (compact)" : "Documentation"}>
+			{isDistroPage(currentSlug) && (
+				<section>
+					<h2>Distro</h2>
+					<ul>
+						{DISTROS.map((d) => (
+							<li>
+								<a href={docsHref(currentSlug, d.id)} aria-current={d.id === distro ? "page" : undefined}>{d.osName}</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			)}
 			{docsNav.map((section) => (
 				<section>
 					<h2>{section.title}</h2>
 					<ul>
 						{section.items.map((item) => {
-							const isActive = currentPath === item.href
-							const sections = contentBySlug[item.href.replace("/docs/", "")]?.sections ?? []
+							const isActive = currentSlug === item.slug
+							const sections = pages[item.slug]?.sections ?? []
 							const showContents = !compact && isActive && sections.length >= MIN_SECTIONS_FOR_CONTENTS
 							return (
 								<li>
-									<a href={item.href} aria-current={isActive ? "page" : undefined}>{item.title}</a>
+									<a href={docsHref(item.slug, distro)} aria-current={isActive ? "page" : undefined}>{item.title}</a>
 									{showContents && (
 										<ul class="docs-nav__sub" aria-label="On this page">
 											{sections.filter((s) => (s.level ?? 2) === 2).map((s) => (

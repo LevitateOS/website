@@ -1,5 +1,7 @@
 // One description of each variant, used by the homepage entries and the downloads page.
 // Keep status honest: nothing here is released until a published artifact exists.
+// The hardware both need is the docs' one baseline.
+import { HARDWARE } from "@levitate/docs-content/pages"
 
 export type ReleaseStatus = "available" | "in-development" | "planned"
 
@@ -19,8 +21,8 @@ export interface Variant {
 	format: string
 	strengths: string[]
 	tradeoffs: string[]
-	ram: { minimum: string; recommended: string }
-	disk: { minimum: string; recommended: string }
+	ram: string
+	disk: string
 }
 
 export const variants: Variant[] = [
@@ -41,8 +43,8 @@ export const variants: Variant[] = [
 		format: "Live UEFI ISO",
 		strengths: ["Broad Linux software compatibility", "Core system from signed Fedora 45 RPMs", "systemd service management", "Familiar GNU tools"],
 		tradeoffs: ["Larger binaries", "Slower boot", "Higher memory use"],
-		ram: { minimum: "16 GB", recommended: "32 GB" },
-		disk: { minimum: "64 GB", recommended: "256 GB" },
+		ram: HARDWARE.ram,
+		disk: HARDWARE.disk,
 	},
 	{
 		id: "acorn",
@@ -61,7 +63,7 @@ export const variants: Variant[] = [
 		format: "Live UEFI ISO",
 		strengths: ["Faster boot", "Lower memory use", "Smaller disk footprint", "Simpler init system"],
 		tradeoffs: ["Some software needs patching", "Fewer pre-built packages", "Less documentation online"],
-		ram: { minimum: "4 GB", recommended: "8 GB" },
-		disk: { minimum: "32 GB", recommended: "128 GB" },
+		ram: HARDWARE.ram,
+		disk: HARDWARE.disk,
 	},
 ]

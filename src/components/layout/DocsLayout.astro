@@ -3,21 +3,24 @@ import Header from "./Header.astro"
 import Footer from "./Footer.astro"
 import DocsSidebar from "./DocsSidebar.astro"
 import BaseLayout from "../../layouts/BaseLayout.astro"
+import type { DistroId } from "../../lib/docs"
 
 interface Props {
 	title: string
 	currentSlug: string
+	/** Set on a distro page's version for that distro. */
+	distro?: DistroId
 	description?: string
 }
 
-const { title, currentSlug, description } = Astro.props
+const { title, currentSlug, distro, description } = Astro.props
 const pageDescription = description || `${title}: LevitateOS documentation.`
 ---
 
 <BaseLayout title={`${title} · LevitateOS docs`} description={pageDescription}>
 	<Header />
 	<div class="wrap docs-layout">
-		<DocsSidebar currentSlug={currentSlug} />
+		<DocsSidebar currentSlug={currentSlug} distro={distro} />
 		<main id="main" class="docs-article">
 			<slot />
 		</main>

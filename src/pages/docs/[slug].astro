@@ -1,21 +1,39 @@
 ---
 import type { DocsContent } from "@levitate/docs-content"
 import DocsPage from "../../components/docs/DocsPage.astro"
-import { contentBySlug } from "@levitate/docs-content/live"
+import DocsLayout from "../../components/layout/DocsLayout.astro"
+import { DISTROS, docsHref, isDistroPage, pagesOf, type DistroId } from "../../lib/docs"
 
+// Shared pages, and for each distro page the choice of distro (which is also where the
+// old, distro-less URLs land).
 export function getStaticPaths() {
-	return Object.entries(contentBySlug).map(([slug, content]) => ({
+	const first = DISTROS[0]!.id
+	return Object.entries(pagesOf(first)).map(([slug, content]) => ({
 		params: { slug },
-		props: { content, slug },
+		props: { content, slug, choose: isDistroPage(slug) },
 	}))
 }
 
 interface Props {
 	content: DocsContent
 	slug: string
+	choose: boolean
 }
 
-const { content, slug } = Astro.props
+const { content, slug, choose } = Astro.props
 ---
 
-<DocsPage content={content} slug={slug} />
+{choose ? (
+	<DocsLayout title={content.title} currentSlug={slug} description={`${content.title}: choose LevitateOS or AcornOS.`}>
+		<p class="eyebrow">Documentation</p>
+		<h1>{content.title}</h1>
+		<p class="docs-intro">This page is written for each distro. Choose yours:</p>
+		<ul>
+			{DISTROS.map((distro) => (
+				<li><a href={docsHref(slug, distro.id)}>{distro.osName}: {content.title}</a></li>
+			))}
+		</ul>
+	</DocsLayout>
+) : (
+	<DocsPage content={content} slug={slug} />
+)}

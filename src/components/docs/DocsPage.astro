@@ -1,47 +1,37 @@
 ---
-import type { DocsContent, Section, ContentBlock } from "@levitate/docs-content"
+import { plainText, type DocsContent, type Section, type ContentBlock } from "@levitate/docs-content"
 import DocsLayout from "../layout/DocsLayout.astro"
 import InlineContent from "./InlineContent.astro"
 import RenderBlock from "./RenderBlock.astro"
 import ImageFrame from "../ImageFrame.astro"
 import { toAnchor } from "../../lib/anchor"
+import { distroName, type DistroId } from "../../lib/docs"
 
 interface Props {
 	content: DocsContent
 	slug: string
+	/** The distro this version of a distro page is for. */
+	distro?: DistroId
 }
 
-const { content, slug } = Astro.props
+const { content, slug, distro } = Astro.props
 
-
-function extractPlainText(intro: any): string | undefined {
-	if (!intro) return undefined
-	if (typeof intro === "string") return intro
-	if (Array.isArray(intro)) {
-		return intro
-			.filter((item: any) => typeof item === "string" || item.type === "text")
-			.map((item: any) => (typeof item === "string" ? item : item.text))
-			.join(" ")
-			.slice(0, 160)
-	}
-	return undefined
-}
-
-const description = extractPlainText(content.intro)
+const description = content.intro ? plainText(content.intro).slice(0, 160) : undefined
+const eyebrow = distro ? `${distroName(distro)} documentation` : "Documentation"
 ---
 
-<DocsLayout title={content.title} currentSlug={slug} description={description}>
+<DocsLayout title={content.title} currentSlug={slug} distro={distro} description={description}>
 	{slug === "getting-started" ? (
 		<ImageFrame art="paper" class="frame-host--inset frame-host--compact frame-host--docs">
 			<div>
-				<p class="eyebrow">Documentation</p>
+				<p class="eyebrow">{eyebrow}</p>
 				<h1>{content.title}</h1>
 				{content.intro && <p class="docs-intro"><InlineContent content={content.intro} /></p>}
 			</div>
 		</ImageFrame>
 	) : (
 		<>
-			<p class="eyebrow">Documentation</p>
+			<p class="eyebrow">{eyebrow}</p>
 			<h1>{content.title}</h1>
 			{content.intro && <p class="docs-intro"><InlineContent content={content.intro} /></p>}
 		</>

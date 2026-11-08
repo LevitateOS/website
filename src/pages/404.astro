@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Header from "../components/layout/Header.astro"
 import Footer from "../components/layout/Footer.astro"
+import { docLink } from "../lib/docs"
 ---
 
 <BaseLayout title="Page not found · LevitateOS" description="The page you're looking for doesn't exist.">
@@ -12,7 +13,7 @@ import Footer from "../components/layout/Footer.astro"
 			<h1>Page not found.</h1>
 			<p class="lead">There is no page at this address. It may have moved, or the link may be mistyped.</p>
 			<div class="actions">
-				<a class="button" href="/docs/getting-started/">Read the docs</a>
+				<a class="button" href={docLink("getting-started")}>Read the docs</a>
 				<a href="/">Go to the homepage</a>
 			</div>
 		</div>
