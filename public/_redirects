@@ -1,0 +1,2 @@
+/docs/levitate/* /docs/:splat 301
+/docs/acorn/* /acorn/docs/:splat 301

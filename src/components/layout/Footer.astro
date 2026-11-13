@@ -1,5 +1,16 @@
 ---
-import { DISTROS, docLink } from "../../lib/docs"
+import { docLink } from "../../lib/docs"
+import { variantOf } from "../../lib/variants"
+import { DEFAULT_DISTRO, distroName, href, type DistroId } from "../../lib/flavor"
+
+interface Props {
+	distro?: DistroId
+}
+
+const { distro = DEFAULT_DISTRO } = Astro.props
+const osName = distroName(distro)
+const { lockup: lockupArt } = variantOf(distro)
+const lockup = { src: lockupArt.dark, width: Math.round((lockupArt.width * 28) / 40) }
 
 const year = new Date().getFullYear()
 
@@ -7,29 +18,29 @@ const columns = [
 	{
 		title: "Getting started",
 		links: [
-			{ href: docLink("getting-started"), label: "Overview" },
-			...DISTROS.map((d) => ({ href: docLink("installation", d.id), label: `Installing ${d.osName}` })),
-			{ href: docLink("post-installation"), label: "After installing" },
-			{ href: docLink("troubleshooting"), label: "Troubleshooting" },
+			{ href: docLink("getting-started", distro), label: "Overview" },
+			{ href: docLink("installation", distro), label: `Installing ${osName}` },
+			{ href: docLink("post-installation", distro), label: "After installing" },
+			{ href: docLink("troubleshooting", distro), label: "Troubleshooting" },
 		],
 	},
 	{
 		title: "Recipes",
 		links: [
-			{ href: docLink("cli-reference"), label: "CLI reference" },
-			{ href: docLink("recipe-format"), label: "Recipe format" },
-			{ href: docLink("helpers-overview"), label: "Rhai helpers" },
-			{ href: docLink("atomic-updates"), label: "Atomic updates" },
+			{ href: docLink("cli-reference", distro), label: "CLI reference" },
+			{ href: docLink("recipe-format", distro), label: "Recipe format" },
+			{ href: docLink("helpers-overview", distro), label: "Rhai helpers" },
+			{ href: docLink("atomic-updates", distro), label: "Atomic updates" },
 		],
 	},
 	{
 		title: "Tooling",
 		links: [
-			{ href: docLink("recpart"), label: "recpart" },
-			{ href: docLink("recstrap"), label: "recstrap" },
-			{ href: docLink("recsetup"), label: "recsetup" },
-			{ href: docLink("recab"), label: "recab" },
-			{ href: docLink("rec-tooling-overview"), label: "All tools" },
+			{ href: docLink("recpart", distro), label: "recpart" },
+			{ href: docLink("recstrap", distro), label: "recstrap" },
+			{ href: docLink("recsetup", distro), label: "recsetup" },
+			{ href: docLink("recab", distro), label: "recab" },
+			{ href: docLink("rec-tooling-overview", distro), label: "All tools" },
 		],
 	},
 ]
@@ -39,7 +50,7 @@ const columns = [
 	<div class="wrap">
 		<div class="foot-grid">
 			<div class="foot-brand">
-				<img src="/brand/levitate-lockup-paper.svg" width="149" height="28" alt="LevitateOS" />
+				<img src={lockup.src} width={lockup.width} height="28" alt={osName} />
 				<p>Be your own package maintainer.</p>
 			</div>
 			{columns.map((column) => (
@@ -57,7 +68,7 @@ const columns = [
 		<div class="foot-base">
 			<div class="foot-links">
 				<span>&copy; {year} LevitateOS</span>
-				<a href="/privacy/">Privacy</a>
+				<a href={href("/privacy/", distro)}>Privacy</a>
 				<a href="https://github.com/LevitateOS/LevitateOS/issues">Report an issue</a>
 				<a href="https://github.com/LevitateOS/LevitateOS/blob/master/LICENSE">MIT or Apache-2.0</a>
 			</div>

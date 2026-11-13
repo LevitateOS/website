@@ -68,8 +68,8 @@ action per page and the occasional note. Square corners throughout.
   type, shape, spacing, layout, frame and motion; the night palette is a site
   addition the kit does not define. After editing it, run
   `python3 scripts/export-tokens.py` to regenerate `tokens.css`. Components use
-  the `--fn-*` role tokens, never raw hex values. `data-product="acorn"` on an
-  element switches `--fn-brand` to the AcornOS brown inside it.
+  the `--fn-*` role tokens, never raw hex values. `data-product` on an element sets
+  `--fn-brand` to that product's colour inside it; `<html>` carries the page's flavour.
 - Every surface sets its own foreground. Light lettering appears only on the red
   action and the pine ending and footer; the footer stays pine in both
   appearances.
@@ -91,19 +91,41 @@ action per page and the occasional note. Square corners throughout.
   footer; the choice is kept in `localStorage` and applied before first paint
   through `data-theme` on `<html>`.
 
+## Flavours and URLs
+
+The site has two flavours, LevitateOS and AcornOS, chosen by the logos in the top
+bar. The flavour is part of the URL, so everything is static and the switch is a
+plain link to the same page in the other flavour.
+
+| Page | LevitateOS | AcornOS |
+|------|------------|---------|
+| Home | `/` | `/acorn/` |
+| Docs page | `/docs/<slug>/` | `/acorn/docs/<slug>/` |
+| Downloads | `/download/` | `/acorn/download/` |
+| Privacy | `/privacy/` | `/acorn/privacy/` |
+
+Each docs tree renders `docsFor(<distro>)` for every slug: distro pages (nav items
+with `distro: true`) come out in that distro's version, shared pages are
+identical, and their AcornOS copies name the LevitateOS URL as canonical.
+`src/lib/flavor.ts` owns the prefixes (`href`, `siblingHref`); the per-flavour
+homepage copy is on each variant in `src/lib/variants.ts`. The old
+`/docs/levitate/*` and `/docs/acorn/*` URLs redirect through `public/_redirects`.
+
 ## Structure
 
 ```
 src/
 ├── pages/
-│   ├── index.astro      # Homepage
-│   ├── download.astro   # Download page
-│   └── docs/[slug].astro
+│   ├── index.astro, download.astro, privacy.astro, docs/[slug].astro
+│   └── acorn/           # the same routes for AcornOS
 ├── components/
-│   ├── layout/          # Header, Footer, Sidebar
+│   ├── pages/           # Home, Download and Privacy bodies, taking a `distro`
+│   ├── layout/          # Header (flavour switch), Footer, Sidebar
 │   └── docs/            # Content block renderers
 ├── layouts/
 │   └── BaseLayout.astro
+├── lib/
+│   └── flavor.ts        # flavour prefixes and the switch's target
 └── styles/
     └── global.css
 ```

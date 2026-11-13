@@ -1,7 +1,7 @@
 // The site's view of the generated docs: which pages each distro has, their URLs, and the
-// page text for llms.txt. Distro pages live at /docs/<distro>/<slug>/; the same slug
-// without a distro (/docs/<slug>/) lets the reader pick one. Shared pages live at
-// /docs/<slug>/.
+// page text for llms.txt. Every flavour has every page at /docs/<slug>/ (LevitateOS) or
+// /acorn/docs/<slug>/ (AcornOS); distro pages come out in that flavour's version, shared
+// pages are identical.
 import {
 	docsFor,
 	docsNav,
@@ -12,8 +12,9 @@ import {
 	type RichText,
 } from "@levitate/docs-content"
 import { DISTROS, type DistroId } from "@levitate/docs-content/distros"
+import { distroName, href } from "./flavor"
 
-export { DISTROS }
+export { DISTROS, distroName }
 export type { DistroId }
 
 const distroSlugs = new Set(docsNav.flatMap((section) => section.items.filter((i) => i.distro).map((i) => i.slug)))
@@ -23,25 +24,18 @@ export function isDistroPage(slug: string): boolean {
 	return distroSlugs.has(slug)
 }
 
-/** A docs page's URL; a distro page's own version when `distro` is given. */
-export function docsHref(slug: string, distro?: DistroId): string {
-	return distro && isDistroPage(slug) ? `/docs/${distro}/${slug}/` : `/docs/${slug}/`
+/** A docs page's URL in `distro`'s flavour. */
+export function docsHref(slug: string, distro: DistroId): string {
+	return href(`/docs/${slug}/`, distro)
 }
 
 /** A hand-written link to a docs page: the slug is typed, so a renamed page fails the typecheck. */
-export function docLink(slug: DocsSlug, distro?: DistroId): string {
+export function docLink(slug: DocsSlug, distro: DistroId): string {
 	return docsHref(slug, distro)
 }
 
-export function distroName(distro: DistroId): string {
-	return DISTROS.find((d) => d.id === distro)!.osName
-}
-
-/** `/docs/<slug>[#anchor]` pointed at `distro`'s version when the slug is a distro page. */
-function localHref(href: string, distro: DistroId): string {
-	const match = /^\/docs\/([^/#?]+)\/?([#?].*)?$/.exec(href)
-	if (!match || !isDistroPage(match[1]!)) return href
-	return `/docs/${distro}/${match[1]}/${match[2] ?? ""}`
+function localHref(link: string, distro: DistroId): string {
+	return link.startsWith("/") && !link.startsWith("//") ? href(link, distro) : link
 }
 
 function localText<T extends string | RichText>(text: T, distro: DistroId): T {
@@ -88,7 +82,7 @@ function localBlock(block: ContentBlock, distro: DistroId): ContentBlock {
 	}
 }
 
-/** The page with its links to distro pages pointed at `distro`'s versions. */
+/** The page with its internal links pointed into `distro`'s flavour. */
 export function localize(content: DocsContent, distro: DistroId): DocsContent {
 	return {
 		...content,

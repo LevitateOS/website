@@ -1,18 +1,31 @@
 ---
 import type { Variant } from "../lib/variants"
+import { href, type DistroId } from "../lib/flavor"
 
 interface Props {
 	variant: Variant
+	/** The flavour of the page the card is on. */
+	distro: DistroId
 }
 
-const { variant } = Astro.props
+const { variant, distro } = Astro.props
+const here = variant.id === distro
 const statusClass = variant.status === "available" ? "status--available" : ""
 ---
 
 <article class="entry" data-product={variant.id} aria-labelledby={`entry-${variant.id}`}>
 	<h3 class="lockup" id={`entry-${variant.id}`}>
-		<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="40" alt={variant.name} />
-		<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="40" alt={variant.name} />
+		{here ? (
+			<>
+				<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="40" alt={variant.name} />
+				<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="40" alt={variant.name} />
+			</>
+		) : (
+			<a href={href("/", variant.id)}>
+				<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="40" alt={variant.name} />
+				<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="40" alt={variant.name} />
+			</a>
+		)}
 	</h3>
 	<p class="entry__role">{variant.role}</p>
 	<dl class="facts">
@@ -30,5 +43,8 @@ const statusClass = variant.status === "available" ? "status--available" : ""
 		<dd>A/B by default, trial boot, rollback</dd>
 	</dl>
 	<p class:list={["status", statusClass]}>{variant.statusLabel} · {variant.release}</p>
-	<p><a class="text-action" href={`/download/#${variant.id}`}>{variant.name} status</a></p>
+	<p class="entry__links">
+		<a class="text-action" href={href(`/download/#${variant.id}`, distro)}>{variant.name} status</a>
+		{!here && <a class="text-action" href={href("/", variant.id)}>Switch to {variant.name}</a>}
+	</p>
 </article>

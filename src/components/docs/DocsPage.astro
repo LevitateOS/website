@@ -5,19 +5,20 @@ import InlineContent from "./InlineContent.astro"
 import RenderBlock from "./RenderBlock.astro"
 import ImageFrame from "../ImageFrame.astro"
 import { toAnchor } from "../../lib/anchor"
-import { distroName, type DistroId } from "../../lib/docs"
+import { isDistroPage } from "../../lib/docs"
+import { DEFAULT_DISTRO, distroName, type DistroId } from "../../lib/flavor"
 
 interface Props {
 	content: DocsContent
 	slug: string
-	/** The distro this version of a distro page is for. */
+	/** The flavour this version of the page is for. */
 	distro?: DistroId
 }
 
-const { content, slug, distro } = Astro.props
+const { content, slug, distro = DEFAULT_DISTRO } = Astro.props
 
 const description = content.intro ? plainText(content.intro).slice(0, 160) : undefined
-const eyebrow = distro ? `${distroName(distro)} documentation` : "Documentation"
+const eyebrow = isDistroPage(slug) ? `${distroName(distro)} documentation` : "Documentation"
 ---
 
 <DocsLayout title={content.title} currentSlug={slug} distro={distro} description={description}>

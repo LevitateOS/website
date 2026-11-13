@@ -30,7 +30,7 @@ export function llmsIndex(): string {
 				? DISTROS.map(
 						(d) => `- [${item.title} (${d.osName})](${site}${docsHref(item.slug, d.id)})${about(pages(d.id)[item.slug])}`,
 					)
-				: [`- [${item.title}](${site}${docsHref(item.slug)})${about(pages(DISTROS[0]!.id)[item.slug])}`],
+				: [`- [${item.title}](${site}${docsHref(item.slug, "levitate")})${about(pages("levitate")[item.slug])}`],
 		)
 		return [`## ${section.title}`, "", ...lines].join("\n")
 	})
@@ -39,7 +39,7 @@ export function llmsIndex(): string {
 
 /** Every page's text: the shared pages once, and each distro's own pages. */
 export function llmsFull(): string {
-	const shared = pagesOf(DISTROS[0]!.id) as Record<string, Parameters<typeof pageText>[0]>
+	const shared = pagesOf("levitate") as Record<string, Parameters<typeof pageText>[0]>
 	const parts = [header()]
 	for (const d of DISTROS) {
 		const pages = pagesOf(d.id) as Record<string, Parameters<typeof pageText>[0]>

@@ -3,27 +3,31 @@ import Header from "./Header.astro"
 import Footer from "./Footer.astro"
 import DocsSidebar from "./DocsSidebar.astro"
 import BaseLayout from "../../layouts/BaseLayout.astro"
-import type { DistroId } from "../../lib/docs"
+import { DEFAULT_DISTRO, distroName, href, type DistroId } from "../../lib/flavor"
+import { isDistroPage } from "../../lib/docs"
 
 interface Props {
 	title: string
 	currentSlug: string
-	/** Set on a distro page's version for that distro. */
+	/** The flavour of the page. */
 	distro?: DistroId
 	description?: string
 }
 
-const { title, currentSlug, distro, description } = Astro.props
-const pageDescription = description || `${title}: LevitateOS documentation.`
+const { title, currentSlug, distro = DEFAULT_DISTRO, description } = Astro.props
+const osName = distroName(distro)
+const pageDescription = description || `${title}: ${osName} documentation.`
+// A shared page reads the same in both flavours, so the AcornOS copy points at the LevitateOS one.
+const canonicalPath = isDistroPage(currentSlug) ? undefined : href(`/docs/${currentSlug}/`, "levitate")
 ---
 
-<BaseLayout title={`${title} · LevitateOS docs`} description={pageDescription}>
-	<Header />
+<BaseLayout title={`${title} · ${osName} docs`} description={pageDescription} distro={distro} canonicalPath={canonicalPath}>
+	<Header distro={distro} />
 	<div class="wrap docs-layout">
 		<DocsSidebar currentSlug={currentSlug} distro={distro} />
 		<main id="main" class="docs-article">
 			<slot />
 		</main>
 	</div>
-	<Footer />
+	<Footer distro={distro} />
 </BaseLayout>

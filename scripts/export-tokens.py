@@ -68,17 +68,18 @@ static = {
     "--fn-lockup-height-compact": f"{data['assets']['lockup_compact_height_px']}px",
 }
 
-light = {**palette("paper"), "--fn-brand": "var(--fn-levitate)"}
-dark = {**palette("night"), "--fn-brand": "var(--fn-levitate)"}
+light = palette("paper")
+dark = palette("night")
 
 out = [
     "/* Generated from tokens.json by scripts/export-tokens.py. Do not edit by hand. */",
-    block(":root", static),
+    block(":root", {**static, "--fn-brand": "var(--fn-levitate)"}),
     block(':root, :root[data-theme="light"]', light, "  color-scheme: light;\n"),
     block(':root[data-theme="dark"]', dark, "  color-scheme: dark;\n"),
     "@media (prefers-color-scheme: dark) {\n"
     + block(':root:not([data-theme="light"]):not([data-theme="dark"])', dark, "  color-scheme: dark;\n")
     + "\n}",
+    block('[data-product="levitate"]', {"--fn-brand": "var(--fn-levitate)"}),
     block('[data-product="acorn"]', {"--fn-brand": "var(--fn-acorn)"}),
     "@media (prefers-reduced-motion: reduce) {\n"
     + block(":root", {"--fn-duration-control": "0ms"})

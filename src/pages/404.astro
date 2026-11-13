@@ -6,14 +6,14 @@ import { docLink } from "../lib/docs"
 ---
 
 <BaseLayout title="Page not found · LevitateOS" description="The page you're looking for doesn't exist.">
-	<Header />
+	<Header switchPath="/acorn/" />
 	<main id="main" class="wrap">
 		<div class="story-section prose">
 			<p class="eyebrow">404</p>
 			<h1>Page not found.</h1>
 			<p class="lead">There is no page at this address. It may have moved, or the link may be mistyped.</p>
 			<div class="actions">
-				<a class="button" href={docLink("getting-started")}>Read the docs</a>
+				<a class="button" href={docLink("getting-started", "levitate")}>Read the docs</a>
 				<a href="/">Go to the homepage</a>
 			</div>
 		</div>

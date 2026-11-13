@@ -1,7 +1,16 @@
 ---
 import { docLink } from "../../lib/docs"
+import { DEFAULT_DISTRO, FLAVORS, href, siblingHref, unprefixed, type DistroId } from "../../lib/flavor"
+import { variantOf } from "../../lib/variants"
 
-const path = Astro.url.pathname
+interface Props {
+	distro?: DistroId
+	/** Where the switch leads, when this page has no twin in the other flavour (the 404 page). */
+	switchPath?: string
+}
+
+const { distro = DEFAULT_DISTRO, switchPath } = Astro.props
+const path = unprefixed(Astro.url.pathname, distro)
 
 function normalize(input: string): string {
 	if (input === "/") return "/"
@@ -9,34 +18,64 @@ function normalize(input: string): string {
 }
 
 /** The page a nav item stands for, matched by its section where it has one. */
-function isCurrent(item: { href: string; match?: string }): boolean {
+function isCurrent(item: { path: string; match?: string }): boolean {
 	const current = normalize(path)
-	const target = normalize(item.match ?? item.href)
+	const target = normalize(item.match ?? item.path)
 	if (target === "/") return current === "/"
 	return current === target || current.startsWith(`${target}/`)
 }
 
+// `path` is the LevitateOS (unprefixed) URL, used to tell which page is open.
 const navItems = [
-	{ href: "/download/", label: "Downloads" },
-	{ href: docLink("getting-started"), label: "Docs", match: "/docs" },
-	{ href: docLink("recipe-format"), label: "Recipes" },
-	{ href: "https://github.com/LevitateOS/LevitateOS", label: "Source" },
+	{ path: "/download/", href: href("/download/", distro), label: "Downloads" },
+	{ path: docLink("getting-started", "levitate"), href: docLink("getting-started", distro), label: "Docs", match: "/docs" },
+	{ path: docLink("recipe-format", "levitate"), href: docLink("recipe-format", distro), label: "Recipes" },
+	{ path: undefined, href: "https://github.com/LevitateOS/LevitateOS", label: "Source" },
 ]
 
 // Recipes is a docs page; mark it current instead of Docs while it is open.
-const onRecipes = normalize(path) === normalize(docLink("recipe-format"))
+const onRecipes = normalize(path) === normalize(docLink("recipe-format", "levitate"))
 function current(item: (typeof navItems)[number]): boolean {
+	if (!item.path) return false
 	if (item.label === "Docs" && onRecipes) return false
-	return isCurrent(item)
+	return isCurrent({ path: item.path, match: item.match })
 }
+
+const switchHref = switchPath ?? siblingHref(Astro.url.pathname, distro)
+const flavors = FLAVORS.map((flavor) => ({
+	variant: variantOf(flavor.id),
+	here: flavor.id === distro,
+	to: flavor.id === distro ? href("/", distro) : switchHref,
+	label: flavor.id === distro ? `${flavor.osName} home` : `Switch to ${flavor.osName}`,
+}))
 ---
 
 <header class="site-head">
 	<div class="wrap head-row">
-		<a class="head-brand" href="/" aria-label="LevitateOS home">
-			<img class="logo-light" src="/brand/levitate-lockup-ink.svg" width="213" height="40" alt="" />
-			<img class="logo-dark" src="/brand/levitate-lockup-paper.svg" width="213" height="40" alt="" />
-		</a>
+		<div class="head-switch">
+			{flavors.map(({ variant, here, to, label }, index) => (
+				<>
+					{index > 0 && <span class="head-switch__rule" aria-hidden="true" />}
+					<a
+						class:list={["head-brand", { "head-brand--other": !here }]}
+						href={to}
+						aria-label={label}
+						aria-current={here ? "true" : undefined}
+					>
+						<span class="head-brand__lockup">
+							<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="40" alt="" />
+							<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="40" alt="" />
+						</span>
+						{!here && (
+							<span class="head-brand__mark">
+								<img class="logo-light" src={variant.mark.light} width="24" height="24" alt="" />
+								<img class="logo-dark" src={variant.mark.dark} width="24" height="24" alt="" />
+							</span>
+						)}
+					</a>
+				</>
+			))}
+		</div>
 
 		<nav class="head-nav" aria-label="Main">
 			<ul>

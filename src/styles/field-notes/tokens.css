@@ -44,6 +44,7 @@
   --fn-ease: ease;
   --fn-lockup-height: 34px;
   --fn-lockup-height-compact: 28px;
+  --fn-brand: var(--fn-levitate);
 }
 :root, :root[data-theme="light"] {
   color-scheme: light;
@@ -74,7 +75,6 @@
   --fn-code-constant: #F0A497;
   --fn-code-prompt: #A9CF9A;
   --fn-code-selection: #33503F;
-  --fn-brand: var(--fn-levitate);
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -105,7 +105,6 @@
   --fn-code-constant: #F0A497;
   --fn-code-prompt: #A9CF9A;
   --fn-code-selection: #33503F;
-  --fn-brand: var(--fn-levitate);
 }
 @media (prefers-color-scheme: dark) {
 :root:not([data-theme="light"]):not([data-theme="dark"]) {
@@ -137,8 +136,10 @@
   --fn-code-constant: #F0A497;
   --fn-code-prompt: #A9CF9A;
   --fn-code-selection: #33503F;
-  --fn-brand: var(--fn-levitate);
 }
+}
+[data-product="levitate"] {
+  --fn-brand: var(--fn-levitate);
 }
 [data-product="acorn"] {
   --fn-brand: var(--fn-acorn);

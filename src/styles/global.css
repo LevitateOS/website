@@ -453,6 +453,34 @@
 		width: auto;
 	}
 
+	/* The brand area is the flavour switch: both lockups, the current one at full strength. */
+	.head-switch {
+		display: flex;
+		align-items: center;
+		gap: var(--fn-space-4);
+		min-width: 0;
+	}
+
+	.head-switch__rule {
+		align-self: center;
+		width: var(--fn-rule-width);
+		height: 28px;
+		background: var(--fn-rule);
+		flex: none;
+	}
+
+	.head-brand--other {
+		opacity: 0.5;
+	}
+
+	.head-brand--other:is(:hover, :focus-visible) {
+		opacity: 1;
+	}
+
+	.head-brand__mark {
+		display: none;
+	}
+
 	.head-nav ul {
 		list-style: none;
 		margin: 0;
@@ -795,6 +823,12 @@
 
 	.entry__role {
 		max-width: 44ch;
+	}
+
+	.entry__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--fn-space-5);
 	}
 
 	/* AcornOS keeps its brown on paper. */
@@ -1730,6 +1764,28 @@
 		}
 
 		.head-brand img {
+			height: var(--fn-lockup-height-compact);
+		}
+
+		.head-switch {
+			gap: var(--fn-space-3);
+		}
+	}
+
+	/* Too narrow for two lockups beside the Menu button: the other flavour shrinks to its mark. */
+	@media (max-width: 540px) {
+		.head-brand--other .head-brand__lockup {
+			display: none;
+		}
+
+		.head-brand--other .head-brand__mark {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 44px;
+		}
+
+		.head-brand--other .head-brand__mark img {
 			height: var(--fn-lockup-height-compact);
 		}
 	}

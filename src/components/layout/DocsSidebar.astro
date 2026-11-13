@@ -1,16 +1,17 @@
 ---
 import { docsNav } from "@levitate/docs-content"
 import { toAnchor } from "../../lib/anchor"
-import { DISTROS, docsHref, isDistroPage, pagesOf, type DistroId } from "../../lib/docs"
+import { docsHref, pagesOf } from "../../lib/docs"
+import { DEFAULT_DISTRO, type DistroId } from "../../lib/flavor"
 
 interface Props {
 	currentSlug: string
-	/** The distro whose version of the distro pages the reader is on, if any. */
+	/** The flavour the reader is in. */
 	distro?: DistroId
 }
 
-const { currentSlug, distro } = Astro.props
-const pages = pagesOf(distro ?? DISTROS[0]!.id) as Record<string, { sections: { title: string; level?: 2 | 3 }[] }>
+const { currentSlug, distro = DEFAULT_DISTRO } = Astro.props
+const pages = pagesOf(distro) as Record<string, { sections: { title: string; level?: 2 | 3 }[] }>
 const currentTitle =
 	docsNav.flatMap((section) => section.items).find((item) => item.slug === currentSlug)?.title || "Documentation"
 
@@ -22,18 +23,6 @@ const MIN_SECTIONS_FOR_CONTENTS = 4
 {[false, true].map((compact) => {
 	const nav = (
 		<nav class="docs-nav" aria-label={compact ? "Documentation (compact)" : "Documentation"}>
-			{isDistroPage(currentSlug) && (
-				<section>
-					<h2>Distro</h2>
-					<ul>
-						{DISTROS.map((d) => (
-							<li>
-								<a href={docsHref(currentSlug, d.id)} aria-current={d.id === distro ? "page" : undefined}>{d.osName}</a>
-							</li>
-						))}
-					</ul>
-				</section>
-			)}
 			{docsNav.map((section) => (
 				<section>
 					<h2>{section.title}</h2>
