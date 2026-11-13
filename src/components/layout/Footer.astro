@@ -85,15 +85,18 @@ const columns = [
 </footer>
 
 <script>
-	// System follows the OS; an explicit Light or Dark choice wins and is kept locally.
+	// System follows the OS; an explicit choice wins over the flavour's default and is kept locally.
 	// Without storage the choice lasts for this page only.
 	const select = document.getElementById("appearance") as HTMLSelectElement | null
 	const root = document.documentElement
 	if (select) {
-		const current = root.dataset.theme
-		select.value = current === "light" || current === "dark" ? current : "system"
+		// data-theme is the flavour's default, or the stored choice the page applied.
+		select.value = root.dataset.theme ?? "system"
+		const meta = document.querySelector('meta[name="theme-color"]')
 		select.addEventListener("change", () => {
 			root.dataset.theme = select.value
+			const dark = select.value === "dark" || (select.value === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
+			meta?.setAttribute("content", (dark ? meta.getAttribute("data-dark") : meta.getAttribute("data-light")) ?? "")
 			try {
 				localStorage.setItem("appearance", select.value)
 			} catch {

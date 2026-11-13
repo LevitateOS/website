@@ -1,4 +1,5 @@
 /* Generated from tokens.json by scripts/export-tokens.py. Do not edit by hand. */
+/* Surface, text, brand and band colours are emitted per flavour by src/lib/look.ts. */
 :root {
   --fn-font-editorial: "Newsreader", Georgia, serif;
   --fn-font-ui: "Instrument Sans", Arial, sans-serif;
@@ -44,99 +45,14 @@
   --fn-ease: ease;
   --fn-lockup-height: 34px;
   --fn-lockup-height-compact: 28px;
+  --fn-action: #B22F27;
+  --fn-action-hover: #95271F;
+  --fn-on-action: #F2EEE4;
+  --fn-code-keyword: #A9CF9A;
+  --fn-code-string: #E4CBA6;
+  --fn-code-constant: #F0A497;
+  --fn-code-prompt: #A9CF9A;
   --fn-brand: var(--fn-levitate);
-}
-:root, :root[data-theme="light"] {
-  color-scheme: light;
-  --fn-surface: #F2EEE4;
-  --fn-surface-raised: #FCFAF5;
-  --fn-text: #14221A;
-  --fn-text-secondary: #59645B;
-  --fn-rule: #BFC6B8;
-  --fn-boundary: #7A8075;
-  --fn-annotation: #B22F27;
-  --fn-levitate: #214438;
-  --fn-acorn: #644532;
-  --fn-action: #B22F27;
-  --fn-action-hover: #95271F;
-  --fn-on-action: #F2EEE4;
-  --fn-ending: #214438;
-  --fn-on-ending: #F2EEE4;
-  --fn-on-ending-secondary: #C3CEBF;
-  --fn-frame: #214438;
-  --fn-code-surface: #14221A;
-  --fn-code-bar: #1B2C23;
-  --fn-code-rule: #2E4136;
-  --fn-code-text: #F2EEE4;
-  --fn-code-secondary: #9AA89D;
-  --fn-code-gutter: #6E7F73;
-  --fn-code-keyword: #A9CF9A;
-  --fn-code-string: #E4CBA6;
-  --fn-code-constant: #F0A497;
-  --fn-code-prompt: #A9CF9A;
-  --fn-code-selection: #33503F;
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --fn-surface: #14221A;
-  --fn-surface-raised: #1D2D24;
-  --fn-text: #F2EEE4;
-  --fn-text-secondary: #BAC5B7;
-  --fn-rule: #3A4B40;
-  --fn-boundary: #7A8075;
-  --fn-annotation: #F0A497;
-  --fn-levitate: #C7D9BA;
-  --fn-acorn: #E4CBA6;
-  --fn-action: #B22F27;
-  --fn-action-hover: #95271F;
-  --fn-on-action: #F2EEE4;
-  --fn-ending: #214438;
-  --fn-on-ending: #F2EEE4;
-  --fn-on-ending-secondary: #C3CEBF;
-  --fn-frame: #214438;
-  --fn-code-surface: #0D1711;
-  --fn-code-bar: #14221A;
-  --fn-code-rule: #2A3B31;
-  --fn-code-text: #F2EEE4;
-  --fn-code-secondary: #9AA89D;
-  --fn-code-gutter: #6E7F73;
-  --fn-code-keyword: #A9CF9A;
-  --fn-code-string: #E4CBA6;
-  --fn-code-constant: #F0A497;
-  --fn-code-prompt: #A9CF9A;
-  --fn-code-selection: #33503F;
-}
-@media (prefers-color-scheme: dark) {
-:root:not([data-theme="light"]):not([data-theme="dark"]) {
-  color-scheme: dark;
-  --fn-surface: #14221A;
-  --fn-surface-raised: #1D2D24;
-  --fn-text: #F2EEE4;
-  --fn-text-secondary: #BAC5B7;
-  --fn-rule: #3A4B40;
-  --fn-boundary: #7A8075;
-  --fn-annotation: #F0A497;
-  --fn-levitate: #C7D9BA;
-  --fn-acorn: #E4CBA6;
-  --fn-action: #B22F27;
-  --fn-action-hover: #95271F;
-  --fn-on-action: #F2EEE4;
-  --fn-ending: #214438;
-  --fn-on-ending: #F2EEE4;
-  --fn-on-ending-secondary: #C3CEBF;
-  --fn-frame: #214438;
-  --fn-code-surface: #0D1711;
-  --fn-code-bar: #14221A;
-  --fn-code-rule: #2A3B31;
-  --fn-code-text: #F2EEE4;
-  --fn-code-secondary: #9AA89D;
-  --fn-code-gutter: #6E7F73;
-  --fn-code-keyword: #A9CF9A;
-  --fn-code-string: #E4CBA6;
-  --fn-code-constant: #F0A497;
-  --fn-code-prompt: #A9CF9A;
-  --fn-code-selection: #33503F;
-}
 }
 [data-product="levitate"] {
   --fn-brand: var(--fn-levitate);

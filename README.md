@@ -55,8 +55,9 @@ Prerequisites:
 
 ## Visual identity
 
-The site uses Field Notes v3 for LevitateOS and AcornOS: warm paper, pine for
-LevitateOS and brown for AcornOS, Newsreader for statements and headings,
+The site uses Field Notes v3 for LevitateOS and AcornOS: warm paper and a dark
+night, each flavour in its own colours (pine for LevitateOS, brown and sand for
+AcornOS), Newsreader for statements and headings,
 Instrument Sans for reading and controls, and a native monospace for code. The
 homepage opens inside a dark botanical frame; red is kept for the one primary
 action per page and the occasional note. Square corners throughout.
@@ -64,15 +65,21 @@ action per page and the occasional note. Square corners throughout.
 - `design/field-notes-v3/` holds the identity kit's handoff, its tokens as
   delivered, the font sources and the original frame artwork with its
   generation brief. It is reference material and is not served.
-- `src/styles/field-notes/tokens.json` is the site's single source for palette,
-  type, shape, spacing, layout, frame and motion; the night palette is a site
-  addition the kit does not define. After editing it, run
-  `python3 scripts/export-tokens.py` to regenerate `tokens.css`. Components use
-  the `--fn-*` role tokens, never raw hex values. `data-product` on an element sets
-  `--fn-brand` to that product's colour inside it; `<html>` carries the page's flavour.
+- Colours come from the distros: each declares its light and dark look in
+  `distro/variants/<id>/distro.toml`, generated into `@levitate/docs-content/distros`
+  (`DISTROS[].look`, `profile.appearance`). `src/lib/look.ts` turns the current
+  flavour's looks into the `--fn-*` colour properties, emitted in a `<style>` by
+  `BaseLayout.astro`. LevitateOS opens in light, AcornOS in dark; a stored footer
+  choice applies on both.
+- `src/styles/field-notes/tokens.json` is the site's source for type, shape,
+  spacing, layout, frame, motion and the site-only colours (the red action and the
+  syntax colours). After editing it, run `python3 scripts/export-tokens.py` to
+  regenerate `tokens.css`. Components use the `--fn-*` role tokens, never raw hex
+  values. `data-product` on an element sets `--fn-brand` to that product's colour
+  inside it; `<html>` carries the page's flavour.
 - Every surface sets its own foreground. Light lettering appears only on the red
-  action and the pine ending and footer; the footer stays pine in both
-  appearances.
+  action and the ending band and footer, which keep the flavour's band colour in
+  both appearances.
 - `ImageFrame.astro` draws six distinct pieces of artwork as CSS `border-image`
   around live paper (slices `15% 10%`, no `fill`). The original botanical hero
   is joined by fern, circuit, mineral, folded paper and contour-map frames in
@@ -86,10 +93,10 @@ action per page and the occasional note. Square corners throughout.
   and their SIL OFL licenses. Fonts are never loaded from a third-party CDN.
 - Pages with several sections use the numbered margin index
   (`src/components/PageIndex.astro`); the entry for the section in view is
-  marked in pine with an underline.
-- Appearance follows the system unless the visitor picks Light or Dark in the
-  footer; the choice is kept in `localStorage` and applied before first paint
-  through `data-theme` on `<html>`.
+  marked in the brand colour with an underline.
+- `data-theme` on `<html>` is the flavour's default appearance (`light` for
+  LevitateOS, `dark` for AcornOS). A choice of Light, Dark or System in the footer
+  is kept in `localStorage` and applied before first paint on both flavours.
 
 ## Flavours and URLs
 

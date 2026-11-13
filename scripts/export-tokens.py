@@ -1,7 +1,9 @@
 """Export src/styles/field-notes/tokens.json to tokens.css (standard library only).
 
-tokens.json is the single source for the Field Notes palette, type, shape,
-spacing, layout, frame and motion. Run this after editing it:
+tokens.json is the single source for the Field Notes type, shape, spacing,
+layout, frame, motion and the site-only colours (the red action, syntax colours).
+The surface, text, brand and band colours come from DISTROS[].look through
+src/lib/look.ts, not from here. Run this after editing it:
 
     python3 scripts/export-tokens.py
 """
@@ -21,13 +23,11 @@ def block(selector, props, extra=""):
     return f"{selector} {{\n{extra}{body}\n}}"
 
 
-def palette(mode):
-    return {f"--fn-{key}": value for key, value in data["palette"][mode].items()}
-
-
 t = data["type"]
 layout = data["layout"]
 frame = data["frame"]
+
+site_colors = {f"--fn-{key}": value for key, value in data["site_colors"].items()}
 
 static = {
     "--fn-font-editorial": '"Newsreader", Georgia, serif',
@@ -68,17 +68,10 @@ static = {
     "--fn-lockup-height-compact": f"{data['assets']['lockup_compact_height_px']}px",
 }
 
-light = palette("paper")
-dark = palette("night")
-
 out = [
     "/* Generated from tokens.json by scripts/export-tokens.py. Do not edit by hand. */",
-    block(":root", {**static, "--fn-brand": "var(--fn-levitate)"}),
-    block(':root, :root[data-theme="light"]', light, "  color-scheme: light;\n"),
-    block(':root[data-theme="dark"]', dark, "  color-scheme: dark;\n"),
-    "@media (prefers-color-scheme: dark) {\n"
-    + block(':root:not([data-theme="light"]):not([data-theme="dark"])', dark, "  color-scheme: dark;\n")
-    + "\n}",
+    "/* Surface, text, brand and band colours are emitted per flavour by src/lib/look.ts. */",
+    block(":root", {**static, **site_colors, "--fn-brand": "var(--fn-levitate)"}),
     block('[data-product="levitate"]', {"--fn-brand": "var(--fn-levitate)"}),
     block('[data-product="acorn"]', {"--fn-brand": "var(--fn-acorn)"}),
     "@media (prefers-reduced-motion: reduce) {\n"

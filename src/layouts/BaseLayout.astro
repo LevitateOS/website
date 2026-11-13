@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css"
 import { DEFAULT_DISTRO, distroName, type DistroId } from "../lib/flavor"
+import { defaultAppearance, lookCss, surfaceOf } from "../lib/look"
 
 interface Props {
 	title?: string
@@ -24,29 +25,35 @@ const {
 const siteBase = Astro.site || new URL("https://levitateos.org")
 const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, siteBase)
 const osName = distroName(distro)
+const appearance = defaultAppearance(distro)
+const surfaces = { light: surfaceOf(distro, "light"), dark: surfaceOf(distro, "dark") }
 const ogImageURL = new URL("/og-image.png", siteBase)
 ---
 
 <!doctype html>
-<html lang="en" data-theme="system" data-product={distro}>
+<html lang="en" data-theme={appearance} data-product={distro}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!-- Apply a stored appearance choice before the first paint. -->
-		<script is:inline>
+		<!-- A stored appearance choice wins over the flavour's default; apply it before the first paint. -->
+		<script is:inline define:vars={{ surfaces }}>
 			;(function () {
-				var choice = "system"
+				var root = document.documentElement
+				root.classList.add("js")
+				var stored = null
 				try {
-					var stored = localStorage.getItem("appearance")
-					if (stored === "light" || stored === "dark" || stored === "system") choice = stored
+					stored = localStorage.getItem("appearance")
 				} catch (e) {}
-				document.documentElement.dataset.theme = choice
-				document.documentElement.classList.add("js")
+				if (stored !== "light" && stored !== "dark" && stored !== "system") return
+				root.dataset.theme = stored
+				var dark = stored === "dark" || (stored === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
+				var meta = document.querySelector('meta[name="theme-color"]')
+				if (meta) meta.setAttribute("content", dark ? surfaces.dark : surfaces.light)
 			})()
 		</script>
 		<meta name="color-scheme" content="light dark" />
-		<meta name="theme-color" content="#F2EEE4" media="(prefers-color-scheme: light)" />
-		<meta name="theme-color" content="#14221A" media="(prefers-color-scheme: dark)" />
+		<meta name="theme-color" content={surfaces[appearance]} data-light={surfaces.light} data-dark={surfaces.dark} />
+		<style is:inline set:html={lookCss(distro)} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<link rel="canonical" href={canonicalURL} />

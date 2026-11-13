@@ -3,7 +3,7 @@
  * Values come from field-notes/tokens.json, exported to tokens.css by
  * scripts/export-tokens.py. Components use the --fn-* role tokens only.
  * Every surface sets its own foreground; light lettering appears only on the
- * red action and the pine ending and footer.
+ * red action and the ending band and footer.
  */
 @import "./field-notes/fonts.css";
 @import "./field-notes/tokens.css";
@@ -317,7 +317,7 @@
 		border: 0;
 	}
 
-	/* ---------- Brand assets: ink on paper, shared paper at night ---------- */
+	/* ---------- Brand assets: ink in light, paper in dark ---------- */
 
 	.logo-dark {
 		display: none;
@@ -677,7 +677,7 @@
 	}
 
 	.hero-title {
-		color: var(--fn-levitate);
+		color: var(--fn-brand);
 		font-size: var(--fn-text-hero);
 		line-height: var(--fn-leading-hero);
 		letter-spacing: var(--fn-tracking-hero);
@@ -831,9 +831,9 @@
 		gap: 0 var(--fn-space-5);
 	}
 
-	/* AcornOS keeps its brown on paper. */
-	[data-product="acorn"] :is(.entry__role, .release__intro > p) {
-		color: var(--fn-acorn);
+	/* A product's card names its role in that product's colour. */
+	[data-product] :is(.entry__role, .release__intro > p) {
+		color: var(--fn-brand);
 	}
 
 	.facts {
