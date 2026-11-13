@@ -69,7 +69,7 @@ action per page and the occasional note. Square corners throughout.
   `distro/variants/<id>/distro.toml`, generated into `@levitate/docs-content/distros`
   (`DISTROS[].look`, `profile.appearance`). `src/lib/look.ts` turns the current
   flavour's looks into the `--fn-*` colour properties, emitted in a `<style>` by
-  `BaseLayout.astro`. LevitateOS opens in light, AcornOS in dark; a stored footer
+  `BaseLayout.astro`. Both flavours open in dark, LevitateOS in green and AcornOS in brown; a stored footer
   choice applies on both.
 - `src/styles/field-notes/tokens.json` is the site's source for type, shape,
   spacing, layout, frame, motion and the site-only colours (the red action and the
@@ -115,8 +115,8 @@ action per page and the occasional note. Square corners throughout.
 - Pages with several sections use the numbered margin index
   (`src/components/PageIndex.astro`); the entry for the section in view is
   marked in the brand colour with an underline.
-- `data-theme` on `<html>` is the flavour's default appearance (`light` for
-  LevitateOS, `dark` for AcornOS). A choice of Light, Dark or System in the footer
+- `data-theme` on `<html>` is the flavour's default appearance (`dark` for
+  both today). A choice of Light, Dark or System in the footer
   is kept in `localStorage` and applied before first paint on both flavours.
 
 ## Flavours and URLs
