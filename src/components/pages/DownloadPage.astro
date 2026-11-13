@@ -4,6 +4,7 @@ import Header from "../layout/Header.astro"
 import Footer from "../layout/Footer.astro"
 import PageIndex from "../PageIndex.astro"
 import ImageFrame from "../ImageFrame.astro"
+import Screenshot from "../Screenshot.astro"
 import { variants as allVariants, variantOf } from "../../lib/variants"
 import { DEFAULT_DISTRO, distroName, type DistroId } from "../../lib/flavor"
 
@@ -78,6 +79,7 @@ import { HARDWARE } from "@levitate/docs-content/pages"
 						</h2>
 						<p class:list={["status", { "status--available": variant.status === "available" }]}>{variant.statusLabel} · {variant.release}</p>
 						<p>{variant.description}</p>
+						<Screenshot id="desktop" distro={variant.id} />
 					</div>
 					<div class="release__details">
 						<dl class="facts">

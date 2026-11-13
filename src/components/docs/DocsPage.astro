@@ -4,6 +4,8 @@ import DocsLayout from "../layout/DocsLayout.astro"
 import InlineContent from "./InlineContent.astro"
 import RenderBlock from "./RenderBlock.astro"
 import ImageFrame from "../ImageFrame.astro"
+import Screenshot from "../Screenshot.astro"
+import { docsScreenshots, type ScreenshotId } from "../../lib/screenshots"
 import { toAnchor } from "../../lib/anchor"
 import { isDistroPage } from "../../lib/docs"
 import { DEFAULT_DISTRO, distroName, type DistroId } from "../../lib/flavor"
@@ -19,6 +21,7 @@ const { content, slug, distro = DEFAULT_DISTRO } = Astro.props
 
 const description = content.intro ? plainText(content.intro).slice(0, 160) : undefined
 const eyebrow = isDistroPage(slug) ? `${distroName(distro)} documentation` : "Documentation"
+const illustrations: Record<string, readonly ScreenshotId[]> = docsScreenshots[slug as keyof typeof docsScreenshots] ?? {}
 ---
 
 <DocsLayout title={content.title} currentSlug={slug} distro={distro} description={description}>
@@ -37,6 +40,7 @@ const eyebrow = isDistroPage(slug) ? `${distroName(distro)} documentation` : "Do
 			{content.intro && <p class="docs-intro"><InlineContent content={content.intro} /></p>}
 		</>
 	)}
+	{slug === "getting-started" && <Screenshot id="desktop-recipe" distro={distro} />}
 	{content.sections.map((section: Section) => {
 		const level = section.level ?? 2
 		const anchor = toAnchor(section.title)
@@ -48,6 +52,7 @@ const eyebrow = isDistroPage(slug) ? `${distroName(distro)} documentation` : "Do
 					<h3><a class="docs-heading-anchor" href={`#${anchor}`}>{section.title}</a></h3>
 				)}
 				{section.content.map((block: ContentBlock) => <RenderBlock block={block} />)}
+				{illustrations[anchor]?.map((id) => <Screenshot id={id} distro={distro} />)}
 			</section>
 		)
 	})}

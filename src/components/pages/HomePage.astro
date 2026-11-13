@@ -5,6 +5,7 @@ import Footer from "../layout/Footer.astro"
 import CodeBlock from "../CodeBlock.astro"
 import ProductEntry from "../ProductEntry.astro"
 import ImageFrame from "../ImageFrame.astro"
+import Screenshot from "../Screenshot.astro"
 import { variantOf } from "../../lib/variants"
 import { docLink } from "../../lib/docs"
 import { DEFAULT_DISTRO, distroName, href, otherFlavor, type DistroId } from "../../lib/flavor"
@@ -164,6 +165,23 @@ const principles = [
 		</section>
 
 		<div class="wrap">
+			<section class="story-section" id="desktop" aria-labelledby="desktop-title">
+				<div class="section-head">
+					<p class="eyebrow">On the desktop</p>
+					<h2 id="desktop-title">Recipe, with a view.</h2>
+					<p>Find software, read what it may use, and see what changes before you install. On {variant.desktop}, with the {osName} background and its {distro === "levitate" ? "leaf" : "acorn"} start button.</p>
+				</div>
+				<Screenshot id="desktop-recipe" distro={distro} priority />
+				<div class="desktop-apps">
+					<Screenshot id="recipe-browse" distro={distro} />
+					<Screenshot id="recab-ready" distro={distro} />
+					<Screenshot id="disk-browse" distro={distro} />
+				</div>
+				<div class="actions">
+					<a class="text-action" href={`${docLink("post-installation", distro)}#desktop`}>Meet the desktop apps</a>
+				</div>
+			</section>
+
 			<section class="story-section" id="principles" aria-labelledby="principles-title">
 				<ImageFrame art="fern" class="frame-host--inset frame-host--editorial">
 					<div class="intro">
@@ -293,3 +311,16 @@ const principles = [
 	</main>
 	<Footer distro={distro} />
 </BaseLayout>
+
+<style>
+	.desktop-apps {
+		display: grid;
+		gap: var(--fn-space-5);
+		grid-template-columns: minmax(0, 1fr);
+	}
+	@media (min-width: 64rem) {
+		.desktop-apps {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+</style>

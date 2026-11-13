@@ -1,0 +1,67 @@
+---
+import { screenshot, type ScreenshotId } from "../lib/screenshots"
+import type { DistroId } from "../lib/flavor"
+
+interface Props {
+	id: ScreenshotId
+	distro: DistroId
+	priority?: boolean
+}
+
+const { id, distro, priority = false } = Astro.props
+const image = screenshot(id, distro)
+---
+
+<figure class="screenshot">
+	<a class="screenshot__image" href={image.src} aria-label={`Open full-size screenshot: ${image.alt}`}>
+		<img
+			src={image.src}
+			alt={image.alt}
+			width={image.width}
+			height={image.height}
+			loading={priority ? "eager" : "lazy"}
+			fetchpriority={priority ? "high" : "auto"}
+			decoding="async"
+		/>
+	</a>
+	<figcaption>
+		<strong>{image.title}</strong> {image.caption}
+		<span class="screenshot__status">{id === "desktop" ? "Development desktop." : "Development preview with sample data."}</span>
+		<a href={image.src}>View full size</a>
+	</figcaption>
+</figure>
+
+<style>
+	.screenshot {
+		min-width: 0;
+		margin: var(--fn-space-6) 0;
+	}
+	.screenshot__image {
+		display: block;
+		border: var(--fn-rule-width) solid var(--fn-boundary);
+		background: var(--fn-surface-sunken);
+		cursor: zoom-in;
+	}
+	.screenshot img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	figcaption {
+		margin-top: var(--fn-space-3);
+		font-size: var(--fn-text-support);
+		line-height: 1.6;
+		color: var(--fn-text-secondary);
+	}
+	figcaption strong {
+		color: var(--fn-text);
+		font-weight: 500;
+	}
+	.screenshot__status {
+		display: block;
+	}
+	figcaption a {
+		display: inline-block;
+		padding-block: var(--fn-space-1);
+	}
+</style>
