@@ -310,22 +310,24 @@ const acknowledgments = [
 </BaseLayout>
 
 <style>
+	/* A disclosure reads as a quiet action: a label and a chevron, no box. */
 	.command-example {
-		margin-top: var(--fn-space-6);
-		border: var(--fn-rule-width) solid var(--fn-rule);
+		margin-top: var(--fn-space-5);
 	}
 	.command-example summary {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: var(--fn-space-3);
+		gap: var(--fn-space-2);
 		min-height: 44px;
-		padding: var(--fn-space-3) var(--fn-space-4);
 		cursor: pointer;
 		list-style: none;
 		font-size: var(--fn-text-action);
 		font-weight: 500;
 		color: var(--fn-text);
+	}
+	.command-example summary:hover {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
 	}
 	.command-example summary::-webkit-details-marker {
 		display: none;
@@ -339,20 +341,11 @@ const acknowledgments = [
 		border-bottom: 1.5px solid currentColor;
 		transform: translateY(-25%) rotate(45deg);
 	}
-	.command-example[open] > summary {
-		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
-	}
 	.command-example[open] > summary::after {
 		transform: translateY(25%) rotate(-135deg);
 	}
 	/* :global, because the content includes other components' root elements. */
-	.command-example > :global(:not(summary)) {
-		margin-inline: var(--fn-space-4);
-	}
 	.command-example[open] > :global(:not(summary)) {
-		margin-top: var(--fn-space-5);
-	}
-	.command-example[open] > :global(:last-child) {
-		margin-bottom: var(--fn-space-5);
+		margin-top: var(--fn-space-4);
 	}
 </style>

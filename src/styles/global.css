@@ -213,14 +213,10 @@
 		text-underline-offset: 0.3em;
 	}
 
+	/* Sections are set apart by space and their headings, not by rules. */
 	.story-section {
-		padding-block: var(--fn-space-8) var(--fn-space-9);
-		border-top: var(--fn-rule-width) solid var(--fn-rule);
+		padding-block: var(--fn-space-8);
 		scroll-margin-top: var(--fn-space-4);
-	}
-
-	.story-section:first-child {
-		border-top: 0;
 	}
 
 	.section-head {
@@ -276,10 +272,9 @@
 	}
 
 	.inline-code {
-		padding: 0.05em 0.3em;
+		padding: 0.1em 0.35em;
 		border-radius: var(--fn-radius);
 		background: var(--fn-surface-raised);
-		border: var(--fn-rule-width) solid var(--fn-rule);
 		font-size: 0.875em;
 		overflow-wrap: anywhere;
 		-webkit-box-decoration-break: clone;
@@ -866,17 +861,19 @@
 	}
 
 	.notes {
-		list-style: none;
+		list-style: disc;
 		margin: var(--fn-space-5) 0 0;
-		padding: 0;
-		border-top: var(--fn-rule-width) solid var(--fn-rule);
+		padding: 0 0 0 1.1em;
 		font-size: var(--fn-text-support);
 		line-height: 1.5;
 	}
 
-	.notes li {
-		padding: var(--fn-space-2) 0;
-		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
+	.notes li + li {
+		margin-top: var(--fn-space-2);
+	}
+
+	.notes li::marker {
+		color: var(--fn-brand);
 	}
 
 	/* ---------- Code: a dark ink specimen, annotated in the margin ---------- */
@@ -1229,15 +1226,14 @@
 		font-size: var(--fn-text-support);
 	}
 
-	/* Directly under the pine ending, a rule separates the two. */
+	/* Directly under the pine ending, the footer continues the same band. */
 	.ending + .site-foot,
 	.home + .site-foot {
 		padding-top: 0;
 	}
 
 	.home + .site-foot .wrap {
-		border-top: var(--fn-rule-width) solid color-mix(in srgb, var(--fn-on-ending) 22%, var(--fn-ending));
-		padding-top: var(--fn-space-6);
+		padding-top: var(--fn-space-5);
 	}
 
 	.site-foot :is(a, p, span, label, h2) {
@@ -1465,14 +1461,11 @@
 
 	.docs-section {
 		scroll-margin-top: var(--fn-space-5);
-		padding-top: var(--fn-space-6);
-		margin-top: var(--fn-space-6);
-		border-top: var(--fn-rule-width) solid var(--fn-rule);
+		margin-top: var(--fn-space-7);
 	}
 
 	.docs-section--sub {
-		border-top: 0;
-		padding-top: 0;
+		margin-top: var(--fn-space-6);
 	}
 
 	.docs-section > h2 {
@@ -1577,13 +1570,8 @@
 		padding-left: 1.25em;
 	}
 
-	.docs-qa {
-		border-top: var(--fn-rule-width) solid var(--fn-rule);
-	}
-
-	.docs-qa__item {
-		padding-block: var(--fn-space-5);
-		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
+	.docs-qa__item + .docs-qa__item {
+		margin-top: var(--fn-space-6);
 	}
 
 	.docs-qa__item > h3 {
@@ -1595,15 +1583,13 @@
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		border-top: var(--fn-rule-width) solid var(--fn-rule);
 	}
 
 	.docs-steps li {
 		display: grid;
 		grid-template-columns: 2.25rem minmax(0, 1fr);
 		gap: var(--fn-space-3);
-		padding-block: var(--fn-space-3);
-		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
+		padding-block: var(--fn-space-2);
 	}
 
 	.docs-steps__number {
@@ -1662,17 +1648,11 @@
 	.ack-list {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 0 var(--fn-space-6);
+		gap: var(--fn-space-5) var(--fn-space-6);
 		margin: 0;
 		padding: 0;
 		list-style: none;
-		border-top: var(--fn-rule-width) solid var(--fn-rule);
 		font-size: var(--fn-text-support);
-	}
-
-	.ack-list li {
-		padding-block: var(--fn-space-3);
-		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
 	}
 
 	.ack-list a {
