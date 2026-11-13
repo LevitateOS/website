@@ -4,7 +4,7 @@
 // The stack, init, privilege tool, desktop and kernel come from the generated DISTROS
 // (`cargo xtask gen`); the base release is typed here until the generator emits it.
 import { DISTROS } from "@levitate/docs-content/distros"
-import { DESKTOP_NAME, HARDWARE, INIT_NAME, KERNEL_LINE_NAME } from "@levitate/docs-content/pages"
+import { desktopOn, HARDWARE, INIT_NAME, KERNEL_LINE_NAME } from "@levitate/docs-content/pages"
 
 export type ReleaseStatus = "available" | "in-development" | "planned"
 
@@ -47,7 +47,7 @@ const derived = (id: Variant["id"]) => {
 	return {
 		init: INIT_NAME[d.profile.init],
 		admin: d.profile.privilege,
-		desktop: DESKTOP_NAME[d.profile.desktop],
+		desktop: desktopOn(d.profile.desktop),
 		kernel: `${d.kernel.version} (${KERNEL_LINE_NAME[d.profile.kernel_line]})`,
 	}
 }
