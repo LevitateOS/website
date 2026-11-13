@@ -86,6 +86,27 @@ action per page and the occasional note. Square corners throughout.
   `public/art/`. They mark different kinds of content at different scales across
   the homepage, downloads and getting-started guide. Frame thickness follows
   each container's width; long reading sections stay on plain paper.
+- Each flavour has its own frame set. LevitateOS uses `public/art/levitate-frame.webp`
+  and `frame-<slot>.webp`; AcornOS pages use the wooden frames in
+  `public/art/acorn/frame-<slot>.webp` (`hero` is the default `botanical` slot).
+  The switch is CSS keyed on `:root[data-product="acorn"]` next to the
+  `.frame-host[data-frame=...]` rules in `global.css`; each AcornOS slot sets
+  `--frame-art` and `--frame-slice`, and `.image-frame` reads
+  `var(--frame-slice, var(--fn-frame-slice))`. The wooden surround is a little thicker than
+  15%/10% and differs per image, so the AcornOS slices are measured per image in source pixels
+  (top right bottom left), ending a few pixels before the dark opening so the lit inner lip
+  is kept. If an AcornOS frame is regenerated, re-measure its opening and update its slice.
+  The AcornOS finals are 1536 x 1024 PNGs in the superproject's
+  `.artifacts/website-art/final/` (not in this repo), encoded with
+  `magick <png> -strip -quality 83`; the briefs are in the superproject's
+  `docs/website-art-brief.md`.
+- Link previews: `public/og-image.png` (LevitateOS) and `public/og-image-acorn.png`
+  (AcornOS), 1200 x 630, are the finals `levitate-og.png` / `acorn-og.png` resized, with the
+  flavour's lockup and one line set in the opening (Newsreader, rendered from HTML in a
+  headless browser, not committed). `BaseLayout.astro` picks the image, its alt text and the
+  favicons (`favicon-acorn.svg/.ico`, `favicon-acorn-<n>x<n>.png`, `apple-touch-icon-acorn.png`,
+  made from `brand/acorn-micro-ink.svg`) per flavour. `manifest.json` is a single static file
+  and stays LevitateOS's.
 - `public/brand/` holds the selected marks (standard and micro) and the outlined
   monochrome lockups: `-ink` on paper, `-paper` on dark surfaces. Use them as
   supplied.

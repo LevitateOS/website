@@ -576,12 +576,23 @@
 	.frame-host[data-frame="paper"] { --frame-art: url("/art/frame-paper.webp"); }
 	.frame-host[data-frame="atlas"] { --frame-art: url("/art/frame-atlas.webp"); }
 
+	/* AcornOS pages use AcornOS's own wooden frames. Their surround is a little
+	   thicker than 10%/15% of the artwork and differs per image, so each slot
+	   carries its own slice in source pixels (top right bottom left), measured to
+	   end a few pixels before the dark opening so the lit inner lip is included. */
+	:root[data-product="acorn"] .frame-host { --frame-art: url("/art/acorn/frame-hero.webp"); --frame-slice: 155 151 154 152; }
+	:root[data-product="acorn"] .frame-host[data-frame="fern"] { --frame-art: url("/art/acorn/frame-fern.webp"); --frame-slice: 160 161 157 161; }
+	:root[data-product="acorn"] .frame-host[data-frame="circuit"] { --frame-art: url("/art/acorn/frame-circuit.webp"); --frame-slice: 144 149 147 153; }
+	:root[data-product="acorn"] .frame-host[data-frame="mineral"] { --frame-art: url("/art/acorn/frame-mineral.webp"); --frame-slice: 159 176 159 176; }
+	:root[data-product="acorn"] .frame-host[data-frame="paper"] { --frame-art: url("/art/acorn/frame-paper.webp"); --frame-slice: 160 162 160 163; }
+	:root[data-product="acorn"] .frame-host[data-frame="atlas"] { --frame-art: url("/art/acorn/frame-atlas.webp"); --frame-slice: 155 149 156 148; }
+
 	/* The artwork is the border of a real surface; the centre is not painted. */
 	.image-frame {
 		border: solid transparent;
 		border-width: var(--fn-frame-width);
 		border-image-source: var(--frame-art, var(--fn-frame-image));
-		border-image-slice: var(--fn-frame-slice);
+		border-image-slice: var(--frame-slice, var(--fn-frame-slice));
 		border-image-width: 1;
 		border-image-repeat: stretch;
 		background: var(--fn-frame);
