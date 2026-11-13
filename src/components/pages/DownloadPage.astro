@@ -5,6 +5,8 @@ import Footer from "../layout/Footer.astro"
 import PageIndex from "../PageIndex.astro"
 import ImageFrame from "../ImageFrame.astro"
 import Screenshot from "../Screenshot.astro"
+import { HARDWARE } from "@levitate/docs-content/pages"
+import { docLink } from "../../lib/docs"
 import { variants as allVariants, variantOf } from "../../lib/variants"
 import { DEFAULT_DISTRO, distroName, type DistroId } from "../../lib/flavor"
 
@@ -23,8 +25,6 @@ const sections = [
 	...variants.map((variant) => ({ id: variant.id, label: variant.name })),
 	{ id: "before-installing", label: "Installing" },
 ]
-import { docLink } from "../../lib/docs"
-import { HARDWARE } from "@levitate/docs-content/pages"
 ---
 
 <BaseLayout
@@ -46,7 +46,7 @@ import { HARDWARE } from "@levitate/docs-content/pages"
 				</ImageFrame>
 				<div class="callout">
 					<strong class="callout__label">Note</strong>
-					<p>There is nothing to download yet. Until a release exists you can build the ISO from the source with <code class="inline-code">cargo xtask build live-tools &lt;distro&gt;</code>; the <a href={docLink("getting-started", distro)}>getting started guide</a> has the steps. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then, the <a href="https://github.com/LevitateOS/LevitateOS">source is public</a> and the <a href={docLink("getting-started", distro)}>documentation</a> describes the system and its installation.</p>
+					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then you can build the ISO from the <a href="https://github.com/LevitateOS/LevitateOS">public source</a> with <code class="inline-code">cargo xtask build live-tools &lt;distro&gt;</code>; the <a href={docLink("getting-started", distro)}>getting started guide</a> has the steps.</p>
 				</div>
 			</section>
 
@@ -110,17 +110,6 @@ import { HARDWARE } from "@levitate/docs-content/pages"
 								<ul>{variant.tradeoffs.map((item) => <li>{item}</li>)}</ul>
 							</div>
 						</div>
-						<div class="table-scroll" role="region" tabindex="0" aria-label={`${variant.name} memory and disk`}>
-							<table class="data-table">
-								<thead>
-									<tr><th scope="col">Resource</th><th scope="col">Needs</th></tr>
-								</thead>
-								<tbody>
-									<tr><th scope="row">RAM</th><td>{variant.ram}</td></tr>
-									<tr><th scope="row">Disk</th><td>{variant.disk}</td></tr>
-								</tbody>
-							</table>
-						</div>
 						<p><a class="text-action" href={docLink("variants", distro)}>Compare the variants</a></p>
 					</div>
 				</section>
@@ -130,7 +119,7 @@ import { HARDWARE } from "@levitate/docs-content/pages"
 				<div class="split">
 					<div class="split__copy">
 						<h2 id="install-title">Before installing</h2>
-						<p>Installing overwrites the target disk. Back up anything you need first. LevitateOS collects no telemetry.</p>
+						<p>Installing overwrites the target disk. Back up anything you need first. Neither system collects telemetry.</p>
 						<p>Each ISO boots into the install screen: a shell beside the full installation guide. <kbd class="inline-code">Ctrl-]</kbd> switches pane, <kbd class="inline-code">j</kbd>/<kbd class="inline-code">k</kbd> scroll the guide, and <kbd class="inline-code">Ctrl-q</kbd> leaves the install screen.</p>
 						<div class="actions">
 							<a class="text-action" href={docLink("installation", distro)}>Read the {osName} installation guide</a>

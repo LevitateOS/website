@@ -34,8 +34,13 @@ export function docLink(slug: DocsSlug, distro: DistroId): string {
 	return docsHref(slug, distro)
 }
 
+/** A site-internal link in `distro`'s flavour, with the trailing slash the pages are served at. */
 function localHref(link: string, distro: DistroId): string {
-	return link.startsWith("/") && !link.startsWith("//") ? href(link, distro) : link
+	if (!link.startsWith("/") || link.startsWith("//")) return link
+	const [path, hash] = link.split(/(?=#)/)
+	const last = path.slice(path.lastIndexOf("/") + 1)
+	const slashed = path.endsWith("/") || last.includes(".") ? path : `${path}/`
+	return href(`${slashed}${hash ?? ""}`, distro)
 }
 
 function localText<T extends string | RichText>(text: T, distro: DistroId): T {

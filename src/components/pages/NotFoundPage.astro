@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import Header from "../layout/Header.astro"
+import Footer from "../layout/Footer.astro"
+import { docLink } from "../../lib/docs"
+import { DEFAULT_DISTRO, distroName, href, otherFlavor, type DistroId } from "../../lib/flavor"
+
+interface Props {
+	distro?: DistroId
+}
+
+const { distro = DEFAULT_DISTRO } = Astro.props
+const osName = distroName(distro)
+---
+
+<BaseLayout distro={distro} noindex title={`Page not found · ${osName}`} description="The page you're looking for doesn't exist.">
+	<Header distro={distro} switchPath={href("/", otherFlavor(distro).id)} />
+	<main id="main" class="wrap">
+		<div class="story-section prose">
+			<p class="eyebrow">404</p>
+			<h1>Page not found.</h1>
+			<p class="lead">There is no page at this address. It may have moved, or the link may be mistyped.</p>
+			<div class="actions">
+				<a class="button" href={docLink("getting-started", distro)}>Read the docs</a>
+				<a href={href("/", distro)}>Go to the homepage</a>
+			</div>
+		</div>
+	</main>
+	<Footer distro={distro} />
+</BaseLayout>

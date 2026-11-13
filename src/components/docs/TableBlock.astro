@@ -1,5 +1,5 @@
 ---
-import type { TableBlock } from "@levitate/docs-content"
+import { plainText, type TableBlock } from "@levitate/docs-content"
 import InlineContent from "./InlineContent.astro"
 
 interface Props {
@@ -7,9 +7,11 @@ interface Props {
 }
 
 const { table } = Astro.props
+const headers = table.headers.map(plainText).filter((text) => text.trim() !== "")
+const regionLabel = headers.length ? `Table: ${headers.join(", ")}` : "Table"
 ---
 
-<div class="table-scroll" role="region" tabindex="0" aria-label="Table">
+<div class="table-scroll" role="region" tabindex="0" aria-label={regionLabel}>
 	<table class="data-table">
 		<thead>
 			<tr>

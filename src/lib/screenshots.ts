@@ -93,7 +93,7 @@ export function screenshot(id: ScreenshotId, distro: DistroId) {
 		...image,
 		caption,
 		src: `/screenshots/${distro}/${id}.webp`,
-		alt: `${image.title} ${caption}`,
+		alt: `Screenshot: ${image.title}`,
 	};
 }
 

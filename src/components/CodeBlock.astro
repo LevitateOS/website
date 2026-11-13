@@ -28,6 +28,17 @@ const { code, language, label, source, copyText, output, notes = [] } = Astro.pr
 const lang = language === "rhai" ? "rust" : language
 const isShell = ["bash", "sh", "shell", "console", "zsh"].includes(language)
 
+// What an unlabelled block shows quietly in its bar.
+const kinds: Record<string, string> = {
+	rhai: "Rhai",
+	toml: "TOML",
+	json: "JSON",
+	text: "Text",
+	plaintext: "Text",
+	rust: "Rust",
+}
+const kind = isShell ? "Shell" : (kinds[language] ?? language)
+
 // Shell lines that start a command get a prompt drawn in CSS, so Copy never
 // copies it. Comments, blank lines and continuations get none.
 const commandLines = new Set<number>()
@@ -57,7 +68,7 @@ const regionLabel = label ? `Code: ${label}` : `${language} code`
 		<div class="code-shell" data-kind={isShell ? "shell" : "file"}>
 			<div class="code-head">
 				<span class="code-head__label">
-					{label && <span class="code-head__name">{label}</span>}
+					{label ? <span class="code-head__name">{label}</span> : <span class="code-head__kind">{kind}</span>}
 					{source && <span class="code-head__source">{source}</span>}
 				</span>
 				<button type="button" class="copy-button" data-code={copyText ?? code} aria-label={label ? `Copy ${label}` : "Copy code"}>Copy</button>
@@ -82,7 +93,7 @@ const regionLabel = label ? `Code: ${label}` : `${language} code`
 		{ordered.length > 0 && (
 			<ol class="code-notes" aria-label={label ? `Notes on ${label}` : "Notes on the code"}>
 				{ordered.map((note, index) => (
-					<li style={`--line: ${note.line}`}>
+					<li style={`--line: ${note.line}; --span: ${(ordered[index + 1]?.line ?? note.line + 1) - note.line}`}>
 						<span class="code-notes__n">{number(index)}</span>
 						<span class="sr-only">Line {note.line}: </span>
 						<span class="code-notes__text">{note.text}</span>

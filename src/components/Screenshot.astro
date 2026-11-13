@@ -14,7 +14,7 @@ const image = screenshot(id, distro)
 ---
 
 <figure class="screenshot">
-	<a class="screenshot__image" href={image.src} aria-label={`Open full-size screenshot: ${image.alt}`}>
+	<a class="screenshot__image" href={image.src} tabindex="-1">
 		<img
 			src={image.src}
 			alt={image.alt}
@@ -40,7 +40,7 @@ const image = screenshot(id, distro)
 	.screenshot__image {
 		display: block;
 		border: var(--fn-rule-width) solid var(--fn-boundary);
-		background: var(--fn-surface-sunken);
+		background: var(--fn-surface-raised);
 		cursor: zoom-in;
 	}
 	.screenshot img {

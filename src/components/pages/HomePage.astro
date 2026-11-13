@@ -60,50 +60,54 @@ fn remove(ctx) {
     ctx
 }`
 
-// The update example: the install procedure's stage command, with its flags on their own lines.
-// The margin notes explain it.
-const updateCode = [
-	`# as administrator, with ${profile.privilege}`,
-	"mount -o loop,ro <release>.iso /mnt",
-	"",
-	"",
-	commands.stage(record).replace(/ --(kernel|initrd)/g, " \\\n    --$1"),
-	"",
-	"",
-	"recab set-next B",
-	"reboot",
-	"",
-	"",
-	"",
-	"recab rollback",
-].join("\n")
-const updateNotes = [
-	{ line: 2, text: "The new release, mounted from its ISO." },
-	{ line: 5, text: "Written to the other slot. The running system is never touched." },
-	{ line: 10, text: "One trial boot. If B does not come up healthy, you are back on A." },
-	{ line: 15, text: "Changed your mind? Back to A, while A still holds it." },
-]
+/** An annotated example: groups of lines with blank lines between them; each group's note points at one of its lines. */
+function annotate(groups: { lines: string[]; note: string; at?: number; gap?: number }[]) {
+	const out: string[] = []
+	const notes: { line: number; text: string }[] = []
+	let count = 0
+	groups.forEach((group, index) => {
+		const text = group.lines.join("\n")
+		notes.push({ line: count + 1 + (group.at ?? 0), text: group.note })
+		out.push(text)
+		count += text.split("\n").length
+		if (index < groups.length - 1) {
+			const gap = group.gap ?? 2
+			out.push(...Array(gap).fill(""))
+			count += gap
+		}
+	})
+	return { code: out.join("\n"), notes }
+}
+
+// The update example: the install procedure's stage command, with the margin notes explaining it.
+const update = annotate([
+	{
+		lines: [`# as administrator, with ${profile.privilege}`, "mount -o loop,ro <release>.iso /mnt"],
+		at: 1,
+		note: "The new release, mounted from its ISO.",
+	},
+	{ lines: [commands.stage(record)], gap: 3, note: "Written to the other slot. The running system is never touched." },
+	{ lines: ["recab set-next B", "reboot"], note: "One trial boot. If B does not come up healthy, you are back on A." },
+	{ lines: ["recab rollback"], note: "Changed your mind? Back to A, while A still holds it." },
+])
 
 // The install commands, from the install procedure the guide and the install screen use.
 // Each group gets a margin note on its first line.
 const example = EXAMPLE_DISK.target
-const installGroups = [
-	{ lines: [commands.partition(EXAMPLE_DISK.disk)], note: "Nothing is wiped until you type the word yourself." },
+const install = annotate([
+	{ lines: [commands.partition(EXAMPLE_DISK.disk)], gap: 3, note: "Nothing is wiped until you type the word yourself." },
 	{ lines: [commands.extract(example), commands.fstab(example)], note: "The whole system, laid down from the live ISO." },
 	{
 		lines: [
 			commands.inspect(example, true),
-			commands.configure(example, { timezone: EXAMPLE_SETUP.timezone, locale: EXAMPLE_SETUP.locale }),
+			commands
+				.configure(example, { timezone: EXAMPLE_SETUP.timezone, locale: EXAMPLE_SETUP.locale })
+				.replace(/ --(timezone|locale)/g, " \\\n    --$1"),
 		],
 		note: "See what it will configure before it does.",
 	},
 	{ lines: [commands.password(example)], note: "Inside your new system, before its first boot." },
-]
-const installCode = installGroups.map((group) => group.lines.join("\n")).join("\n\n\n")
-const installNotes = installGroups.map((group, i) => ({
-	line: 1 + installGroups.slice(0, i).reduce((n, g) => n + g.lines.length + 2, 0),
-	text: group.note,
-}))
+])
 
 // Notes on hello.rhai, each beside the line it explains.
 const recipeNotes = [
@@ -134,7 +138,7 @@ const acknowledgments = [
 	{ name: "Gentoo", href: "https://gentoo.org", text: "For USE flags and the philosophy of compile-time customization." },
 	{ name: "Universal Blue", href: "https://universal-blue.org", text: "For demonstrating image-based updates on the desktop." },
 	{ name: "Ginux", href: "https://github.com/gmkurtzer/ginux", text: "For the userspace kernel every recipe builds inside." },
-	{ name: "Claude Code", href: "https://claude.ai/claude-code", text: "For AI-assisted development that accelerated this project." },
+	{ name: "Claude Code", href: "https://claude.com/claude-code", text: "For AI-assisted development that accelerated this project." },
 	{ name: "Rust", href: "https://rust-lang.org", text: "For the language the rec* tools and recipe are written in." },
 ]
 ---
@@ -230,7 +234,7 @@ const acknowledgments = [
 				</div>
 				<details class="command-example">
 					<summary>See the update commands</summary>
-					<CodeBlock code={updateCode} language="bash" label="An update" source="docs/content/src/install.ts" notes={updateNotes} />
+					<CodeBlock code={update.code} language="bash" label="An update" source="docs/content/src/install.ts" notes={update.notes} />
 				</details>
 			</section>
 
@@ -256,7 +260,7 @@ const acknowledgments = [
 						</div>
 					</div>
 					<div class="split__example">
-						<CodeBlock code={installCode} language="bash" label="Installing" source="docs/content/src/install.ts" notes={installNotes} />
+						<CodeBlock code={install.code} language="bash" label="Installing" source="docs/content/src/install.ts" notes={install.notes} />
 					</div>
 				</div>
 			</section>
@@ -308,15 +312,47 @@ const acknowledgments = [
 <style>
 	.command-example {
 		margin-top: var(--fn-space-6);
-		padding: var(--fn-space-4);
-		border-block: var(--fn-rule-width) solid var(--fn-rule);
+		border: var(--fn-rule-width) solid var(--fn-rule);
 	}
 	.command-example summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--fn-space-3);
+		min-height: 44px;
+		padding: var(--fn-space-3) var(--fn-space-4);
 		cursor: pointer;
+		list-style: none;
+		font-size: var(--fn-text-action);
 		font-weight: 500;
-		color: var(--fn-brand);
+		color: var(--fn-text);
 	}
-	.command-example[open] > :not(summary) {
+	.command-example summary::-webkit-details-marker {
+		display: none;
+	}
+	.command-example summary::after {
+		content: "";
+		flex: none;
+		width: 0.45em;
+		height: 0.45em;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: translateY(-25%) rotate(45deg);
+	}
+	.command-example[open] > summary {
+		border-bottom: var(--fn-rule-width) solid var(--fn-rule);
+	}
+	.command-example[open] > summary::after {
+		transform: translateY(25%) rotate(-135deg);
+	}
+	/* :global, because the content includes other components' root elements. */
+	.command-example > :global(:not(summary)) {
+		margin-inline: var(--fn-space-4);
+	}
+	.command-example[open] > :global(:not(summary)) {
 		margin-top: var(--fn-space-5);
+	}
+	.command-example[open] > :global(:last-child) {
+		margin-bottom: var(--fn-space-5);
 	}
 </style>

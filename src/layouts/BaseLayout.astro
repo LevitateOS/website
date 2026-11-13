@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css"
-import { DEFAULT_DISTRO, distroName, type DistroId } from "../lib/flavor"
+import { DEFAULT_DISTRO, distroName, href, type DistroId } from "../lib/flavor"
 import { defaultAppearance, lookCss, surfaceOf } from "../lib/look"
 
 interface Props {
@@ -12,6 +12,8 @@ interface Props {
 	canonicalPath?: string
 	/** Preload the display serif when the page opens with a large serif heading. */
 	preloadDisplay?: boolean
+	/** Keep the page out of search indexes (the 404 pages). */
+	noindex?: boolean
 }
 
 const {
@@ -20,9 +22,11 @@ const {
 	title = `${distroName(distro)}: know what you run`,
 	description = "A Linux distribution built around readable package recipes and explicit control, with atomic A/B updates by default.",
 	preloadDisplay = true,
+	noindex = false,
 } = Astro.props
 
 const siteBase = Astro.site || new URL("https://levitateos.org")
+const homeURL = new URL(href("/", distro), siteBase)
 const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, siteBase)
 const osName = distroName(distro)
 const appearance = defaultAppearance(distro)
@@ -40,6 +44,8 @@ const ogImageAlt = acornFlavour
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="theme-color" content={surfaces[appearance]} data-light={surfaces.light} data-dark={surfaces.dark} />
 		<!-- A stored appearance choice wins over the flavour's default; apply it before the first paint. -->
 		<script is:inline define:vars={{ surfaces }}>
 			;(function () {
@@ -56,11 +62,10 @@ const ogImageAlt = acornFlavour
 				if (meta) meta.setAttribute("content", dark ? surfaces.dark : surfaces.light)
 			})()
 		</script>
-		<meta name="color-scheme" content="light dark" />
-		<meta name="theme-color" content={surfaces[appearance]} data-light={surfaces.light} data-dark={surfaces.dark} />
 		<style is:inline set:html={lookCss(distro)} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		{noindex && <meta name="robots" content="noindex" />}
 		<link rel="canonical" href={canonicalURL} />
 
 		<link rel="preload" href="/fonts/field-notes/instrument-sans.woff2" as="font" type="font/woff2" crossorigin />
@@ -93,9 +98,9 @@ const ogImageAlt = acornFlavour
 			"name": osName,
 			"applicationCategory": "OperatingSystem",
 			"operatingSystem": "Linux",
-			"description": "A Linux distribution built around readable package recipes and explicit control, with atomic A/B updates by default.",
-			"license": "https://opensource.org/licenses/MIT",
-			"url": "https://levitateos.org",
+			"description": description,
+			"license": "https://github.com/LevitateOS/LevitateOS/blob/master/LICENSE",
+			"url": homeURL.href,
 			"author": { "@type": "Organization", "name": "LevitateOS" },
 		})} />
 	</head>

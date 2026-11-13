@@ -3,7 +3,7 @@ import { docsNav, plainText } from "@levitate/docs-content"
 import { HARDWARE } from "@levitate/docs-content/pages"
 import { DISTROS, docsHref, isDistroPage, pageText, pagesOf } from "./docs"
 
-// The canonical host is astro.config.mjs's `site`.
+// The canonical host is astro.config.ts's `site`.
 const site = String(import.meta.env.SITE ?? "").replace(/\/$/, "")
 
 function header(): string {

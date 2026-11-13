@@ -1,2 +1,6 @@
+/docs /docs/getting-started/ 301
+/docs/ /docs/getting-started/ 301
+/acorn/docs /acorn/docs/getting-started/ 301
+/acorn/docs/ /acorn/docs/getting-started/ 301
 /docs/levitate/* /docs/:splat 301
 /docs/acorn/* /acorn/docs/:splat 301

@@ -4,7 +4,7 @@
 // The stack, init, privilege tool, desktop and kernel come from the generated DISTROS
 // (`cargo xtask gen`); the base release is typed here until the generator emits it.
 import { DISTROS } from "@levitate/docs-content/distros"
-import { desktopOn, HARDWARE, INIT_NAME, KERNEL_LINE_NAME } from "@levitate/docs-content/pages"
+import { desktopOn, INIT_NAME, KERNEL_LINE_NAME } from "@levitate/docs-content/pages"
 
 export type ReleaseStatus = "available" | "in-development" | "planned"
 
@@ -34,8 +34,6 @@ export interface Variant {
 	format: string
 	strengths: string[]
 	tradeoffs: string[]
-	ram: string
-	disk: string
 }
 
 const distro = (id: Variant["id"]) => DISTROS.find((d) => d.id === id)!
@@ -86,8 +84,6 @@ export const variants: Variant[] = [
 		format: "Live UEFI ISO",
 		strengths: ["Broad Linux software compatibility", "Core system from signed Fedora 45 RPMs", "systemd service management", "Familiar GNU tools"],
 		tradeoffs: ["Larger binaries", "Slower boot", "Higher memory use"],
-		ram: HARDWARE.ram,
-		disk: HARDWARE.disk,
 	},
 	{
 		id: "acorn",
@@ -121,8 +117,6 @@ export const variants: Variant[] = [
 		format: "Live UEFI ISO",
 		strengths: ["Faster boot", "Lower memory use", "Smaller disk footprint", "Simpler init system"],
 		tradeoffs: ["Some software needs patching", "Fewer pre-built packages", "Less documentation online"],
-		ram: HARDWARE.ram,
-		disk: HARDWARE.disk,
 	},
 ]
 

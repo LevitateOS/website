@@ -93,10 +93,19 @@ const columns = [
 		// data-theme is the flavour's default, or the stored choice the page applied.
 		select.value = root.dataset.theme ?? "system"
 		const meta = document.querySelector('meta[name="theme-color"]')
+		const scheme = matchMedia("(prefers-color-scheme: dark)")
+		// The browser's theme colour follows the surface the page shows.
+		function syncThemeColor() {
+			const choice = select?.value
+			const dark = choice === "dark" || (choice === "system" && scheme.matches)
+			meta?.setAttribute("content", (dark ? meta.getAttribute("data-dark") : meta.getAttribute("data-light")) ?? "")
+		}
+		scheme.addEventListener("change", () => {
+			if (select?.value === "system") syncThemeColor()
+		})
 		select.addEventListener("change", () => {
 			root.dataset.theme = select.value
-			const dark = select.value === "dark" || (select.value === "system" && matchMedia("(prefers-color-scheme: dark)").matches)
-			meta?.setAttribute("content", (dark ? meta.getAttribute("data-dark") : meta.getAttribute("data-light")) ?? "")
+			syncThemeColor()
 			try {
 				localStorage.setItem("appearance", select.value)
 			} catch {

@@ -139,6 +139,10 @@ identical, and their AcornOS copies name the LevitateOS URL as canonical.
 homepage copy is on each variant in `src/lib/variants.ts`. The old
 `/docs/levitate/*` and `/docs/acorn/*` URLs redirect through `public/_redirects`.
 
+Each flavour has its own 404 page (`/404.html`, `/acorn/404.html`; the config's build
+hook moves the latter into place, since Cloudflare Pages serves the nearest
+`404.html` up the tree). The sitemap lists only canonical pages.
+
 ## Structure
 
 ```
@@ -198,4 +202,4 @@ The site follows **mobile-first design principles**:
 
 ## License
 
-MIT
+MIT or Apache-2.0

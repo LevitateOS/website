@@ -1,5 +1,5 @@
 ---
-import { plainText, type DocsContent, type Section, type ContentBlock } from "@levitate/docs-content"
+import { docsNav, plainText, type DocsContent, type Section, type ContentBlock } from "@levitate/docs-content"
 import DocsLayout from "../layout/DocsLayout.astro"
 import InlineContent from "./InlineContent.astro"
 import RenderBlock from "./RenderBlock.astro"
@@ -7,7 +7,7 @@ import ImageFrame from "../ImageFrame.astro"
 import Screenshot from "../Screenshot.astro"
 import { docsScreenshots, type ScreenshotId } from "../../lib/screenshots"
 import { toAnchor } from "../../lib/anchor"
-import { isDistroPage } from "../../lib/docs"
+import { docsHref, isDistroPage } from "../../lib/docs"
 import { DEFAULT_DISTRO, distroName, type DistroId } from "../../lib/flavor"
 
 interface Props {
@@ -19,7 +19,19 @@ interface Props {
 
 const { content, slug, distro = DEFAULT_DISTRO } = Astro.props
 
-const description = content.intro ? plainText(content.intro).slice(0, 160) : undefined
+/** The text cut at the last word boundary within `max` characters, with an ellipsis when something was cut. */
+function excerpt(text: string, max: number): string {
+	if (text.length <= max) return text
+	const cut = text.slice(0, max + 1)
+	const words = cut.slice(0, cut.search(/\s\S*$/) > 0 ? cut.search(/\s\S*$/) : max)
+	return `${words.replace(/[\s.,;:!?\-–—]+$/, "")}…`
+}
+
+const description = content.intro ? excerpt(plainText(content.intro), 160) : undefined
+const pages = docsNav.flatMap((section) => section.items)
+const at = pages.findIndex((page) => page.slug === slug)
+const previous = at > 0 ? pages[at - 1] : undefined
+const next = at >= 0 ? pages[at + 1] : undefined
 const eyebrow = isDistroPage(slug) ? `${distroName(distro)} documentation` : "Documentation"
 const illustrations: Record<string, readonly ScreenshotId[]> = docsScreenshots[slug as keyof typeof docsScreenshots] ?? {}
 ---
@@ -56,4 +68,20 @@ const illustrations: Record<string, readonly ScreenshotId[]> = docsScreenshots[s
 			</section>
 		)
 	})}
+	{(previous || next) && (
+		<nav class="docs-pager" aria-label="Previous and next page">
+			{previous && (
+				<a class="docs-pager__prev" rel="prev" href={docsHref(previous.slug, distro)}>
+					<span class="docs-pager__label">Previous</span>
+					<span class="docs-pager__title">{previous.title}</span>
+				</a>
+			)}
+			{next && (
+				<a class="docs-pager__next" rel="next" href={docsHref(next.slug, distro)}>
+					<span class="docs-pager__label">Next</span>
+					<span class="docs-pager__title">{next.title}</span>
+				</a>
+			)}
+		</nav>
+	)}
 </DocsLayout>
