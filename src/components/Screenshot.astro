@@ -6,9 +6,10 @@ interface Props {
 	id: ScreenshotId
 	distro: DistroId
 	priority?: boolean
+	showStatus?: boolean
 }
 
-const { id, distro, priority = false } = Astro.props
+const { id, distro, priority = false, showStatus = true } = Astro.props
 const image = screenshot(id, distro)
 ---
 
@@ -26,7 +27,7 @@ const image = screenshot(id, distro)
 	</a>
 	<figcaption>
 		<strong>{image.title}</strong> {image.caption}
-		<span class="screenshot__status">{id === "desktop" ? "Development desktop." : "Development preview with sample data."}</span>
+		{showStatus && <span class="screenshot__status">{id === "desktop" ? "Development desktop." : "Development preview with sample data."}</span>}
 		<a href={image.src}>View full size</a>
 	</figcaption>
 </figure>

@@ -114,10 +114,9 @@ const recipeNotes = [
 ]
 
 const recipePoints = [
-	"Pin exact versions: downloads need a SHA-256, git checkouts a full commit.",
-	"Each check inspects the real files, so an interrupted build resumes where it stopped.",
-	"Add patches directly in the recipe that builds the package.",
-	"Builds run in an isolated Ginux domain, never on the running system.",
+	"Choose software for your own account or for the whole computer.",
+	"Review the network hosts, files and resources the recipe may use.",
+	"Let Recipe build it inside Ginux, within those declared limits.",
 ]
 
 const updatePoints = [
@@ -138,11 +137,6 @@ const acknowledgments = [
 	{ name: "Claude Code", href: "https://claude.ai/claude-code", text: "For AI-assisted development that accelerated this project." },
 	{ name: "Rust", href: "https://rust-lang.org", text: "For the language the rec* tools and recipe are written in." },
 ]
-const principles = [
-	{ href: "#recipe", title: "Read the recipe.", text: "Every package is a Rhai file with its version, its checksum and the steps that build it. Open it before you install it." },
-	{ href: "#updates", title: "Try the update.", text: "The next system boots once, as a trial, in the other slot. Keep it if it comes up healthy; fall back if it does not." },
-	{ href: "#install", title: "Install with the guide open.", text: "The live ISO puts the installation guide beside your shell, so each step is one you chose and can explain." },
-]
 ---
 
 <BaseLayout title={variant.meta.title} description={variant.meta.description} distro={distro}>
@@ -158,7 +152,7 @@ const principles = [
 					<h1 class="hero-title" id="hero-title"><span>{variant.hero.title.first}</span> <span>{variant.hero.title.second}{variant.hero.title.second && " "}<em>{variant.hero.title.emphasis}</em></span></h1>
 					<p class="hero-deck">{variant.hero.deck}</p>
 					<div class="actions">
-						<a class="button" href="#recipe">Read a recipe</a>
+						<a class="button" href="#desktop">Explore the desktop</a>
 						<a class="text-action" href={docLink("getting-started", distro)}>Read the docs</a>
 					</div>
 			</ImageFrame>
@@ -168,63 +162,48 @@ const principles = [
 			<section class="story-section" id="desktop" aria-labelledby="desktop-title">
 				<div class="section-head">
 					<p class="eyebrow">On the desktop</p>
-					<h2 id="desktop-title">Recipe, with a view.</h2>
-					<p>Find software, read what it may use, and see what changes before you install. On {variant.desktop}, with the {osName} background and its {distro === "levitate" ? "leaf" : "acorn"} start button.</p>
+					<h2 id="desktop-title">{variant.desktopStory.title}</h2>
+					<p>{variant.desktopStory.text}</p>
 				</div>
-				<Screenshot id="desktop-recipe" distro={distro} priority />
-				<div class="desktop-apps">
-					<Screenshot id="recipe-browse" distro={distro} />
-					<Screenshot id="recab-ready" distro={distro} />
-					<Screenshot id="disk-browse" distro={distro} />
-				</div>
-				<div class="actions">
-					<a class="text-action" href={`${docLink("post-installation", distro)}#desktop`}>Meet the desktop apps</a>
-				</div>
+				<Screenshot id="desktop-recipe" distro={distro} priority showStatus={false} />
+				<p class="support">Development previews throughout this page; application content uses sample data.</p>
 			</section>
 
-			<section class="story-section" id="principles" aria-labelledby="principles-title">
+			<section class="story-section" id="software" aria-labelledby="software-title">
 				<ImageFrame art="fern" class="frame-host--inset frame-host--editorial">
 					<div class="intro">
 						<div>
-							<p class="eyebrow">Nothing hidden</p>
-							<h2 id="principles-title"><span>Read every package.</span> <span>Undo every update.</span></h2>
+							<p class="eyebrow">Start with the software</p>
+							<h2 id="software-title"><span>Find what you</span> <span>want to <em>run.</em></span></h2>
 						</div>
-						<p class="intro__deck">Most systems ask you to trust the package manager and hope the update boots. {osName} shows you the recipe, builds it in isolation, and keeps the previous system one reboot away.</p>
+						<p class="intro__deck">Search by name or browse by kind of software. Each entry leads to the recipe behind the program, so finding it and understanding it happen in the same place.</p>
 					</div>
 				</ImageFrame>
-				<ol class="principles">
-					{principles.map((item, index) => (
-						<li>
-							<span class="principles__n" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-							<div>
-								<h3><a href={item.href}>{item.title}</a></h3>
-								<p>{item.text}</p>
-							</div>
-						</li>
-					))}
-				</ol>
+				<Screenshot id="recipe-browse" distro={distro} showStatus={false} />
+				<div class="actions">
+					<a class="text-action" href="#recipe">See what happens before Install</a>
+					<a class="text-action" href={`${docLink("post-installation", distro)}#software-with-recipe`}>Read the software guide</a>
+				</div>
 			</section>
 
 			<section class="story-section" id="recipe" aria-labelledby="recipe-title">
-				<div class="split">
-					<div class="split__copy">
-						<p class="eyebrow">Recipes, not repositories</p>
-						<h2 id="recipe-title">Every package is a file <em>you can read.</em></h2>
-						<p>Instead of <code class="inline-code">apt</code>, <code class="inline-code">dnf</code> or <code class="inline-code">apk</code>, both variants use <code class="inline-code">recipe</code>. A recipe is a Rhai script with the package's facts, checks that inspect the real files, and hooks that acquire, build and install it.</p>
-						<p>Recipes run inside a <a href="https://github.com/gmkurtzer/ginux">Ginux</a> domain, a userspace kernel that gives each build only the inputs, network hosts and resources it was granted. On an A/B system, recipe changes compose the inactive slot, never the system you are running.</p>
-						<ul class="notes">
-							{recipePoints.map((point) => <li>{point}</li>)}
-						</ul>
-						<div class="actions">
-							<a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a>
-						</div>
-					</div>
-					<div class="split__example">
-						<ImageFrame art="circuit" class="frame-host--inset frame-host--compact">
-							<CodeBlock code={recipeCode} language="rhai" label="hello.rhai" source="tools/recipe/WRITING_RECIPES.md" notes={recipeNotes} />
-						</ImageFrame>
-					</div>
+				<div class="section-head">
+					<p class="eyebrow">Before you install</p>
+					<h2 id="recipe-title">Know what <em>will change.</em></h2>
+					<p>Choosing Install brings you to the decision, before the work starts. Recipe shows where the software will go, how it will be built, and what it may use along the way.</p>
+					<ul class="notes">
+						{recipePoints.map((point) => <li>{point}</li>)}
+					</ul>
 				</div>
+				<Screenshot id="recipe-before-install" distro={distro} showStatus={false} />
+				<details class="command-example">
+					<summary>Look inside the recipe file</summary>
+					<p>The window reads a Rhai file. That file holds the package facts and the steps that acquire, build, install and remove it. Here is a complete small recipe you can read from beginning to end.</p>
+					<ImageFrame art="circuit" class="frame-host--inset frame-host--compact">
+						<CodeBlock code={recipeCode} language="rhai" label="hello.rhai" source="tools/recipe/WRITING_RECIPES.md" notes={recipeNotes} />
+					</ImageFrame>
+					<div class="actions"><a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a></div>
+				</details>
 			</section>
 
 			<section class="story-section" id="updates" aria-labelledby="updates-title">
@@ -232,12 +211,12 @@ const principles = [
 					<div class="split__copy">
 						<ImageFrame art="mineral" class="frame-host--inset frame-host--aside">
 							<div>
-								<p class="eyebrow">Atomic updates</p>
-								<h2 id="updates-title">Updates <em>you can undo.</em></h2>
-								<p>The disk holds two system slots and one running system. An update never changes the slot you are booted from.</p>
+								<p class="eyebrow">When the system changes</p>
+								<h2 id="updates-title">Keep using this system. <em>Try the next one.</em></h2>
+								<p>Recab keeps the system you are using beside the one you are preparing. You can see which is which before you restart.</p>
 							</div>
 						</ImageFrame>
-						<p><code class="inline-code">recab</code> writes the new system into the other slot, carries your hostname, users and enabled services across, and boots it once. Mutable mode exists, but it is an explicit opt-in without that safety net.</p>
+						<p>Software changes for the whole computer go into the next system. Recab brings system updates into that same preparation, preserving your changes or showing you what needs a decision. The running system stays as it is.</p>
 						<ul class="notes">
 							{updatePoints.map((point) => <li>{point}</li>)}
 						</ul>
@@ -246,18 +225,32 @@ const principles = [
 						</div>
 					</div>
 					<div class="split__example">
-						<CodeBlock code={updateCode} language="bash" label="An update" source="docs/content/src/install.ts" notes={updateNotes} />
+						<Screenshot id="recab-ready" distro={distro} showStatus={false} />
 					</div>
 				</div>
+				<details class="command-example">
+					<summary>See the update commands</summary>
+					<CodeBlock code={updateCode} language="bash" label="An update" source="docs/content/src/install.ts" notes={updateNotes} />
+				</details>
+			</section>
+
+			<section class="story-section" id="storage" aria-labelledby="storage-title">
+				<div class="section-head">
+					<p class="eyebrow">Once you have made it yours</p>
+					<h2 id="storage-title">See where the <em>space goes.</em></h2>
+					<p>Your files, downloaded software and build leftovers all take room. Recdirstat puts their sizes on a map, so you can see the large places and inspect what is inside before deciding what to keep.</p>
+				</div>
+				<Screenshot id="disk-browse" distro={distro} showStatus={false} />
+				<div class="actions"><a class="text-action" href={`${docLink("post-installation", distro)}#disk-usage`}>Read the disk usage guide</a></div>
 			</section>
 
 			<section class="story-section" id="install" aria-labelledby="install-title">
 				<div class="split">
 					<div class="split__copy">
 						<p class="eyebrow">Installation</p>
-						<h2 id="install-title">The guide sits <em>beside your shell.</em></h2>
-						<p>Both variants install the Arch way, one step at a time. The live ISO boots into an install screen: a shell on one side and the full installation guide on the other, with <kbd class="inline-code">Ctrl-]</kbd> switching between them.</p>
-						<p>The same pages are on this site, so you can read ahead before you boot.</p>
+						<h2 id="install-title">Start with the guide <em>beside you.</em></h2>
+						<p>To reach that desktop, boot the live ISO and install one step at a time. A shell sits beside the full installation guide; <kbd class="inline-code">Ctrl-]</kbd> switches between them.</p>
+						<p>Read the same guide here before you boot. It takes you from the disk layout to your first login, with each command explained.</p>
 						<div class="actions">
 							<a class="text-action" href={docLink("installation", distro)}>Read the {osName} installation guide</a>
 						</div>
@@ -271,8 +264,8 @@ const principles = [
 			<section class="story-section" id="variants" aria-labelledby="variants-title">
 				<div class="section-head">
 					<p class="eyebrow">Two variants, one pipeline</p>
-					<h2 id="variants-title">Choose a foundation.</h2>
-					<p>Both variants are built from their own declarations by the same pipeline. Both install as A/B systems by default; a mutable install is an explicit opt-in.</p>
+					<h2 id="variants-title">The same tools. <em>Two foundations.</em></h2>
+					<p>The Recipe workflow you have seen belongs to both variants, alongside Recab and Recdirstat. Choose the base and desktop that suit you; both install as A/B systems by default.</p>
 				</div>
 				<div class="entries">
 					<ProductEntry variant={variant} distro={distro} />
@@ -313,14 +306,17 @@ const principles = [
 </BaseLayout>
 
 <style>
-	.desktop-apps {
-		display: grid;
-		gap: var(--fn-space-5);
-		grid-template-columns: minmax(0, 1fr);
+	.command-example {
+		margin-top: var(--fn-space-6);
+		padding: var(--fn-space-4);
+		border-block: var(--fn-rule-width) solid var(--fn-rule);
 	}
-	@media (min-width: 64rem) {
-		.desktop-apps {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
+	.command-example summary {
+		cursor: pointer;
+		font-weight: 500;
+		color: var(--fn-brand);
+	}
+	.command-example[open] > :not(summary) {
+		margin-top: var(--fn-space-5);
 	}
 </style>

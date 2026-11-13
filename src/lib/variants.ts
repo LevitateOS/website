@@ -18,6 +18,7 @@ export interface Variant {
 	meta: { title: string; description: string }
 	/** The homepage's opening: eyebrow, the headline in two spans (the second ends in an emphasised phrase) and the deck. */
 	hero: { eyebrow: string; title: { first: string; second: string; emphasis: string }; deck: string }
+	desktopStory: { title: string; text: string }
 	role: string
 	description: string
 	stack: string
@@ -66,11 +67,15 @@ export const variants: Variant[] = [
 		hero: {
 			eyebrow: "Be your own package maintainer",
 			title: { first: "Know what", second: "you", emphasis: "run." },
-			deck: "A Linux distribution where every package is a recipe you can read, and every update is a trial you can undo.",
+			deck: "Choose your software in Recipe. Read what it will do, review what it may use, and prepare system changes beside the system you are running.",
+		},
+		desktopStory: {
+			title: "A familiar place to make it yours.",
+			text: "KDE Plasma gives you the desktop. Recipe gives you a clear view of the software you put on it. The leaf in the panel opens your applications.",
 		},
 		role: "The broad-compatibility choice, on a core system from signed Fedora RPMs.",
 		description:
-			"Run Linux software without patching, use familiar GNU tools, and find answers to most questions online. Choose it if you want the widest software compatibility.",
+			"A Fedora-derived base with glibc, systemd and GNU tools, with KDE Plasma on the desktop. Choose it for broad software compatibility; Recipe manages the software you add.",
 		stack: stack("levitate", "GNU"),
 		base: "Fedora 45 RPMs, signed and locked",
 		...derived("levitate"),
@@ -97,11 +102,15 @@ export const variants: Variant[] = [
 		hero: {
 			eyebrow: "The small, strict sibling of LevitateOS",
 			title: { first: "The fewest parts", second: "", emphasis: "that do the job." },
-			deck: "A small Linux system on musl, OpenRC and busybox, where every package is a recipe you can read, and every update is a trial you can undo.",
+			deck: "A smaller Linux base, with the same Recipe tools. Find what you want to run, inspect it before installing, and try system changes in the other slot.",
+		},
+		desktopStory: {
+			title: "A small base. Your own desktop.",
+			text: "LXQt sits on AcornOS's musl, OpenRC and busybox base. The acorn in the panel opens your applications; Recipe is where you choose what to add.",
 		},
 		role: "The musl and OpenRC sibling in the LevitateOS family.",
 		description:
-			"A smaller, simpler base built by the same pipeline. Some software needs patching or compiling yourself, and you can see exactly what is running.",
+			"An Alpine-derived base with musl, OpenRC and busybox, with LXQt on the desktop. Choose it if you prefer a smaller base and are willing to adapt software that expects glibc.",
 		stack: stack("acorn", "busybox"),
 		base: "Alpine Linux 3.24 APKs",
 		...derived("acorn"),
