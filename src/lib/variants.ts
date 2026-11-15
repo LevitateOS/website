@@ -60,7 +60,7 @@ export const variants: Variant[] = [
 		meta: {
 			title: "LevitateOS: know what you run",
 			description:
-				"A Linux distribution built around readable package recipes and explicit control: recipes built in isolated Ginux domains and two A/B roots by default.",
+				"A Linux distribution built around readable package recipes and explicit control: recipes that start programs run in isolated Ginux domains, and two A/B roots by default.",
 		},
 		hero: {
 			eyebrow: "Be your own package maintainer",
@@ -71,18 +71,18 @@ export const variants: Variant[] = [
 			title: "A familiar place to make it yours.",
 			text: "KDE Plasma gives you the desktop. Recipe gives you a clear view of the software you put on it. The leaf in the panel opens your applications.",
 		},
-		role: "The broad-compatibility choice, on a core system from signed Fedora RPMs.",
+		role: "The broad-compatibility choice: glibc and systemd, userland built from signed Fedora RPM packages.",
 		description:
-			"An independent system with glibc, systemd and GNU tools, with KDE Plasma on the desktop. Its userland is built from signed Fedora 45 RPM packages; it is not based on Fedora. Choose it for broad software compatibility; Recipe manages the software you add.",
+			"An independent system with glibc, systemd and GNU tools, with KDE Plasma on the desktop. Its userland is built from signed Fedora 45 RPM packages. The installer, the rec* tools, the kernel, A/B booting and Recipe are our own. Choose it for broad software compatibility; Recipe manages the software you add.",
 		stack: stack("levitate", "GNU"),
 		base: "Fedora 45 RPM packages, signed and locked",
 		...derived("levitate"),
 		status: "in-development",
 		statusLabel: "In development",
 		release: "Planned for 2027",
-		architectures: "x86_64 first; AArch64 after",
+		architectures: "x86_64",
 		format: "Live UEFI ISO",
-		strengths: ["Broad Linux software compatibility", "Core system from signed Fedora 45 RPMs", "systemd service management", "Familiar GNU tools"],
+		strengths: ["Broad Linux software compatibility", "Userland built from signed Fedora 45 RPM packages", "systemd service management", "Familiar GNU tools"],
 		tradeoffs: ["Larger binaries", "Slower boot", "Higher memory use"],
 	},
 	{
@@ -93,7 +93,7 @@ export const variants: Variant[] = [
 		meta: {
 			title: "AcornOS: the fewest parts that do the job",
 			description:
-				"The small, strict sibling of LevitateOS: musl, OpenRC and busybox, with the same readable package recipes, isolated Ginux builds and two A/B roots.",
+				"The small, strict sibling of LevitateOS: musl, OpenRC and busybox, with the same readable package recipes, isolation for programs a recipe starts, and two A/B roots.",
 		},
 		hero: {
 			eyebrow: "The small, strict sibling of LevitateOS",
@@ -106,14 +106,14 @@ export const variants: Variant[] = [
 		},
 		role: "The musl and OpenRC sibling in the LevitateOS family.",
 		description:
-			"An independent system with musl, OpenRC and busybox, with LXQt on the desktop. Its userland is built from Alpine Linux 3.24 APK packages; it is not based on Alpine. Choose it if you prefer a smaller system and are willing to adapt software that expects glibc.",
+			"An independent system with musl, OpenRC and busybox, with LXQt on the desktop. Its userland is built from Alpine Linux 3.24 APK packages. The installer, the rec* tools, the kernel, A/B booting and Recipe are our own. Choose it if you prefer a smaller system and are willing to adapt software that expects glibc.",
 		stack: stack("acorn", "busybox"),
 		base: "Alpine Linux 3.24 APK packages",
 		...derived("acorn"),
 		status: "in-development",
 		statusLabel: "In development",
 		release: "Planned for 2027",
-		architectures: "x86_64 first; AArch64 after",
+		architectures: "x86_64",
 		format: "Live UEFI ISO",
 		strengths: ["Faster boot", "Lower memory use", "Smaller disk footprint", "Simpler init system"],
 		tradeoffs: ["Some software needs patching", "Fewer pre-built packages", "Less documentation online"],

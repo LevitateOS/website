@@ -1,0 +1,295 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import Header from "../layout/Header.astro"
+import Footer from "../layout/Footer.astro"
+import CodeBlock from "../CodeBlock.astro"
+import ImageFrame from "../ImageFrame.astro"
+import Screenshot from "../Screenshot.astro"
+import { variantOf } from "../../lib/variants"
+import { docLink } from "../../lib/docs"
+import { DEFAULT_DISTRO, distroName, href, type DistroId } from "../../lib/flavor"
+import { DISTROS } from "@levitate/docs-content/distros"
+
+interface Props {
+	distro?: DistroId
+}
+
+const { distro = DEFAULT_DISTRO } = Astro.props
+const variant = variantOf(distro)
+const { profile } = DISTROS.find((d) => d.id === distro)!
+const osName = distroName(distro)
+const admin = profile.privilege
+
+// The runnable example from tools/recipe/WRITING_RECIPES.md.
+const recipeCode = `const RECIPE_API = 2;
+let ctx = #{
+    name: "hello",
+    version: "1.0",
+    program: join_path(RUNTIME.paths.output, "bin/hello"),
+    payload: "#!/bin/sh\\nprintf 'hello\\\\n'\\n",
+};
+
+fn is_acquired(ctx) { ready(ctx) }
+fn acquire(ctx) { ctx }
+fn is_built(ctx) { ready(ctx) }
+fn build(ctx) { ctx }
+
+fn is_installed(ctx) {
+    if !is_file(ctx.program) { return needs_work(ctx, "hello output is missing"); }
+    if read_file(ctx.program) != ctx.payload {
+        return needs_work(ctx, "hello output has different contents");
+    }
+    ctx.outputs.program = ctx.program;
+    ready(ctx)
+}
+
+fn install(ctx) {
+    mkdir(dirname(ctx.program));
+    write_file(ctx.program, ctx.payload);
+    chmod(ctx.program, 0o755);
+    ctx.outputs.program = ctx.program;
+    ctx
+}
+
+fn remove(ctx) {
+    if is_file(ctx.program) { rm(ctx.program); }
+    ctx.outputs = #{};
+    ctx
+}`
+
+const recipeNotes = [
+	{ line: 1, text: "Every recipe names the API it was written for." },
+	{ line: 14, text: "Asks the files on disk, not a database. An interrupted install resumes here." },
+	{ line: 23, text: "Writes only into the run's own output folder. It starts no program, so it runs on the host." },
+	{ line: 31, text: "Removal is in the recipe too. You can read what it deletes." },
+]
+
+const scopeCode = `# for me: your own account, no administrator needed
+recipe install ripgrep
+
+# for everyone: the whole computer, as administrator
+${admin} recipe --system install ripgrep`
+
+const needsCode = `const NEEDS = #{
+    inputs: #{ source: "directory" },
+    outputs: #{ program: "file" },
+    network: ["publisher.example:443"],
+    memory_mib: 4096,
+    timeout_secs: 3600,
+};`
+
+const sourceCode = `recipe source add https://github.com/OWNER/recipes    # a repository of recipes
+recipe source add --path ~/my-recipes                 # a folder of your own
+recipe source list
+recipe install SOURCE:NAME                            # name the source when two have the same recipe`
+
+const beforePoints = [
+	"Choose software for your own account or for the whole computer.",
+	"Review the network hosts, files and resources the recipe may use.",
+	"Recipe runs it within those declared limits.",
+]
+
+const ginuxReach = [
+	{ what: "Network", text: "None, unless the recipe's NEEDS lists the host and port. A redirect to another host needs a grant too. You can narrow the list when you install; you cannot widen it." },
+	{ what: "Files", text: "Only what NEEDS declares as inputs (read-only), plus the run's own work and output folders. Your home folder is not there." },
+	{ what: "Resources", text: "Memory, storage and time are bounded by NEEDS, and you can only lower them." },
+	{ what: "Dependencies", text: "Each runs in its own domain under its own NEEDS. Nothing is lent from the recipe that asked for it." },
+]
+---
+
+<BaseLayout
+	title={`Recipe · ${osName}`}
+	description="Recipe is the software manager of LevitateOS and AcornOS: readable recipes, your own sources, system-wide or personal installs, and isolation for the programs a recipe starts."
+	distro={distro}
+	canonicalPath="/recipe/"
+>
+	<Header distro={distro} />
+	<main id="main" class="home">
+		<section aria-labelledby="hero-title">
+			<ImageFrame class="frame-host--hero">
+				<p class="eyebrow">Software, by recipe</p>
+				<h1 class="hero-title" id="hero-title"><span>Read it,</span> <span>then <em>trust it.</em></span></h1>
+				<p class="hero-deck">Recipe finds, builds, installs and removes software. Each program has a recipe: a short file you can read before anything happens. {osName} and its sibling both use the same Recipe, and it is on this page once.</p>
+				<div class="actions">
+					<a class="button" href="#ginux">How Ginux isolates a recipe</a>
+					<a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a>
+				</div>
+			</ImageFrame>
+		</section>
+
+		<div class="wrap">
+			<section class="story-section" id="software" aria-labelledby="software-title">
+				<div class="section-head">
+					<p class="eyebrow">Start with the software</p>
+					<h2 id="software-title">Find what you <em>want to run.</em></h2>
+					<p>Search by name or browse by kind of software. Each entry leads to the recipe behind the program, so finding it and understanding it happen in the same place.</p>
+				</div>
+				<Screenshot id="recipe-browse" distro={distro} showStatus={false} />
+				<p class="support">Development previews; application content uses sample data.</p>
+			</section>
+
+			<section class="story-section" id="before-install" aria-labelledby="before-title">
+				<div class="section-head">
+					<p class="eyebrow">Before you install</p>
+					<h2 id="before-title">Know what <em>will change.</em></h2>
+					<p>Choosing Install brings you to the decision, before the work starts. Recipe shows where the software will go and what it may use along the way.</p>
+					<ul class="notes">
+						{beforePoints.map((point) => <li>{point}</li>)}
+					</ul>
+				</div>
+				<Screenshot id="recipe-before-install" distro={distro} showStatus={false} />
+			</section>
+
+			<section class="story-section" id="scopes" aria-labelledby="scopes-title">
+				<div class="section-head">
+					<p class="eyebrow">For me, or for everyone</p>
+					<h2 id="scopes-title">Choose <em>where it goes.</em></h2>
+					<p>Software can be for your own account or for the whole computer. "For me" is the default.</p>
+					<ul class="notes">
+						<li><strong>For me</strong> goes into your own store, <code class="inline-code">~/.local/share/recipe</code>. Other people on the computer do not see it.</li>
+						<li><strong>For everyone</strong> is system software. On an A/B installation it is written into the other root, which is unlocked. The booted root is never touched. It becomes active when that root is started.</li>
+						<li>A mutable installation has one root and no recab. System software goes straight into the running system.</li>
+					</ul>
+				</div>
+				<CodeBlock code={scopeCode} language="bash" label="Two scopes" source="tools/recipe/README.md" />
+				<p>If you make the other root a copy of the booted root again, the system changes Recipe wrote there are gone. Recipe notices, and writes exactly that system part again. It does not redo the whole install, and it does not touch what you installed for yourself. Until that has succeeded, it does not report the part as done.</p>
+				<div class="actions">
+					<a class="text-action" href={docLink("atomic-updates", distro)}>Read about A/B roots</a>
+					<a class="text-action" href={`${docLink("post-installation", distro)}#software-with-recipe`}>Read the software guide</a>
+				</div>
+			</section>
+
+			<section class="story-section" id="sources" aria-labelledby="sources-title">
+				<div class="section-head">
+					<p class="eyebrow">Where recipes come from</p>
+					<h2 id="sources-title">Sources, <em>yours included.</em></h2>
+					<p>A source is a collection of recipes. The system ships the official one, so its recipes install offline. You can add others: a repository on github.com or gitlab.com, or a folder on your own disk.</p>
+					<ul class="notes">
+						<li>A remote source publishes an index. Recipe keeps the index and downloads a recipe's files only when you install it.</li>
+						<li>Every downloaded file is checked against the SHA-256 in the index. A file that differs stops the install before anything runs.</li>
+						<li>A folder you point Recipe at is read as it is, edits included.</li>
+					</ul>
+				</div>
+				<CodeBlock code={sourceCode} language="bash" label="Adding sources" source="tools/recipe/README.md" />
+			</section>
+
+			<section class="story-section" id="write" aria-labelledby="write-title">
+				<div class="section-head">
+					<p class="eyebrow">Write your own</p>
+					<h2 id="write-title">A recipe is <em>a file you can read.</em></h2>
+					<p>A recipe is a Rhai file. It holds the package facts and the steps that acquire, build, install and remove the software. Here is a complete small one. Put your own in a folder, add that folder as a source, and Recipe reads them like any others.</p>
+				</div>
+				<ImageFrame art="circuit" class="frame-host--inset frame-host--compact">
+					<CodeBlock code={recipeCode} language="rhai" label="hello.rhai" source="tools/recipe/WRITING_RECIPES.md" notes={recipeNotes} />
+				</ImageFrame>
+				<div class="actions">
+					<a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a>
+					<a class="text-action" href={docLink("helpers-overview", distro)}>Rhai helpers</a>
+					<a class="text-action" href={docLink("cli-reference", distro)}>CLI reference</a>
+				</div>
+			</section>
+
+			<section class="story-section" id="proprietary" aria-labelledby="proprietary-title">
+				<div class="section-head">
+					<p class="eyebrow">Proprietary software</p>
+					<h2 id="proprietary-title">Your choice, <em>and flagged.</em></h2>
+					<p>Neither system ships proprietary software in its image. It reaches a machine only because you installed it through Recipe.</p>
+					<ul class="notes">
+						<li>A recipe for proprietary software says so in its <code class="inline-code">license</code>, which starts with <code class="inline-code">proprietary</code>, and Recipe shows that flag.</li>
+						<li>The recipe fetches the program from the vendor's own site. Where the vendor's terms require it, we do not redistribute it.</li>
+						<li>Being proprietary never earns an app a place in the base image, and it never bans it from Recipe.</li>
+					</ul>
+				</div>
+			</section>
+
+			<section class="story-section" id="fits" aria-labelledby="fits-title">
+				<div class="section-head">
+					<p class="eyebrow">Only where it can run</p>
+					<h2 id="fits-title">An app is offered <em>where its base can run it.</em></h2>
+					<p>{osName} and its sibling run the same Recipe, not the same list of apps. {osName} uses {profile.libc}. A recipe can say which C libraries its build works with. Before it downloads anything, Recipe compares that with the system's.</p>
+					<ul class="notes">
+						<li>If they do not match, Recipe says what the build is linked against and what this system has, and stops.</li>
+						<li>You can install it anyway with <code class="inline-code">--any-libc</code>. The program may then not start.</li>
+						<li>A recipe whose package carries its own C library says so, and Recipe tells you it was tried on that library and not yet on yours.</li>
+					</ul>
+				</div>
+			</section>
+
+			<section class="story-section" id="ginux" aria-labelledby="ginux-title">
+				<div class="section-head">
+					<p class="eyebrow">Ginux</p>
+					<h2 id="ginux-title">Programs a recipe starts <em>run in isolation.</em></h2>
+					<p>Installing software means running someone else's build steps. Recipe puts a wall around the steps that start programs, and it makes you able to read, ahead of time, what is on the other side of it.</p>
+				</div>
+
+				<div class="prose">
+					<h3>What Ginux is</h3>
+					<p>Ginux is a configurable userspace kernel for isolated Linux instances. It runs as an ordinary Linux process. It sits between a program and the host kernel and decides, for each system call, whether to answer it itself, to perform a narrow checked operation, or to deny it. An instance, called a domain here, gets only what its contract allows.</p>
+
+					<h3>Whose it is</h3>
+					<p>Ginux is Greg Kurtzer's project, <a href="https://github.com/gmkurtzer/ginux">gmkurtzer/ginux</a>. We did not make it. Recipe uses it as technology. We keep a <a href="https://github.com/LevitateOS/ginux">fork</a> and follow upstream: when upstream provides a behavior, we take it.</p>
+
+					<h3>Which recipes run in a Ginux domain</h3>
+					<p>Recipe reads a recipe's source before anything runs and picks one of two ways.</p>
+					<ul class="docs-list">
+						<li><strong>In a Ginux domain</strong> when the recipe, the base it extends or a module it imports can start a program: <code class="inline-code">exec</code> and <code class="inline-code">shell</code> calls, <code class="inline-code">git_checkout</code>, RPM and APK helpers, and the like. Builds that run <code class="inline-code">make</code> or <code class="inline-code">cmake</code> are here.</li>
+						<li><strong>On the host</strong> when it can start none. It runs as an ordinary process of the user who ran Recipe. Recipe confines it: its file helpers reach only the run's own folders, its network reaches only the hosts in NEEDS, the program helpers do not exist for it, and a seccomp filter refuses new programs and processes. A recipe that downloads, checks hashes, unpacks and copies is here, and so is the <code class="inline-code">hello.rhai</code> above.</li>
+					</ul>
+					<p><code class="inline-code">recipe info NAME</code> tells you which way a recipe goes and why.</p>
+
+					<h3>What a domain can reach</h3>
+				</div>
+				<dl class="facts reach">
+					{ginuxReach.map((item) => (
+						<>
+							<dt>{item.what}</dt>
+							<dd>{item.text}</dd>
+						</>
+					))}
+				</dl>
+				<div class="prose">
+					<p>The domain also gets no listening sockets and no direct access to devices or raw network packets. Everything that comes out is checked before it is published, and a failed or interrupted run never replaces an earlier good result.</p>
+					<p>Those grants are the recipe's <code class="inline-code">NEEDS</code>. It is literal data, with no helper calls or variables:</p>
+				</div>
+				<CodeBlock code={needsCode} language="rhai" label="NEEDS" source="tools/recipe/WRITING_RECIPES.md" />
+
+				<div class="prose">
+					<h3>Why you can read it, then trust it</h3>
+					<ul class="docs-list">
+						<li>NEEDS is read without running the recipe. What it may use is on the page before it does anything.</li>
+						<li>It is enforced, not advised. A recipe cannot add a host, a file or a larger limit to what it declared, and neither can the caller.</li>
+						<li>Downloads must carry a SHA-256 the recipe pins, and a front end can pass the checksum of the recipe you looked at. What you read is what runs.</li>
+					</ul>
+
+					<h3>What it does not do</h3>
+					<ul class="docs-list">
+						<li>Ginux is not a virtual machine. Its own README says the host kernel and the supervision mechanisms stay trusted, and that it is a narrow research project.</li>
+						<li>A host-side recipe is held by Recipe's own checks, not by Ginux.</li>
+						<li>An address grant does not tell apart two sites on the same address and port.</li>
+						<li>The program you install runs with your rights once it is installed. Isolation covers its install, not its use.</li>
+						<li>The descriptive notes in a recipe (<code class="inline-code">ABOUT</code>) are the author's words. Only NEEDS is enforced.</li>
+					</ul>
+					<p>That is why we say to read the recipe. The wall makes what you read true. It does not make an untrusted recipe safe.</p>
+				</div>
+				<div class="actions">
+					<a class="text-action" href="https://github.com/gmkurtzer/ginux">Ginux upstream</a>
+					<a class="text-action" href={docLink("faq", distro)}>Architecture FAQ</a>
+				</div>
+			</section>
+		</div>
+
+		<section class="ending" aria-labelledby="recipe-end-title">
+			<div class="wrap ending__row">
+				<div>
+					<h2 id="recipe-end-title">One Recipe. <em>Both systems.</em></h2>
+					<p>{osName} is {variant.role.charAt(0).toLowerCase() + variant.role.slice(1)} Its sibling uses the same Recipe.</p>
+				</div>
+				<div class="actions">
+					<a class="text-action" href={href("/", distro)}>Back to {osName}</a>
+					<a class="text-action" href={href("/download/", distro)}>Downloads &amp; status</a>
+				</div>
+			</div>
+		</section>
+	</main>
+	<Footer distro={distro} />
+</BaseLayout>

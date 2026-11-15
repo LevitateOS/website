@@ -10,7 +10,7 @@ function header(): string {
 	return [
 		"# LevitateOS",
 		"",
-		"> LevitateOS is a Linux distribution where you maintain your own packages. Packages are Rhai scripts called \"recipes\" that declare how to acquire, build and install each piece of software, and every recipe runs inside an isolated Ginux domain. The installed system keeps two roots, A and B, by default: the booted root is locked and changes are made in the other root. Mutable mode, one root, is an explicit opt-in.",
+		"> LevitateOS and AcornOS are independent operating systems; their userlands are built from Fedora 45 RPM packages and Alpine 3.24 APK packages. You maintain your own packages with Recipe: Rhai scripts called \"recipes\" that declare how to acquire, build and install each piece of software. A recipe that starts programs runs inside an isolated Ginux domain; one that starts none runs on the host, confined by Recipe. The installed system keeps two roots, A and B, by default: the booted root is locked and changes are made in the other root. Mutable mode, one root, is an explicit opt-in.",
 		"",
 		"Siblings (built by the same pipeline, installed the same way):",
 		...DISTROS.map((d) => `- **${d.osName}**: ${d.profile.libc}, ${d.profile.init}, ${d.profile.privilege}, kernel ${d.kernel.version}.`),

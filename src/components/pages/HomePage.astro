@@ -23,43 +23,6 @@ const record = DISTROS.find((d) => d.id === distro)!
 const { profile } = record
 const osName = distroName(distro)
 
-// The runnable example from tools/recipe/WRITING_RECIPES.md.
-const recipeCode = `const RECIPE_API = 2;
-let ctx = #{
-    name: "hello",
-    version: "1.0",
-    program: join_path(RUNTIME.paths.output, "bin/hello"),
-    payload: "#!/bin/sh\\nprintf 'hello\\\\n'\\n",
-};
-
-fn is_acquired(ctx) { ready(ctx) }
-fn acquire(ctx) { ctx }
-fn is_built(ctx) { ready(ctx) }
-fn build(ctx) { ctx }
-
-fn is_installed(ctx) {
-    if !is_file(ctx.program) { return needs_work(ctx, "hello output is missing"); }
-    if read_file(ctx.program) != ctx.payload {
-        return needs_work(ctx, "hello output has different contents");
-    }
-    ctx.outputs.program = ctx.program;
-    ready(ctx)
-}
-
-fn install(ctx) {
-    mkdir(dirname(ctx.program));
-    write_file(ctx.program, ctx.payload);
-    chmod(ctx.program, 0o755);
-    ctx.outputs.program = ctx.program;
-    ctx
-}
-
-fn remove(ctx) {
-    if is_file(ctx.program) { rm(ctx.program); }
-    ctx.outputs = #{};
-    ctx
-}`
-
 /** An annotated example: groups of lines with blank lines between them; each group's note points at one of its lines. */
 function annotate(groups: { lines: string[]; note: string; at?: number; gap?: number }[]) {
 	const out: string[] = []
@@ -109,20 +72,6 @@ const install = annotate([
 	{ lines: [commands.password(example)], note: "Inside your new system, before its first boot." },
 ])
 
-// Notes on hello.rhai, each beside the line it explains.
-const recipeNotes = [
-	{ line: 1, text: "Every recipe names the API it was written for." },
-	{ line: 14, text: "Asks the files on disk, not a database. An interrupted install resumes here." },
-	{ line: 23, text: "Runs inside a Ginux domain, never on the system you are using." },
-	{ line: 31, text: "Removal is in the recipe too. You can read what it deletes." },
-]
-
-const recipePoints = [
-	"Choose software for your own account or for the whole computer.",
-	"Review the network hosts, files and resources the recipe may use.",
-	"Let Recipe build it inside Ginux, within those declared limits.",
-]
-
 const updatePoints = [
 	"The booted root is locked. The other root is unlocked.",
 	"Changes are written into the other root.",
@@ -132,12 +81,12 @@ const updatePoints = [
 
 const acknowledgments = [
 	{ name: "Arch Linux", href: "https://archlinux.org", text: "For the blueprint of a user-controlled distribution and a manual installation." },
-	{ name: "Fedora", href: "https://fedoraproject.org", text: "For the signed, maintained packages the LevitateOS core system is extracted from." },
-	{ name: "Alpine Linux", href: "https://alpinelinux.org", text: "For the musl and busybox base that AcornOS builds on." },
+	{ name: "Fedora", href: "https://fedoraproject.org", text: "For the signed, maintained RPM packages the LevitateOS userland is built from." },
+	{ name: "Alpine Linux", href: "https://alpinelinux.org", text: "For the signed APK packages, musl and busybox the AcornOS userland is built from." },
 	{ name: "Nix", href: "https://nixos.org", text: "For pioneering declarative dependency management and reproducible builds." },
 	{ name: "Gentoo", href: "https://gentoo.org", text: "For USE flags and the philosophy of compile-time customization." },
 	{ name: "Universal Blue", href: "https://universal-blue.org", text: "For demonstrating image-based updates on the desktop." },
-	{ name: "Ginux", href: "https://github.com/gmkurtzer/ginux", text: "For the userspace kernel every recipe builds inside." },
+	{ name: "Ginux", href: "https://github.com/gmkurtzer/ginux", text: "Greg Kurtzer's userspace kernel, which Recipe uses to isolate the programs a recipe starts." },
 	{ name: "Claude Code", href: "https://claude.com/claude-code", text: "For AI-assisted development that accelerated this project." },
 	{ name: "Rust", href: "https://rust-lang.org", text: "For the language the rec* tools and recipe are written in." },
 ]
@@ -177,37 +126,17 @@ const acknowledgments = [
 				<ImageFrame art="fern" class="frame-host--inset frame-host--editorial">
 					<div class="intro">
 						<div>
-							<p class="eyebrow">Start with the software</p>
-							<h2 id="software-title"><span>Find what you</span> <span>want to <em>run.</em></span></h2>
+							<p class="eyebrow">Software</p>
+							<h2 id="software-title"><span>Software comes</span> <span>through <em>Recipe.</em></span></h2>
 						</div>
-						<p class="intro__deck">Search by name or browse by kind of software. Each entry leads to the recipe behind the program, so finding it and understanding it happen in the same place.</p>
+						<p class="intro__deck">Search by name, read the recipe behind each program, and see what it may use before you install. Recipe has its own page.</p>
 					</div>
 				</ImageFrame>
 				<Screenshot id="recipe-browse" distro={distro} showStatus={false} />
 				<div class="actions">
-					<a class="text-action" href="#recipe">See what happens before Install</a>
+					<a class="button" href={href("/recipe/", distro)}>About Recipe</a>
 					<a class="text-action" href={`${docLink("post-installation", distro)}#software-with-recipe`}>Read the software guide</a>
 				</div>
-			</section>
-
-			<section class="story-section" id="recipe" aria-labelledby="recipe-title">
-				<div class="section-head">
-					<p class="eyebrow">Before you install</p>
-					<h2 id="recipe-title">Know what <em>will change.</em></h2>
-					<p>Choosing Install brings you to the decision, before the work starts. Recipe shows where the software will go, how it will be built, and what it may use along the way.</p>
-					<ul class="notes">
-						{recipePoints.map((point) => <li>{point}</li>)}
-					</ul>
-				</div>
-				<Screenshot id="recipe-before-install" distro={distro} showStatus={false} />
-				<details class="command-example">
-					<summary>Look inside the recipe file</summary>
-					<p>The window reads a Rhai file. That file holds the package facts and the steps that acquire, build, install and remove it. Here is a complete small recipe you can read from beginning to end.</p>
-					<ImageFrame art="circuit" class="frame-host--inset frame-host--compact">
-						<CodeBlock code={recipeCode} language="rhai" label="hello.rhai" source="tools/recipe/WRITING_RECIPES.md" notes={recipeNotes} />
-					</ImageFrame>
-					<div class="actions"><a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a></div>
-				</details>
 			</section>
 
 			<section class="story-section" id="updates" aria-labelledby="updates-title">
@@ -268,8 +197,8 @@ const acknowledgments = [
 			<section class="story-section" id="variants" aria-labelledby="variants-title">
 				<div class="section-head">
 					<p class="eyebrow">Two variants, one pipeline</p>
-					<h2 id="variants-title">The same tools. <em>Two foundations.</em></h2>
-					<p>The Recipe workflow you have seen belongs to both variants, alongside Recab and Recdirstat. Choose the base and desktop that suit you; both install as A/B systems by default.</p>
+					<h2 id="variants-title">The same tools. <em>Two userlands.</em></h2>
+					<p>LevitateOS and AcornOS are independent operating systems. Their userlands are built from Fedora 45 RPM packages and Alpine 3.24 APK packages. Both use the same Recipe, alongside Recab and Recdirstat. Choose the userland and desktop that suit you; both install as A/B systems by default.</p>
 				</div>
 				<div class="entries">
 					<ProductEntry variant={variant} distro={distro} />
