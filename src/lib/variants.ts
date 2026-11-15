@@ -73,9 +73,9 @@ export const variants: Variant[] = [
 		},
 		role: "The broad-compatibility choice, on a core system from signed Fedora RPMs.",
 		description:
-			"A Fedora-derived base with glibc, systemd and GNU tools, with KDE Plasma on the desktop. Choose it for broad software compatibility; Recipe manages the software you add.",
+			"An independent system with glibc, systemd and GNU tools, with KDE Plasma on the desktop. Its userland is built from signed Fedora 45 RPM packages; it is not based on Fedora. Choose it for broad software compatibility; Recipe manages the software you add.",
 		stack: stack("levitate", "GNU"),
-		base: "Fedora 45 RPMs, signed and locked",
+		base: "Fedora 45 RPM packages, signed and locked",
 		...derived("levitate"),
 		status: "in-development",
 		statusLabel: "In development",
@@ -98,17 +98,17 @@ export const variants: Variant[] = [
 		hero: {
 			eyebrow: "The small, strict sibling of LevitateOS",
 			title: { first: "The fewest parts", second: "", emphasis: "that do the job." },
-			deck: "A smaller Linux base, with the same Recipe tools. Find what you want to run, inspect it before installing, and try system changes in the other slot.",
+			deck: "A smaller Linux system, with the same Recipe tools. Find what you want to run, inspect it before installing, and try system changes in the other slot.",
 		},
 		desktopStory: {
 			title: "A small base. Your own desktop.",
-			text: "LXQt sits on AcornOS's musl, OpenRC and busybox base. The acorn in the panel opens your applications; Recipe is where you choose what to add.",
+			text: "LXQt sits on AcornOS's musl, OpenRC and busybox system. The acorn in the panel opens your applications; Recipe is where you choose what to add.",
 		},
 		role: "The musl and OpenRC sibling in the LevitateOS family.",
 		description:
-			"An Alpine-derived base with musl, OpenRC and busybox, with LXQt on the desktop. Choose it if you prefer a smaller base and are willing to adapt software that expects glibc.",
+			"An independent system with musl, OpenRC and busybox, with LXQt on the desktop. Its userland is built from Alpine Linux 3.24 APK packages; it is not based on Alpine. Choose it if you prefer a smaller system and are willing to adapt software that expects glibc.",
 		stack: stack("acorn", "busybox"),
-		base: "Alpine Linux 3.24 APKs",
+		base: "Alpine Linux 3.24 APK packages",
 		...derived("acorn"),
 		status: "in-development",
 		statusLabel: "In development",
