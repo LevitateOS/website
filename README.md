@@ -1,6 +1,6 @@
 # LevitateOS Website
 
-Static documentation site built with Astro. Renders content from `@levitate/docs-content` package.
+The public site of LevitateOS and AcornOS, built with Astro. It has a home page, a download page, a page for Recipe alone, a privacy page and the documentation, which it renders from the `@levitate/docs-content` package. It says the two systems are independent operating systems whose userlands are built from Fedora and Alpine packages, and it does not call either one "based on" another distribution. There is no updater here: the site only describes the two roots of an A/B install, and recab is not a web service.
 
 ## Status
 
@@ -36,7 +36,7 @@ bun run deploy    # Build and deploy to production
 
 Prerequisites:
 - Must be logged into Wrangler (`bunx wrangler login`)
-- Account: vincepaul.liem@gmail.com
+- The Cloudflare account that owns the `levitateos-docs` project
 
 ## Design Targets
 
@@ -128,6 +128,7 @@ plain link to the same page in the other flavour.
 | Page | LevitateOS | AcornOS |
 |------|------------|---------|
 | Home | `/` | `/acorn/` |
+| Recipe | `/recipe/` | `/acorn/recipe/` |
 | Docs page | `/docs/<slug>/` | `/acorn/docs/<slug>/` |
 | Downloads | `/download/` | `/acorn/download/` |
 | Privacy | `/privacy/` | `/acorn/privacy/` |
@@ -148,16 +149,19 @@ hook moves the latter into place, since Cloudflare Pages serves the nearest
 ```
 src/
 ├── pages/
-│   ├── index.astro, download.astro, privacy.astro, docs/[slug].astro
+│   ├── index.astro, download.astro, recipe.astro, privacy.astro, docs/[slug].astro
+│   ├── llms.txt.ts, llms-full.txt.ts   # the site as plain text for language models
 │   └── acorn/           # the same routes for AcornOS
 ├── components/
-│   ├── pages/           # Home, Download and Privacy bodies, taking a `distro`
+│   ├── pages/           # Home, Download, Recipe, Privacy and 404 bodies, taking a `distro`
 │   ├── layout/          # Header (flavour switch), Footer, Sidebar
 │   └── docs/            # Content block renderers
 ├── layouts/
 │   └── BaseLayout.astro
 ├── lib/
-│   └── flavor.ts        # flavour prefixes and the switch's target
+│   ├── flavor.ts        # flavour prefixes and the switch's target
+│   ├── variants.ts      # per-flavour homepage copy
+│   └── look.ts          # a flavour's looks as `--fn-*` colour properties
 └── styles/
     └── global.css
 ```

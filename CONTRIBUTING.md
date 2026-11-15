@@ -1,53 +1,39 @@
-# Contributing to LevitateOS Website
+# Contributing to the LevitateOS website
 
-Thanks for your interest in contributing!
+## Setup
 
-## Development Setup
+```bash
+git clone https://github.com/LevitateOS/website.git
+cd website
+bun install
+bun run dev
+```
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/LevitateOS/website.git
-   cd website
-   ```
+## Changing the site
 
-2. Install dependencies:
-   ```bash
-   bun install
-   ```
+The repository has one branch, `main`. Make the change, then run:
 
-3. Start the dev server:
-   ```bash
-   bun run dev
-   ```
+```bash
+bun run typecheck
+bun run build
+```
 
-## Pull Request Process
+Commit with a short plain sentence that says what changed, and push to `main`.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run type checking (`bun run typecheck`)
-5. Run a production build (`bun run build`)
-6. Commit your changes (`git commit -m 'feat: Add amazing feature'`)
-7. Push to your branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+## Wording
 
-## Commit Messages
+Page text lives in the content package (`docs/content` in the LevitateOS checkout), not here. Three rules apply to every page:
 
-We use [Conventional Commits](https://www.conventionalcommits.org/):
+- LevitateOS and AcornOS are independent operating systems. Their userlands are built from Fedora and Alpine packages. Never write "based on".
+- An A/B install has two roots. The booted root is locked and the other root is unlocked. recab makes the other root a copy of the booted root and chooses which root starts at the next boot.
+- Software comes through Recipe. Do not name another package manager or app store as an option.
 
-- `feat:` New feature
-- `fix:` Bug fix
-- `docs:` Documentation only
-- `style:` Code style (formatting, etc.)
-- `refactor:` Code refactoring
-- `chore:` Maintenance tasks
+## Code style
 
-## Code Style
+- TypeScript.
+- Follow the patterns already in the code.
+- Keep components small and single-purpose.
 
-- Use TypeScript for type safety
-- Follow existing patterns in the codebase
-- Keep components focused and single-purpose
+## Questions
 
-## Questions?
-
-Open an issue or reach out via the main [LevitateOS repository](https://github.com/LevitateOS/LevitateOS).
+Open an issue on the main [LevitateOS repository](https://github.com/LevitateOS/LevitateOS).

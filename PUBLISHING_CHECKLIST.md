@@ -45,7 +45,7 @@ Use this as the source of truth for launch readiness and first growth phases.
 - [x] `bun run build` passes in `docs/website`.
 - [x] `bun run deploy` succeeds and creates a fresh production deployment.
 - [ ] Latest deployment in Pages maps to current commit hash.
-- [ ] Rollback target is known (last good deployment URL noted).
+- [ ] The previous deployment's URL is noted, so the site can be switched back to it.
 
 ### P0.3 Route Health (Production)
 - [x] Core routes load with HTTP 200:
