@@ -79,16 +79,16 @@ function annotate(groups: { lines: string[]; note: string; at?: number; gap?: nu
 	return { code: out.join("\n"), notes }
 }
 
-// The update example: the install procedure's stage command, with the margin notes explaining it.
+// The A/B example: status, a change landing in the other root, boot-other, the roles swapped.
 const update = annotate([
 	{
-		lines: [`# as administrator, with ${profile.privilege}`, "mount -o loop,ro <release>.iso /mnt"],
+		lines: [`# as administrator, with ${profile.privilege}`, "recab status"],
 		at: 1,
-		note: "The new release, mounted from its ISO.",
+		note: "A is booted and locked. B is the other root, unlocked.",
 	},
-	{ lines: [commands.stage(record)], gap: 3, note: "Written to the other slot. The running system is never touched." },
-	{ lines: ["recab set-next B", "reboot"], note: "One trial boot. If B does not come up healthy, you are back on A." },
-	{ lines: ["recab rollback"], note: "Changed your mind? Back to A, while A still holds it." },
+	{ lines: ["recipe --system install ripgrep"], gap: 3, note: "Written into B. The booted root is never touched." },
+	{ lines: ["recab boot-other", "reboot"], note: "B starts once, at the next boot." },
+	{ lines: ["recab status"], note: "B is booted and locked. A is now the unlocked one." },
 ])
 
 // The install commands, from the install procedure the guide and the install screen use.
@@ -124,10 +124,10 @@ const recipePoints = [
 ]
 
 const updatePoints = [
-	"The next system is written to the inactive slot.",
-	"It boots once as a trial and is kept only if that boot is healthy.",
-	"A failed trial returns you to the slot you came from.",
-	"recab rollback switches back later, while the old slot still holds its system.",
+	"The booted root is locked. The other root is unlocked.",
+	"Changes are written into the other root.",
+	"Boot the other root and the roles swap.",
+	"If it does not finish starting, the machine starts the previous root again.",
 ]
 
 const acknowledgments = [
@@ -216,16 +216,16 @@ const acknowledgments = [
 						<ImageFrame art="mineral" class="frame-host--inset frame-host--aside">
 							<div>
 								<p class="eyebrow">When the system changes</p>
-								<h2 id="updates-title">Keep using this system. <em>Try the next one.</em></h2>
-								<p>Recab keeps the system you are using beside the one you are preparing. You can see which is which before you restart.</p>
+								<h2 id="updates-title">Keep using this system. <em>Change the other one.</em></h2>
+								<p>Recab keeps two roots, A and B. The one you are using is locked. The other is open for change. You can see which is which at any time.</p>
 							</div>
 						</ImageFrame>
-						<p>Software changes for the whole computer go into the next system. Recab brings system updates into that same preparation, preserving your changes or showing you what needs a decision. The running system stays as it is.</p>
+						<p>Software changes for the whole computer go into the other root. The running system stays as it is. To start over, make the other root a copy of the booted root.</p>
 						<ul class="notes">
 							{updatePoints.map((point) => <li>{point}</li>)}
 						</ul>
 						<div class="actions">
-							<a class="text-action" href={docLink("atomic-updates", distro)}>Read about A/B updates</a>
+							<a class="text-action" href={docLink("atomic-updates", distro)}>Read about A/B roots</a>
 						</div>
 					</div>
 					<div class="split__example">
@@ -233,8 +233,8 @@ const acknowledgments = [
 					</div>
 				</div>
 				<details class="command-example">
-					<summary>See the update commands</summary>
-					<CodeBlock code={update.code} language="bash" label="An update" source="docs/content/src/install.ts" notes={update.notes} />
+					<summary>See the A/B commands</summary>
+					<CodeBlock code={update.code} language="bash" label="A system change" source="tools/recab/README.md" notes={update.notes} />
 				</details>
 			</section>
 

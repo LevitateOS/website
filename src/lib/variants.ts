@@ -60,12 +60,12 @@ export const variants: Variant[] = [
 		meta: {
 			title: "LevitateOS: know what you run",
 			description:
-				"A Linux distribution built around readable package recipes and explicit control: recipes built in isolated Ginux domains and atomic A/B updates by default.",
+				"A Linux distribution built around readable package recipes and explicit control: recipes built in isolated Ginux domains and two A/B roots by default.",
 		},
 		hero: {
 			eyebrow: "Be your own package maintainer",
 			title: { first: "Know what", second: "you", emphasis: "run." },
-			deck: "Choose your software in Recipe. Read what it will do, review what it may use, and prepare system changes beside the system you are running.",
+			deck: "Choose your software in Recipe. Read what it will do, review what it may use, and make system changes in a second root beside the system you are running.",
 		},
 		desktopStory: {
 			title: "A familiar place to make it yours.",
@@ -93,12 +93,12 @@ export const variants: Variant[] = [
 		meta: {
 			title: "AcornOS: the fewest parts that do the job",
 			description:
-				"The small, strict sibling of LevitateOS: musl, OpenRC and busybox, with the same readable package recipes, isolated Ginux builds and atomic A/B updates.",
+				"The small, strict sibling of LevitateOS: musl, OpenRC and busybox, with the same readable package recipes, isolated Ginux builds and two A/B roots.",
 		},
 		hero: {
 			eyebrow: "The small, strict sibling of LevitateOS",
 			title: { first: "The fewest parts", second: "", emphasis: "that do the job." },
-			deck: "A smaller Linux system, with the same Recipe tools. Find what you want to run, inspect it before installing, and try system changes in the other slot.",
+			deck: "A smaller Linux system, with the same Recipe tools. Find what you want to run, inspect it before installing, and make system changes in the other root.",
 		},
 		desktopStory: {
 			title: "A small base. Your own desktop.",

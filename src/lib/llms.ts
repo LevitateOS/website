@@ -10,9 +10,9 @@ function header(): string {
 	return [
 		"# LevitateOS",
 		"",
-		"> LevitateOS is a Linux distribution where you maintain your own packages. Packages are Rhai scripts called \"recipes\" that declare how to acquire, build and install each piece of software, and every recipe runs inside an isolated Ginux domain. The installed system updates atomically: A/B slots are the default, each update is trial-booted before it is kept, and mutable mode is an explicit opt-in.",
+		"> LevitateOS is a Linux distribution where you maintain your own packages. Packages are Rhai scripts called \"recipes\" that declare how to acquire, build and install each piece of software, and every recipe runs inside an isolated Ginux domain. The installed system keeps two roots, A and B, by default: the booted root is locked and changes are made in the other root. Mutable mode, one root, is an explicit opt-in.",
 		"",
-		"Siblings (built by the same pipeline, installed and updated the same way):",
+		"Siblings (built by the same pipeline, installed the same way):",
 		...DISTROS.map((d) => `- **${d.osName}**: ${d.profile.libc}, ${d.profile.init}, ${d.profile.privilege}, kernel ${d.kernel.version}.`),
 		"",
 		`Hardware: ${HARDWARE.cpu}, ${HARDWARE.ram} RAM, ${HARDWARE.disk} disk, UEFI with Secure Boot disabled.`,

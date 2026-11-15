@@ -57,13 +57,13 @@ const images = {
 		width: 1100,
 		height: 700,
 		title: "Know which system is running.",
-		caption: "Recab names the running system and the role of the other slot.",
+		caption: "Recab names the booted root and the role of the other root.",
 	},
 	"recab-ready": {
 		width: 1100,
 		height: 700,
-		title: "The next system is ready.",
-		caption: "Recab keeps the running system beside the prepared one and offers a trial restart.",
+		title: "The other root is ready.",
+		caption: "Recab shows the booted root beside the other root, and starts the other root at the next boot.",
 	},
 	"disk-browse": {
 		width: 1100,
@@ -102,17 +102,17 @@ export const docsScreenshots = {
 	"post-installation": {
 		desktop: ["desktop-apps"],
 		"software-with-recipe": ["recipe-browse", "recipe-before-install"],
-		"system-updates": ["recab-ready"],
+		"the-two-roots": ["recab-ready"],
 		"disk-usage": ["disk-browse", "disk-compare"],
 	},
 	"cli-reference": { "user-package-lifecycle": ["recipe-installed", "recipe-updates"] },
 	"recipe-format": { "two-uses-one-format": ["recipe-detail"] },
 	"atomic-updates": {
-		"two-equivalent-initial-systems": ["recab-overview"],
-		"required-continuation-and-update-lifecycle": ["recab-ready"],
+		"two-roots": ["recab-overview"],
+		"how-a-change-lands": ["recab-ready"],
 	},
 	recab: {
-		"required-update-lifecycle": ["recab-overview"],
-		"current-release-image-staging": ["recab-ready"],
+		"the-two-roots": ["recab-overview"],
+		"using-it": ["recab-ready"],
 	},
 } as const satisfies Partial<Record<DocsSlug, Record<string, readonly ScreenshotId[]>>>;

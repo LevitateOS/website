@@ -39,7 +39,7 @@ const statusClass = variant.status === "available" ? "status--available" : ""
 		<dd>{variant.desktop}</dd>
 		<dt>Kernel</dt>
 		<dd>{variant.kernel}</dd>
-		<dt>Updates</dt>
+		<dt>Roots</dt>
 		<dd>A/B by default: the running root is locked, changes go in the other root, and a failed boot returns to the last working root</dd>
 	</dl>
 	<p class:list={["status", statusClass]}>{variant.statusLabel} · {variant.release}</p>
