@@ -153,6 +153,7 @@ const ginuxReach = [
 				</div>
 				<CodeBlock code={scopeCode} language="bash" label="Two scopes" source="tools/recipe/README.md" />
 				<p>If you make the other root a copy of the booted root again, the system changes Recipe wrote there are gone. Recipe notices, and writes exactly that system part again. It does not redo the whole install, and it does not touch what you installed for yourself. Until that has succeeded, it does not report the part as done.</p>
+				<p>The software that comes with the system is installed this way too. The system image holds only the minimal base. The desktop, Firefox, audio, networking, Bluetooth, printing, the firewall and fonts are group recipes, and the installer installs each system's default set from a package cache on the install medium. Each group has a Recipe receipt, so you can remove or swap it in Recipe, the desktop included. Removing the last desktop is allowed and leaves a text login.</p>
 				<div class="actions">
 					<a class="text-action" href={docLink("atomic-updates", distro)}>Read about A/B roots</a>
 					<a class="text-action" href={`${docLink("post-installation", distro)}#software-with-recipe`}>Read the software guide</a>
@@ -198,6 +199,7 @@ const ginuxReach = [
 						<li>A recipe for proprietary software says so in its <code class="inline-code">license</code>, which starts with <code class="inline-code">proprietary</code>, and Recipe shows that flag.</li>
 						<li>The recipe fetches the program from the vendor's own site. Where the vendor's terms require it, we do not redistribute it.</li>
 						<li>Being proprietary never earns an app a place in the base image, and it never bans it from Recipe.</li>
+						<li>Steam is a recipe for LevitateOS only. It is fetched from Valve, and it needs 32-bit glibc libraries that AcornOS's musl base cannot run. The recipe is written and has not been run yet.</li>
 					</ul>
 				</div>
 			</section>

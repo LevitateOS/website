@@ -73,7 +73,7 @@ export const variants: Variant[] = [
 		},
 		role: "The broad-compatibility choice: glibc and systemd, userland built from signed Fedora RPM packages.",
 		description:
-			"An independent system with glibc, systemd and GNU tools, with KDE Plasma on the desktop. Its userland is built from signed Fedora 45 RPM packages. The installer, the rec* tools, the kernel, A/B booting and Recipe are our own. Choose it for broad software compatibility; Recipe manages the software you add.",
+			"An independent system with glibc, systemd and GNU tools, with KDE Plasma on the desktop. Its userland is built from signed Fedora 45 RPM packages. The installer, the rec* tools, the kernel, A/B booting and Recipe are our own. Choose it for broad software compatibility. Recipe installs the desktop and its apps and manages the software you add.",
 		stack: stack("levitate", "GNU"),
 		base: "Fedora 45 RPM packages, signed and locked",
 		...derived("levitate"),
