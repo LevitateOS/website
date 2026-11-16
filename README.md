@@ -149,7 +149,7 @@ hook moves the latter into place, since Cloudflare Pages serves the nearest
 
 The Recipe page (`RecipePage.astro`) runs in this order: hero, the four steps, your disk,
 finding software, before install, scopes, sources, "A recipe states facts" (the ripgrep
-example), updates, proprietary software, C libraries, what Recipe does not do, Ginux (head
+example), updates, proprietary software and C libraries (a side-by-side pair, `.story-pair`, stacked below 960px), what Recipe does not do, Ginux (head
 with its credit to Greg Kurtzer, the three-part wall, the two ways, NEEDS, the limits) and the
 ending band. Everything about the new Recipe is marked as written, not built or run yet.
 

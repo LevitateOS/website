@@ -219,6 +219,31 @@
 		scroll-margin-top: var(--fn-space-4);
 	}
 
+	/* Two sections set side by side as a pair, each under the rule the entries have. */
+	.story-pair {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--fn-space-7) var(--fn-space-6);
+		align-items: start;
+		padding-block: var(--fn-space-8);
+	}
+
+	.story-pair__item {
+		min-width: 0;
+		padding-top: var(--fn-space-5);
+		border-top: 2px solid var(--fn-brand);
+		scroll-margin-top: var(--fn-space-4);
+	}
+
+	.story-pair__item .section-head {
+		max-width: none;
+		margin-bottom: 0;
+	}
+
+	.story-pair__item h2 {
+		font-size: clamp(1.5625rem, 2.6vw, 1.875rem);
+	}
+
 	.section-head {
 		max-width: var(--fn-reading-max);
 		margin-bottom: var(--fn-space-6);
@@ -2012,6 +2037,11 @@
 		.entries,
 		.tradeoffs {
 			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.story-pair {
+			grid-template-columns: minmax(0, 1fr);
+			row-gap: var(--fn-space-8);
 		}
 
 		.entry {
