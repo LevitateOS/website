@@ -29,7 +29,6 @@ function isCurrent(item: { path: string; match?: string }): boolean {
 const navItems = [
 	{ path: "/download/", href: href("/download/", distro), label: "Downloads" },
 	{ path: docLink("getting-started", "levitate"), href: docLink("getting-started", distro), label: "Docs", match: "/docs" },
-	{ path: "/recipe/", href: href("/recipe/", distro), label: "Recipe" },
 	{ path: undefined, href: "https://github.com/LevitateOS/LevitateOS", label: "Source" },
 ]
 
@@ -37,6 +36,10 @@ function current(item: (typeof navItems)[number]): boolean {
 	if (!item.path) return false
 	return isCurrent({ path: item.path, match: item.match })
 }
+
+// Recipe is in the product switcher, not in the navigation.
+const recipeHref = href("/recipe/", distro)
+const recipeHere = isCurrent({ path: "/recipe/" })
 
 const switchHref = switchPath ?? siblingHref(Astro.url.pathname, distro)
 const flavors = FLAVORS.map((flavor) => ({
@@ -72,6 +75,16 @@ const flavors = FLAVORS.map((flavor) => ({
 					</a>
 				</>
 			))}
+			<span class="head-switch__rule" aria-hidden="true" />
+			<a
+				class:list={["head-brand", "head-recipe", { "head-brand--other": !recipeHere }]}
+				href={recipeHref}
+				aria-label="Recipe"
+				aria-current={recipeHere ? "page" : undefined}
+			>
+				<span class="head-recipe__mark" aria-hidden="true"></span>
+				<span class="head-recipe__name">Recipe</span>
+			</a>
 		</div>
 
 		<nav class="head-nav" aria-label="Main">

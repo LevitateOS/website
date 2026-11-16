@@ -473,6 +473,35 @@
 		display: none;
 	}
 
+	/* Recipe is a product of both systems, not a flavour: smaller than the lockups, one colour,
+	   with its name as live text. The mark is drawn as a mask so it takes the text colour
+	   (the brand colour on the Recipe page, dimmed like the other entries elsewhere). */
+	.head-recipe {
+		gap: 6px;
+		color: var(--fn-text);
+	}
+
+	.head-recipe[aria-current="page"] {
+		color: var(--fn-brand);
+	}
+
+	.head-recipe__mark {
+		width: 21px;
+		height: 21px;
+		flex: none;
+		background: currentColor;
+		-webkit-mask: url("/brand/recipe-ink.svg") center / contain no-repeat;
+		mask: url("/brand/recipe-ink.svg") center / contain no-repeat;
+	}
+
+	.head-recipe__name {
+		font-family: var(--fn-font-editorial);
+		font-size: 21px;
+		font-weight: 500;
+		letter-spacing: -0.01em;
+		line-height: 1;
+	}
+
 	.head-nav ul {
 		list-style: none;
 		margin: 0;
@@ -874,6 +903,137 @@
 
 	.notes li::marker {
 		color: var(--fn-brand);
+	}
+
+	/* ---------- Short items in columns: steps, marks, ways, the wall ---------- */
+
+	.columns {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+		gap: var(--fn-space-6);
+	}
+
+	.columns--pair {
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+	}
+
+	.column {
+		min-width: 0;
+		padding-top: var(--fn-space-5);
+		border-top: 2px solid var(--fn-brand);
+	}
+
+	.column > * + * {
+		margin-top: var(--fn-space-2);
+	}
+
+	.column__label {
+		font-size: var(--fn-text-label);
+		color: var(--fn-text-secondary);
+	}
+
+	.column p:not(.column__label) {
+		font-size: var(--fn-text-support);
+		line-height: 1.5;
+		color: var(--fn-text-secondary);
+	}
+
+	/* A short list of points, each with a lead line and a plain explanation. */
+	.points {
+		list-style: none;
+		margin: var(--fn-space-5) 0 0;
+		padding: 0;
+		display: grid;
+		gap: var(--fn-space-4);
+	}
+
+	.points li {
+		display: grid;
+		gap: var(--fn-space-1);
+		padding-top: var(--fn-space-3);
+		border-top: var(--fn-rule-width) solid var(--fn-rule);
+	}
+
+	.points__lead {
+		font-family: var(--fn-font-editorial);
+		font-size: 1.25rem;
+		line-height: 1.2;
+	}
+
+	.points__text {
+		font-size: var(--fn-text-support);
+		line-height: 1.5;
+		color: var(--fn-text-secondary);
+	}
+
+	.split__copy > .status {
+		margin-top: var(--fn-space-5);
+	}
+
+	/* ---------- Ginux: the head with its credit, and the wall in three parts ---------- */
+
+	.ginux-parts > * + * {
+		margin-top: var(--fn-space-8);
+	}
+
+	.head-credit {
+		display: grid;
+		grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+		gap: var(--fn-space-6) var(--fn-space-7);
+		align-items: start;
+	}
+
+	.head-credit .section-head {
+		margin-bottom: 0;
+	}
+
+	.credit {
+		padding-left: var(--fn-space-5);
+		border-left: 2px solid var(--fn-brand);
+		font-size: var(--fn-text-support);
+		line-height: 1.5;
+	}
+
+	.credit .eyebrow {
+		margin-bottom: var(--fn-space-2);
+	}
+
+	.wall {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--fn-space-6);
+	}
+
+	.wall__part {
+		min-width: 0;
+		padding-top: var(--fn-space-5);
+		border-top: var(--fn-rule-width) solid var(--fn-rule);
+		font-size: var(--fn-text-support);
+		line-height: 1.5;
+	}
+
+	.wall__part--ginux {
+		border-top: 2px solid var(--fn-brand);
+	}
+
+	.wall__part > * + * {
+		margin-top: var(--fn-space-2);
+	}
+
+	.wall__part .notes {
+		margin-top: var(--fn-space-3);
+	}
+
+	.closing {
+		margin-top: var(--fn-space-5);
+		max-width: var(--fn-reading-max);
+		font-family: var(--fn-font-editorial);
+		font-size: 1.5rem;
+		line-height: 1.25;
+		text-wrap: balance;
 	}
 
 	/* ---------- Code: a dark ink specimen, annotated in the margin ---------- */
@@ -1688,7 +1848,8 @@
 		}
 
 		.split,
-		.release {
+		.release,
+		.head-credit {
 			grid-template-columns: minmax(0, 1fr);
 		}
 
@@ -1771,6 +1932,10 @@
 	}
 
 	@media (max-width: 760px) {
+		.wall {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
 		:root {
 			--fn-page-padding: 26px;
 			--fn-index-width: 76px;
@@ -1801,6 +1966,32 @@
 
 		.head-brand--other .head-brand__mark img {
 			height: var(--fn-lockup-height-compact);
+		}
+
+		/* Recipe is its mark alone; the link keeps its name for assistive technology. */
+		.head-recipe {
+			justify-content: center;
+			min-width: 44px;
+		}
+
+		.head-recipe__name {
+			display: none;
+		}
+	}
+
+	/* Narrowest phones: the current lockup shrinks and the rules go, so the three entries
+	   and the Menu button fit one row. */
+	@media (max-width: 400px) {
+		.head-switch {
+			gap: var(--fn-space-2);
+		}
+
+		.head-switch__rule {
+			display: none;
+		}
+
+		.head-brand:not(.head-brand--other) img {
+			height: 24px;
 		}
 	}
 

@@ -45,13 +45,13 @@ const images = {
 		width: 1100,
 		height: 700,
 		title: "Installed software.",
-		caption: "See installed versions and the actions available for each program.",
+		caption: "See each installed program and its version, with the actions available for it.",
 	},
 	"recipe-updates": {
 		width: 1100,
 		height: 700,
 		title: "Software updates.",
-		caption: "Review which installed programs have a newer recipe in the collection.",
+		caption: "Programs with a newer recipe in the collection are marked. An update is asked for one program at a time.",
 	},
 	"recab-overview": {
 		width: 1100,

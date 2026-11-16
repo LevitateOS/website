@@ -122,7 +122,10 @@ action per page and the occasional note. Square corners throughout.
 ## Flavours and URLs
 
 The site has two flavours, LevitateOS and AcornOS, chosen by the logos in the top
-bar. The flavour is part of the URL, so everything is static and the switch is a
+bar. Beside them, after a thin rule, is a smaller third entry, Recipe: it is not a
+flavour but a link to the Recipe page of the current flavour (a one-colour mark,
+`public/brand/recipe-ink.svg`, drawn as a CSS mask so it takes the text colour, and the
+name as live text; on narrow screens it shrinks to its mark). The flavour is part of the URL, so everything is static and the switch is a
 plain link to the same page in the other flavour.
 
 | Page | LevitateOS | AcornOS |
@@ -143,6 +146,12 @@ homepage copy is on each variant in `src/lib/variants.ts`. The old
 Each flavour has its own 404 page (`/404.html`, `/acorn/404.html`; the config's build
 hook moves the latter into place, since Cloudflare Pages serves the nearest
 `404.html` up the tree). The sitemap lists only canonical pages.
+
+The Recipe page (`RecipePage.astro`) runs in this order: hero, the four steps, your disk,
+finding software, before install, scopes, sources, "A recipe states facts" (the ripgrep
+example), updates, proprietary software, C libraries, what Recipe does not do, Ginux (head
+with its credit to Greg Kurtzer, the three-part wall, the two ways, NEEDS, the limits) and the
+ending band. Everything about the new Recipe is marked as written, not built or run yet.
 
 ## Structure
 
