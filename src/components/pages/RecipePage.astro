@@ -21,47 +21,24 @@ const osName = distroName(distro)
 const admin = profile.privilege
 
 // The runnable example from tools/recipe/WRITING_RECIPES.md.
-const recipeCode = `const RECIPE_API = 2;
-let ctx = #{
-    name: "hello",
-    version: "1.0",
-    program: join_path(RUNTIME.paths.output, "bin/hello"),
-    payload: "#!/bin/sh\\nprintf 'hello\\\\n'\\n",
-};
+const recipeCode = `const RECIPE_API = 1;
+const NEEDS = #{ outputs: #{ program: "file" } };
+const PACKAGE = #{ name: "hello", version: "1.0", description: "Prints hello" };
 
-fn is_acquired(ctx) { ready(ctx) }
-fn acquire(ctx) { ctx }
-fn is_built(ctx) { ready(ctx) }
-fn build(ctx) { ctx }
-
-fn is_installed(ctx) {
-    if !is_file(ctx.program) { return needs_work(ctx, "hello output is missing"); }
-    if read_file(ctx.program) != ctx.payload {
-        return needs_work(ctx, "hello output has different contents");
-    }
-    ctx.outputs.program = ctx.program;
-    ready(ctx)
+fn build(src, out) {
+    write_file(out, "#!/bin/sh\\nprintf 'hello\\\\n'\\n");
+    chmod(out, 0o755);
 }
 
-fn install(ctx) {
-    mkdir(dirname(ctx.program));
-    write_file(ctx.program, ctx.payload);
-    chmod(ctx.program, 0o755);
-    ctx.outputs.program = ctx.program;
-    ctx
-}
-
-fn remove(ctx) {
-    if is_file(ctx.program) { rm(ctx.program); }
-    ctx.outputs = #{};
-    ctx
+fn verify(out) {
+    if !is_file(out) { throw "hello was not written"; }
 }`
 
 const recipeNotes = [
 	{ line: 1, text: "Every recipe names the API it was written for." },
-	{ line: 14, text: "Asks the files on disk, not a database. An interrupted install resumes here." },
-	{ line: 23, text: "Writes only into the run's own output folder. It starts no program, so it runs on the host." },
-	{ line: 31, text: "Removal is in the recipe too. You can read what it deletes." },
+	{ line: 2, text: "What the recipe may use, declared as data and read without running it." },
+	{ line: 6, text: "Writes only into the run's own output. It starts no program, so it runs on the host." },
+	{ line: 11, text: "Only reads the result. Recipe records what is installed and removes it from its receipt." },
 ]
 
 const scopeCode = `# for me: your own account, no administrator needed
@@ -178,7 +155,7 @@ const ginuxReach = [
 				<div class="section-head">
 					<p class="eyebrow">Write your own</p>
 					<h2 id="write-title">A recipe is <em>a file you can read.</em></h2>
-					<p>A recipe is a Rhai file. It holds the package facts and the steps that acquire, build, install and remove the software. Here is a complete small one. Put your own in a folder, add that folder as a source, and Recipe reads them like any others.</p>
+					<p>A recipe is a Rhai file. It states the package facts, the sources to download and the files to place as plain declarations, and has code only for what is unusual. Recipe downloads, unpacks, installs and removes. Here is a complete small one. Put your own in a folder, add that folder as a source, and Recipe reads them like any others.</p>
 				</div>
 				<ImageFrame art="circuit" class="frame-host--inset frame-host--compact">
 					<CodeBlock code={recipeCode} language="rhai" label="hello.rhai" source="tools/recipe/WRITING_RECIPES.md" notes={recipeNotes} />
