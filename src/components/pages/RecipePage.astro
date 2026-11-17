@@ -9,6 +9,12 @@ import { docLink } from "../../lib/docs"
 import { DEFAULT_DISTRO, distroName, href, type DistroId } from "../../lib/flavor"
 import { DISTROS } from "@levitate/docs-content/distros"
 
+// The recipe-pm version that is published on https://github.com/LevitateOS/recipe/releases.
+// null hides the "Get Recipe on another Linux" section and its links: no release exists yet,
+// and the site must not point at downloads that do not exist.
+// At release time: set the version here (for example "0.2.0"), then deploy the site.
+const STANDALONE_RELEASE: string | null = null
+
 interface Props {
 	distro?: DistroId
 }
@@ -115,6 +121,28 @@ recipe source add --path ~/my-recipes                 # a folder of your own
 recipe source list
 recipe install SOURCE:NAME                            # name the source when two have the same recipe`
 
+const release = STANDALONE_RELEASE as string | null
+const v = release ?? ""
+
+const installOneLiner = "curl -fsSL https://levitateos.org/recipe/install.sh | sh"
+
+const installReadCode = `curl -fsSLO https://levitateos.org/recipe/install.sh
+less install.sh
+sh install.sh`
+
+const installFormats = [
+	{ family: "Fedora, RHEL, openSUSE", command: `sudo dnf install ./recipe-pm-${v}-1.x86_64.rpm` },
+	{ family: "Debian, Ubuntu", command: `sudo apt install ./recipe-pm_${v}-1_amd64.deb` },
+	{ family: "Alpine", command: `sudo apk add ./recipe-pm-${v}-r0.x86_64.apk` },
+]
+
+const installNeeds = [
+	"An x86_64 Linux system.",
+	"A recent kernel. 6.10 or newer is what has been tried. Older ones are untried.",
+	"On Ubuntu, AppArmor restricts unprivileged user namespaces. The package loads a profile for Recipe's sandbox when it installs.",
+	"About 330 MB is downloaded the first time you install a program that is built or unpacked in the sandbox: the compiler image. It is downloaded once and kept in your cache.",
+]
+
 const beforePoints = [
 	"Choose software for your own account or for the whole computer.",
 	"Review the network hosts, files and resources the recipe may use.",
@@ -138,6 +166,7 @@ const beforePoints = [
 				<div class="actions">
 					<a class="button" href="#ginux">How Ginux isolates a recipe</a>
 					<a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a>
+					{release && <a class="text-action" href="#get">Get Recipe on another Linux</a>}
 				</div>
 			</ImageFrame>
 		</section>
@@ -399,6 +428,47 @@ const beforePoints = [
 					</div>
 				</div>
 			</section>
+
+		{release && (
+			<section class="story-section" id="get" aria-labelledby="get-title">
+				<div class="section-head">
+					<p class="eyebrow">Other systems</p>
+					<h2 id="get-title">Get Recipe <em>on another Linux.</em></h2>
+					<p>On {osName} nothing has to be installed: Recipe is part of the system. This section is for other x86_64 Linux systems, where the package is called <code class="inline-code">recipe-pm</code> and the command is <code class="inline-code">recipe</code>.</p>
+				</div>
+				<CodeBlock code={installOneLiner} language="bash" label="Install" source="one line, as your user" />
+				<p>The script looks at the system. It takes the native package where one exists: RPM for the Fedora, RHEL and openSUSE families, <code class="inline-code">.deb</code> for the Debian and Ubuntu families, APK for Alpine. Everywhere else it takes a tarball and installs it into <code class="inline-code">/usr/local</code>. It checks the SHA-256 of what it downloaded, and it asks for root only to install.</p>
+				<p>You can read the script before you run it.</p>
+				<CodeBlock code={installReadCode} language="bash" label="Download, read, then run" />
+
+				<div class="section-head">
+					<h3>By hand, per system</h3>
+					<p>The files are on the <a href="https://github.com/LevitateOS/recipe/releases">release page</a>. <code class="inline-code">SHA256SUMS</code> there lists every file.</p>
+				</div>
+				<dl class="facts facts--commands">
+					{installFormats.map((item) => (
+						<>
+							<dt>{item.family}</dt>
+							<dd><code class="inline-code">{item.command}</code></dd>
+						</>
+					))}
+					<dt>Arch family</dt>
+					<dd>The AUR package <code class="inline-code">recipe-pm</code>.</dd>
+					<dt>Void</dt>
+					<dd>Build it with xbps-src from the <code class="inline-code">recipe-pm</code> template. It is proposed to void-packages and is not in the official repository.</dd>
+					<dt>Any other system</dt>
+					<dd>Unpack <code class="inline-code">{`recipe-pm-${v}-x86_64.tar.zst`}</code> and run <code class="inline-code">sudo sh install.sh</code>. It installs into <code class="inline-code">/usr/local</code>. <code class="inline-code">uninstall.sh</code> removes it.</dd>
+				</dl>
+				<p>The tarball holds the command line only. The window, <code class="inline-code">recipe-gui</code>, comes as its own package where the system's Qt allows it.</p>
+
+				<div class="section-head">
+					<h3>What it needs</h3>
+					<ul class="notes">
+						{installNeeds.map((item) => <li>{item}</li>)}
+					</ul>
+				</div>
+			</section>
+		)}
 		</div>
 
 		<section class="ending" aria-labelledby="recipe-end-title">

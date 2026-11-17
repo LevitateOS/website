@@ -870,6 +870,11 @@
 
 	.facts dd {
 		margin: 0;
+		min-width: 0;
+	}
+
+	.facts--commands dd {
+		overflow-wrap: anywhere;
 	}
 
 	.status {

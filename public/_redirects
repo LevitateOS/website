@@ -1,3 +1,4 @@
+/recipe/install.sh https://raw.githubusercontent.com/LevitateOS/recipe/master/scripts/web-install.sh 302
 /docs /docs/getting-started/ 301
 /docs/ /docs/getting-started/ 301
 /acorn/docs /acorn/docs/getting-started/ 301
