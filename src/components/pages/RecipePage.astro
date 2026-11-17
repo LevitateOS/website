@@ -10,10 +10,10 @@ import { DEFAULT_DISTRO, distroName, href, type DistroId } from "../../lib/flavo
 import { DISTROS } from "@levitate/docs-content/distros"
 
 // The recipe-pm version that is published on https://github.com/LevitateOS/recipe/releases.
-// null hides the "Get Recipe on another Linux" section and its links: no release exists yet,
-// and the site must not point at downloads that do not exist.
+// null hides the "Get Recipe on another Linux" section and its links. The published release is 0.2.0 (2026-11-17);
+// this constant is updated at each release, and the site must not point at downloads that do not exist.
 // At release time: set the version here (for example "0.2.0"), then deploy the site.
-const STANDALONE_RELEASE: string | null = null
+const STANDALONE_RELEASE: string | null = "0.2.0"
 
 interface Props {
 	distro?: DistroId
