@@ -159,14 +159,33 @@ const beforePoints = [
 	<Header distro={distro} />
 	<main id="main" class="home">
 		<section aria-labelledby="hero-title">
-			<ImageFrame class="frame-host--hero">
-				<p class="eyebrow">Software, by recipe</p>
-				<h1 class="hero-title" id="hero-title"><span>Read it,</span> <span>then <em>trust it.</em></span></h1>
-				<p class="hero-deck">Recipe downloads, builds, installs and cleans up software. Every program has a recipe: a short file you can read before anything runs. LevitateOS and AcornOS use the same Recipe.</p>
-				<div class="actions">
-					<a class="button" href="#ginux">How Ginux isolates a recipe</a>
-					<a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a>
-					{release && <a class="text-action" href="#get">Get Recipe on another Linux</a>}
+			<ImageFrame class="frame-host--hero frame-host--recipe">
+				<div class="hero-split">
+					<div class="hero-split__text">
+						<p class="eyebrow">Software, by recipe</p>
+						<h1 class="hero-title" id="hero-title"><span>Read it,</span> <span>then <em>trust it.</em></span></h1>
+						<p class="hero-deck">Recipe downloads, builds, installs and cleans up software. Every program has a recipe: a short file you can read before anything runs. LevitateOS and AcornOS use the same Recipe.</p>
+						<div class="actions">
+							<a class="button" href="#ginux">How Ginux isolates a recipe</a>
+							<a class="text-action" href={docLink("recipe-format", distro)}>Read the recipe format</a>
+						</div>
+					</div>
+					<div class="hero-split__aside">
+						{release ? (
+							<>
+								<p class="hero-command__label">On another Linux</p>
+								<CodeBlock code={installOneLiner} language="bash" label="Install Recipe on another Linux" />
+								<p class="hero-command__note"><a class="text-action" href="#get">What the script does</a></p>
+								<p class="hero-command__note">On {osName}, Recipe is already there.</p>
+							</>
+						) : (
+							<>
+								<p class="hero-command__label">Install a program</p>
+								<CodeBlock code="recipe install ripgrep" language="bash" label="Install ripgrep with Recipe" />
+								<p class="hero-command__note">Recipe is already part of {osName}.</p>
+							</>
+						)}
+					</div>
 				</div>
 			</ImageFrame>
 		</section>

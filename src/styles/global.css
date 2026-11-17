@@ -760,6 +760,57 @@
 		margin-top: 30px;
 	}
 
+	/* Recipe page hero: the command card sits under the links, and beside the
+	   text where the frame is wide enough for the title to keep its two lines. */
+	.frame-host--recipe .hero-split {
+		width: 100%;
+		min-width: 0;
+	}
+
+	.frame-host--recipe .hero-split__aside {
+		min-width: 0;
+		margin-top: var(--fn-space-6);
+	}
+
+	.frame-host--recipe .hero-command__label {
+		margin-bottom: var(--fn-space-2);
+		font-size: var(--fn-text-label);
+		color: var(--fn-text-secondary);
+	}
+
+	.frame-host--recipe .hero-command__note {
+		margin-top: var(--fn-space-3);
+		font-size: var(--fn-text-support);
+		line-height: 1.5;
+		color: var(--fn-text-secondary);
+	}
+
+	.frame-host--recipe .hero-command__note:has(.text-action) {
+		margin-top: var(--fn-space-4);
+	}
+
+	.frame-host--recipe .hero-command__note + .hero-command__note {
+		margin-top: var(--fn-space-2);
+		font-size: var(--fn-text-label);
+	}
+
+	@container (min-width: 1100px) {
+		.frame-host--recipe .hero-split {
+			display: grid;
+			grid-template-columns: minmax(min-content, 1fr) minmax(18rem, 24rem);
+			gap: var(--fn-space-6) clamp(32px, 4cqi, 56px);
+			align-items: center;
+		}
+
+		.frame-host--recipe .hero-title span {
+			white-space: nowrap;
+		}
+
+		.frame-host--recipe .hero-split__aside {
+			margin-top: 0;
+		}
+	}
+
 	/* ---------- Homepage: introduction ---------- */
 
 	.intro {
