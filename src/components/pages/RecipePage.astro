@@ -171,20 +171,10 @@ const beforePoints = [
 						</div>
 					</div>
 					<div class="hero-split__aside">
-						{release ? (
-							<>
-								<p class="hero-command__label">On another Linux</p>
-								<CodeBlock code={installOneLiner} language="bash" label="Install Recipe on another Linux" />
-								<p class="hero-command__note"><a class="text-action" href="#get">What the script does</a></p>
-								<p class="hero-command__note">On {osName}, Recipe is already there.</p>
-							</>
-						) : (
-							<>
-								<p class="hero-command__label">Install a program</p>
-								<CodeBlock code="recipe install ripgrep" language="bash" label="Install ripgrep with Recipe" />
-								<p class="hero-command__note">Recipe is already part of {osName}.</p>
-							</>
-						)}
+						<p class="hero-command__label">Get Recipe on another Linux</p>
+						<CodeBlock code={installOneLiner} language="bash" label="Install Recipe on another Linux" />
+						{release && <p class="hero-command__note"><a class="text-action" href="#get">What the script does</a></p>}
+						<p class="hero-command__note">On {osName}, Recipe is already part of the system.</p>
 					</div>
 				</div>
 			</ImageFrame>
