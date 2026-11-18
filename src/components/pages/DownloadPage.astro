@@ -1,16 +1,17 @@
 ---
+// The download page of one flavour: that flavour's OS first, with one download button,
+// then how to check the file, what it needs and lacks, how to install it, and the other OS
+// quietly at the end. The release facts come from src/data/releases.json (lib/releases).
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import Header from "../layout/Header.astro"
 import Footer from "../layout/Footer.astro"
-import PageIndex from "../PageIndex.astro"
 import ImageFrame from "../ImageFrame.astro"
-import Screenshot from "../Screenshot.astro"
+import CodeBlock from "../CodeBlock.astro"
 import { HARDWARE } from "@levitate/docs-content/pages"
 import { docLink } from "../../lib/docs"
-import { variants as allVariants, variantOf } from "../../lib/variants"
-import CodeBlock from "../CodeBlock.astro"
-import { DEFAULT_DISTRO, distroName, type DistroId } from "../../lib/flavor"
-import { formatSize, inline, isoFileName, notesFor, notesPath, osKey, RELEASE_LABEL, releaseOf, released, verifyCommand } from "../../lib/releases"
+import { variantOf } from "../../lib/variants"
+import { DEFAULT_DISTRO, distroName, href, otherFlavor, type DistroId } from "../../lib/flavor"
+import { formatSize, inline, isoFileName, notesFor, notesPath, osKey, RELEASE_LABEL, releaseOf, verifyCommand, type Release } from "../../lib/releases"
 
 interface Props {
 	distro?: DistroId
@@ -18,182 +19,462 @@ interface Props {
 
 const { distro = DEFAULT_DISTRO } = Astro.props
 const osName = distroName(distro)
-// This flavour's release section first.
-const variants = [variantOf(distro), ...allVariants.filter((v) => v.id !== distro)]
+const variant = variantOf(distro)
+const release = releaseOf(distro)
+const notes = release ? notesFor(osKey(distro), release.version) : undefined
+const other = variantOf(otherFlavor(distro).id)
+const otherRelease = releaseOf(other.id)
 
-const anyReleased = released().length > 0
+/** 2026-11-18 as "18 November 2026". */
+const longDate = (date: string) =>
+	new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
 
-const sections = [
-	{ id: "status", label: "Status" },
-	{ id: "requirements", label: "Requirements" },
-	...variants.map((variant) => ({ id: variant.id, label: variant.name })),
-	{ id: "before-installing", label: "Installing" },
+/** What the installer downloads on top of the ISO: the release's signed parts. */
+const partsSize = (r: Release) => r.parts.reduce((total, part) => total + part.size, 0)
+
+// The release key the signed manifest is checked against, from the public source repository.
+const RELEASE_KEY = "https://raw.githubusercontent.com/LevitateOS/LevitateOS/master/distro/keys/release/2026-11.pub"
+const RELEASE_KEYS_TREE = "https://github.com/LevitateOS/LevitateOS/tree/master/distro/keys/release"
+
+/** The commands that check the release's signed manifest, and the ISO against the SHA-256 it lists. */
+function signatureCommand(r: Release): string {
+	const assets = new URL(".", r.iso.url).href
+	const iso = isoFileName(r)
+	return [
+		"# This release's signed manifest, and the release key from the source repository",
+		`curl -LO ${assets}release.json -LO ${assets}release.json.sig`,
+		`printf -- '-----BEGIN PUBLIC KEY-----\\nMCowBQYDK2VwAyEA%s\\n-----END PUBLIC KEY-----\\n' "$(curl -sL ${RELEASE_KEY})" > release-key.pem`,
+		"",
+		"# Check the signature: prints Signature Verified Successfully",
+		"base64 -d release.json.sig > release.json.sig.bin",
+		"openssl pkeyutl -verify -pubin -inkey release-key.pem -rawin -in release.json -sigfile release.json.sig.bin",
+		"",
+		`# Check the ISO against the SHA-256 the manifest lists: prints ${iso}: OK`,
+		`sed -n '/"iso"/,/}/s/.*"sha256": "\\([0-9a-f]*\\)".*/\\1  ${iso}/p' release.json | sha256sum -c -`,
+	].join("\n")
+}
+
+const requirements = [
+	{ name: "Processor", value: `${HARDWARE.cpu}: ${HARDWARE.cpuNote}` },
+	{ name: "Memory", value: HARDWARE.ram },
+	{ name: "Firmware", value: HARDWARE.firmware },
+	{ name: "Disk", value: `${HARDWARE.disk}, on ${HARDWARE.storage}` },
 ]
+
+const description = release
+	? `Download ${osName} ${release.version} (${RELEASE_LABEL}): the x86_64 UEFI ISO, its SHA-512 and signature, the system requirements, the known limits and how to install it.`
+	: `${osName} is not released yet. Its system requirements, and how to build the ISO from the public source.`
 ---
 
-<BaseLayout
-	title={`Downloads & status · ${osName}`}
-	distro={distro}
-	description={anyReleased
-		? "Download the LevitateOS and AcornOS preview ISOs, with checksums, system requirements and known limits. x86_64, UEFI, tested in virtual machines."
-		: "Release status and system requirements for LevitateOS and AcornOS. Neither is released yet; both ship first for x86_64."}
->
+<BaseLayout title={`Download ${osName}`} distro={distro} description={description}>
 	<Header distro={distro} />
-	<div class="wrap atlas">
-		<PageIndex items={sections} />
-		<main id="main" class="atlas__main">
-			<section class="story-section" id="status" aria-labelledby="status-title">
-				<ImageFrame art="atlas" class="frame-host--inset frame-host--editorial">
-					<div class="section-head">
-						<p class="eyebrow">Downloads &amp; status</p>
-						{anyReleased ? (
+	<main id="main" class="download">
+		<section id={distro} aria-labelledby="download-title">
+			<ImageFrame class="frame-host--hero">
+				<span class="frame-leaf">
+					<img class="logo-light" src={variant.mark.light} width="56" height="56" alt="" />
+					<img class="logo-dark" src={variant.mark.dark} width="56" height="56" alt="" />
+				</span>
+				<p class="eyebrow">Download</p>
+				<div class="dl-hero">
+					<div class="dl-hero__main">
+						{release ? (
 							<>
-							<h1 id="status-title">Preview <em>releases.</em></h1>
-							<p class="lead">LevitateOS and AcornOS are independent operating systems. Their userlands are built from Fedora 45 RPM packages and Alpine 3.24 APK packages. The first releases are previews: UEFI ISOs for x86_64, tested in virtual machines only.</p>
+								<h1 class="hero-title dl-title" id="download-title"><span>{osName}</span> <span>{release.version} <em>{RELEASE_LABEL}.</em></span></h1>
+								<p class="hero-deck">Released {longDate(release.date)}. A live ISO for x86_64 computers with UEFI. It boots into the install screen: a shell beside the full installation guide.</p>
+								<div class="actions">
+									<a class="button dl-button" href={release.iso.url}>Download the ISO<span class="dl-button__size">{formatSize(release.iso.size)}</span></a>
+									<a class="text-action" href={notesPath(osKey(distro), release.version)}>Release notes</a>
+								</div>
+								<p class="dl-file"><span>{isoFileName(release)}</span> <a href="#verify">SHA-512 and signature</a></p>
 							</>
 						) : (
 							<>
-							<h1 id="status-title">Not released <em>yet.</em></h1>
-							<p class="lead">LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default, x86_64 first.</p>
+								<h1 class="hero-title dl-title" id="download-title"><span>{osName}</span> <span><em>not released yet.</em></span></h1>
+								<p class="hero-deck">It will ship as a live UEFI ISO for x86_64 that installs an A/B system by default. Until then, build the ISO from the public source with <code class="inline-code">cargo xtask build release {distro}</code>.</p>
+								<div class="actions">
+									<a class="button" href={docLink("getting-started", distro)}>Build it yourself</a>
+									<a class="text-action" href="https://github.com/LevitateOS/LevitateOS">The public source</a>
+								</div>
 							</>
 						)}
 					</div>
-				</ImageFrame>
-				{anyReleased ? (
-					<div class="callout">
-						<strong class="callout__label">Preview</strong>
-						<p>Installing overwrites the target disk, so back up anything you need first. A preview needs UEFI with Secure Boot off, has no disk encryption and has not run on real hardware yet. Each release's notes list its known limits.</p>
-					</div>
-				) : (
-					<div class="callout">
-						<strong class="callout__label">Note</strong>
-						<p>There is nothing to download yet. This page will list each release's version, date, checksum and size once it is published. Until then you can build the ISO from the <a href="https://github.com/LevitateOS/LevitateOS">public source</a> with <code class="inline-code">cargo xtask build release &lt;distro&gt;</code>; the <a href={docLink("getting-started", distro)}>getting started guide</a> has the steps.</p>
-					</div>
-				)}
-			</section>
-
-			<section class="story-section" id="requirements" aria-labelledby="requirements-title">
-				<div class="section-head">
-					<h2 id="requirements-title">Requirements for both variants</h2>
-				</div>
-				<div class="table-scroll prose" role="region" tabindex="0" aria-labelledby="requirements-title">
-					<table class="data-table">
-						<thead>
-							<tr><th scope="col">Component</th><th scope="col">Requirement</th></tr>
-						</thead>
-						<tbody>
-							<tr><th scope="row">CPU</th><td>{HARDWARE.cpu}: {HARDWARE.cpuNote}</td></tr>
-							<tr><th scope="row">RAM</th><td>{HARDWARE.ram}</td></tr>
-							<tr><th scope="row">Firmware</th><td>{HARDWARE.firmware}</td></tr>
-							<tr><th scope="row">Disk</th><td>{HARDWARE.disk}, on {HARDWARE.storage}</td></tr>
-							<tr><th scope="row">Architecture</th><td>x86_64</td></tr>
-						</tbody>
-					</table>
-				</div>
-			</section>
-
-			{variants.map((variant) => {
-				const release = releaseOf(variant.id)
-				const notes = release ? notesFor(osKey(variant.id), release.version) : undefined
-				return (
-				<section class="story-section release" id={variant.id} data-product={variant.id} aria-labelledby={`release-${variant.id}`}>
-					<div class="release__intro">
-						<h2 class="lockup" id={`release-${variant.id}`}>
-							<img class="logo-light" src={variant.lockup.light} width={variant.lockup.width} height="40" alt={variant.name} />
-							<img class="logo-dark" src={variant.lockup.dark} width={variant.lockup.width} height="40" alt={variant.name} />
-						</h2>
-						<p class:list={["status", { "status--available": variant.status === "available" }]}>{variant.statusLabel} · {variant.release}</p>
-						<p>{variant.description}</p>
-						<Screenshot id="desktop" distro={variant.id} />
-					</div>
-					<div class="release__details">
+					<div class="dl-sheet">
+						<p class="dl-sheet__label">In this system</p>
 						<dl class="facts">
-							<dt>Stack</dt>
+							<dt>Desktop</dt>
+							<dd>{variant.desktop}</dd>
+							<dt>Userland</dt>
 							<dd>{variant.stack}</dd>
 							<dt>Built from</dt>
 							<dd>{variant.base}</dd>
-							<dt>Administrator</dt>
-							<dd>{variant.admin}</dd>
-							<dt>Desktop</dt>
-							<dd>{variant.desktop}</dd>
 							<dt>Kernel</dt>
 							<dd>{variant.kernel}</dd>
-							<dt>Format</dt>
-							<dd>{variant.format}</dd>
-							<dt>Architecture</dt>
-							<dd>{variant.architectures}</dd>
-							<dt>Version</dt>
-							<dd>{release ? `${release.version} (${RELEASE_LABEL}), ${release.date}` : "Not released yet"}</dd>
+							<dt>Installs as</dt>
+							<dd>Two A/B roots</dd>
 						</dl>
-						{release && (
-							<div class="release__download">
-								<h3>Download {variant.name} {release.version} ({RELEASE_LABEL})</h3>
-								<dl class="facts">
-									<dt>ISO</dt>
-									<dd><a class="text-action" href={release.iso.url}>{isoFileName(release)}</a></dd>
-									<dt>Size</dt>
-									<dd>{formatSize(release.iso.size)}</dd>
-									<dt>SHA-512</dt>
-									<dd class="release__hash"><code>{release.iso.sha512}</code></dd>
-									<dt>Date</dt>
-									<dd>{release.date}</dd>
-									{release.parts.length > 0 && (
-										<>
-											<dt>Downloaded during install</dt>
-											<dd>{formatSize(release.parts.reduce((total, part) => total + part.size, 0))} of default software, in {release.parts.length} signed parts</dd>
-										</>
-									)}
-								</dl>
-								<p>Check the download in the folder that holds it:</p>
-								<CodeBlock language="bash" code={verifyCommand(release)} label="Check the ISO" />
-								<p>It prints <code class="inline-code">{isoFileName(release)}: OK</code> when the file is the one we published.</p>
-								{notes && (
-									<>
-										<h3>Known limits</h3>
-										<ul class="docs-list">{notes.limits.map((item) => <li>{inline(item).map((piece) => piece.code ? <code class="inline-code">{piece.text}</code> : piece.text)}</li>)}</ul>
-									</>
-								)}
-								<p><a class="text-action" href={notesPath(osKey(variant.id), release.version)}>Release notes for {release.version}</a></p>
-							</div>
-						)}
-						<div class="tradeoffs">
-							<div>
-								<h3>Strengths</h3>
-								<ul>{variant.strengths.map((item) => <li>{item}</li>)}</ul>
-							</div>
-							<div>
-								<h3>Trade-offs</h3>
-								<ul>{variant.tradeoffs.map((item) => <li>{item}</li>)}</ul>
-							</div>
+					</div>
+				</div>
+			</ImageFrame>
+		</section>
+
+		<div class="wrap">
+			{release && (
+				<section class="story-section" id="verify" aria-labelledby="verify-title">
+					<div class="split">
+						<div class="split__copy">
+							<p class="eyebrow">Verify</p>
+							<h2 id="verify-title">Check it <em>before you write it.</em></h2>
+							<p>Run the command in the folder that holds the download. It compares the file with the SHA-512 we published.</p>
+							<p class="dl-hash-label">SHA-512 of {isoFileName(release)}</p>
+							<p class="dl-hash"><code>{release.iso.sha512}</code></p>
 						</div>
-						<p><a class="text-action" href={docLink("variants", distro)}>Compare the variants</a></p>
+						<div class="split__example">
+							<CodeBlock language="bash" code={verifyCommand(release)} label="Check the ISO" output={`${isoFileName(release)}: OK`} />
+							<details class="dl-more">
+								<summary>Check the release signature as well</summary>
+								<div class="dl-more__body">
+									<p>Each release has a manifest, <code class="inline-code">release.json</code>, signed with the release key. It lists the ISO's SHA-256, so a good signature and a matching hash mean the file is the one we signed. The key is in the <a href={RELEASE_KEYS_TREE}>source repository</a>; the commands need curl and OpenSSL 3.</p>
+									<CodeBlock language="bash" code={signatureCommand(release)} label="Check the signature" />
+								</div>
+							</details>
+						</div>
 					</div>
 				</section>
-				)
-			})}
+			)}
 
-			<section class="story-section" id="before-installing" aria-labelledby="install-title">
-				<div class="split">
-					<div class="split__copy">
-						<h2 id="install-title">Before installing</h2>
-						<p>Installing overwrites the target disk. Back up anything you need first. Neither system collects telemetry.</p>
-						<p>Each ISO boots into the install screen: a shell beside the full installation guide. <kbd class="inline-code">Ctrl-]</kbd> switches pane, <kbd class="inline-code">j</kbd>/<kbd class="inline-code">k</kbd> scroll the guide, and <kbd class="inline-code">Ctrl-q</kbd> leaves the install screen.</p>
-						<div class="actions">
-							<a class="text-action" href={docLink("installation", distro)}>Read the {osName} installation guide</a>
-						</div>
+			<section class="story-section" id="requirements" aria-labelledby="requirements-title">
+				<div class="section-head">
+					<p class="eyebrow">Before you install</p>
+					<h2 id="requirements-title">What it needs, <em>{notes ? "what it lacks." : "and on what."}</em></h2>
+				</div>
+				<div class="dl-pair">
+					<div class="dl-pair__item">
+						<h3>System requirements</h3>
+						<dl class="facts">
+							{requirements.map((row) => (
+								<>
+									<dt>{row.name}</dt>
+									<dd>{row.value}</dd>
+								</>
+							))}
+						</dl>
+						<a class="text-action" href={`${docLink("getting-started", distro)}#requirements`}>Requirements in the guide</a>
 					</div>
-					<div class="split__example">
-						<p class="eyebrow">Steps</p>
-						<ol class="docs-steps">
-							<li><span class="docs-steps__number" aria-hidden="true">01</span><p>Partition the disk with <code class="inline-code">recpart</code>. The A/B layout is the default.</p></li>
-							<li><span class="docs-steps__number" aria-hidden="true">02</span><p>Extract the system with <code class="inline-code">recstrap</code>.</p></li>
-							<li><span class="docs-steps__number" aria-hidden="true">03</span><p>Write the fstab with <code class="inline-code">recfstab</code>.</p></li>
-							<li><span class="docs-steps__number" aria-hidden="true">04</span><p>Configure the system and its boot entries with <code class="inline-code">recsetup</code>.</p></li>
-						</ol>
+					{release && notes && (
+						<div class="dl-pair__item">
+							<h3>Known limits of {release.version}</h3>
+							<ul class="notes">
+								{notes.limits.map((item) => <li>{inline(item).map((piece) => (piece.code ? <code class="inline-code">{piece.text}</code> : piece.text))}</li>)}
+							</ul>
+							<a class="text-action" href={notesPath(osKey(distro), release.version)}>All release notes for {release.version}</a>
+						</div>
+					)}
+				</div>
+			</section>
+
+			<section class="story-section" id="install" aria-labelledby="install-title">
+				<div class="section-head">
+					<p class="eyebrow">Install</p>
+					<h2 id="install-title">From the download <em>to your desktop.</em></h2>
+				</div>
+				<ol class="columns dl-steps">
+					<li class="column">
+						<p class="column__label">1</p>
+						<h3>Write a USB stick</h3>
+						<p>Write the ISO to a USB stick with <code class="inline-code">dd</code> on Linux or macOS, or Rufus in DD mode on Windows. This erases the stick.</p>
+						<a class="text-action" href={`${docLink("getting-started", distro)}#usb-drive-linuxmacos`}>How to write the stick</a>
+					</li>
+					<li class="column">
+						<p class="column__label">2</p>
+						<h3>Boot from it</h3>
+						<p>Start the computer from the stick in UEFI mode, with Secure Boot disabled. <kbd class="inline-code">Ctrl-]</kbd> switches between the shell and the guide, <kbd class="inline-code">j</kbd>/<kbd class="inline-code">k</kbd> scroll the guide, <kbd class="inline-code">Ctrl-q</kbd> leaves the install screen.</p>
+					</li>
+					<li class="column">
+						<p class="column__label">3</p>
+						<h3>Connect to a network</h3>
+						{release && release.parts.length > 0 ? (
+							<p>The default software, {formatSize(partsSize(release))} in {release.parts.length} signed parts, downloads during installation. Offline, download the parts beforehand and give their folder to the installer with <code class="inline-code">--parts-from DIR</code>.</p>
+						) : (
+							<p>The default software downloads during installation, from the release's own signed parts.</p>
+						)}
+					</li>
+					<li class="column">
+						<p class="column__label">4</p>
+						<h3>Install</h3>
+						<p>Installing overwrites the target disk, so back up anything you need first. The A/B layout is the default. {osName} collects no telemetry.</p>
+						<a class="text-action" href={docLink("installation", distro)}>Installation guide</a>
+					</li>
+				</ol>
+			</section>
+
+			<section class="story-section dl-other" id={other.id} data-product={other.id} aria-labelledby="other-title">
+				<p class="eyebrow">The other system</p>
+				<div class="dl-other__row">
+					<div class="dl-other__intro">
+						<h2 class="lockup" id="other-title">
+							<img class="logo-light" src={other.lockup.light} width={other.lockup.width} height="40" alt={other.name} />
+							<img class="logo-dark" src={other.lockup.dark} width={other.lockup.width} height="40" alt={other.name} />
+						</h2>
+						<p class="dl-other__role">{other.role}</p>
+					</div>
+					<div class="dl-other__release">
+						{otherRelease ? (
+							<p class:list={["status", "status--available"]}>{other.name} {otherRelease.version} {RELEASE_LABEL} · {longDate(otherRelease.date)} · {formatSize(otherRelease.iso.size)}</p>
+						) : (
+							<p class="status">Not released yet</p>
+						)}
+						<div class="dl-other__links">
+							<a class="text-action" href={href("/download/", other.id)}>{otherRelease ? `Download ${other.name}` : `${other.name} status`}</a>
+							<a class="text-action" href={docLink("variants", distro)}>Compare the two</a>
+						</div>
 					</div>
 				</div>
 			</section>
-		</main>
-	</div>
+		</div>
+	</main>
 	<Footer distro={distro} />
 </BaseLayout>
+
+<style>
+	/* ---------- Hero: the release, its one button, and what the system is ---------- */
+
+	.dl-hero {
+		width: 100%;
+		min-width: 0;
+		display: grid;
+		gap: var(--fn-space-7);
+	}
+
+	.dl-hero__main {
+		min-width: 0;
+	}
+
+	.dl-title span:first-child {
+		overflow-wrap: anywhere;
+	}
+
+	.dl-button {
+		min-height: 54px;
+		padding: 14px 22px;
+		font-size: 0.9375rem;
+	}
+
+	.dl-button__size {
+		margin-left: 12px;
+		padding-left: 12px;
+		border-left: 1px solid color-mix(in srgb, var(--fn-on-action) 45%, transparent);
+		font-weight: 400;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.dl-file {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--fn-space-4);
+		margin-top: var(--fn-space-3);
+		font-size: var(--fn-text-label);
+		line-height: 1.6;
+		color: var(--fn-text-secondary);
+	}
+
+	.dl-file span {
+		font-family: var(--fn-font-code);
+	}
+
+	.dl-file a {
+		color: var(--fn-text-secondary);
+	}
+
+	.dl-sheet {
+		min-width: 0;
+		padding-top: var(--fn-space-4);
+		border-top: 2px solid var(--fn-brand);
+	}
+
+	.dl-sheet__label {
+		margin-bottom: var(--fn-space-3);
+		font-size: var(--fn-text-label);
+		color: var(--fn-text-secondary);
+	}
+
+	@container (min-width: 900px) {
+		.dl-hero {
+			grid-template-columns: minmax(0, 1fr) minmax(17rem, 23rem);
+			gap: var(--fn-space-6) clamp(32px, 4cqi, 56px);
+			align-items: end;
+		}
+	}
+
+	/* ---------- Verify ---------- */
+
+	.dl-hash-label {
+		margin-top: var(--fn-space-6);
+		font-size: var(--fn-text-label);
+		color: var(--fn-text-secondary);
+	}
+
+	.split__copy > .dl-hash-label + .dl-hash {
+		margin-top: var(--fn-space-2);
+	}
+
+	.dl-hash {
+		padding-left: var(--fn-space-4);
+		border-left: 2px solid var(--fn-rule);
+		font-size: 0.75rem;
+		line-height: 1.7;
+		color: var(--fn-text-secondary);
+		overflow-wrap: anywhere;
+	}
+
+	.dl-hash code {
+		font-family: var(--fn-font-code);
+	}
+
+	.dl-more {
+		margin-top: var(--fn-space-5);
+		border-top: var(--fn-rule-width) solid var(--fn-rule);
+	}
+
+	.dl-more summary {
+		display: flex;
+		align-items: center;
+		gap: var(--fn-space-3);
+		min-height: 48px;
+		font-size: var(--fn-text-action);
+		font-weight: 500;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.dl-more summary::-webkit-details-marker {
+		display: none;
+	}
+
+	/* A drawn plus that turns into a minus when open. */
+	.dl-more summary::before {
+		content: "";
+		flex: none;
+		width: 11px;
+		height: 11px;
+		background:
+			linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+			linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+	}
+
+	.dl-more[open] summary::before {
+		background: linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat;
+	}
+
+	.dl-more summary:hover {
+		text-decoration: underline;
+		text-underline-offset: 0.3em;
+	}
+
+	.dl-more__body {
+		padding-bottom: var(--fn-space-2);
+	}
+
+	.dl-more__body > p {
+		margin-bottom: var(--fn-space-4);
+		font-size: var(--fn-text-support);
+		line-height: 1.6;
+		color: var(--fn-text-secondary);
+	}
+
+	/* ---------- Requirements and limits ---------- */
+
+	.dl-pair {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: var(--fn-space-7) var(--fn-space-6);
+	}
+
+	.dl-pair__item {
+		min-width: 0;
+		padding-top: var(--fn-space-5);
+		border-top: 2px solid var(--fn-brand);
+	}
+
+	.dl-pair__item h3 {
+		margin-bottom: var(--fn-space-4);
+	}
+
+	.dl-pair__item .notes {
+		margin-top: 0;
+	}
+
+	.dl-pair__item .text-action {
+		margin-top: var(--fn-space-4);
+	}
+
+	/* ---------- Install steps ---------- */
+
+	.dl-steps .column h3 {
+		margin-top: var(--fn-space-1);
+	}
+
+	.dl-steps .column .text-action {
+		margin-top: var(--fn-space-1);
+	}
+
+	.dl-steps .inline-code {
+		white-space: nowrap;
+	}
+
+	/* ---------- The other system, quietly ---------- */
+
+	.dl-other {
+		padding-top: var(--fn-space-6);
+		border-top: var(--fn-rule-width) solid var(--fn-rule);
+	}
+
+	.dl-other__row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: var(--fn-space-4) var(--fn-space-6);
+		align-items: end;
+	}
+
+	.dl-other .lockup img {
+		height: 28px;
+	}
+
+	.dl-other__role {
+		margin-top: var(--fn-space-3);
+		max-width: 46ch;
+		font-size: var(--fn-text-support);
+		line-height: 1.5;
+		color: var(--fn-brand);
+	}
+
+	.dl-other__release {
+		min-width: 0;
+	}
+
+	.dl-other__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--fn-space-5);
+		margin-top: var(--fn-space-1);
+	}
+
+	/* The sheet keeps its two columns on phones; the rows are short. */
+	@media (max-width: 540px) {
+		.dl-sheet .facts {
+			grid-template-columns: max-content minmax(0, 1fr);
+			gap: var(--fn-space-1) var(--fn-space-4);
+		}
+
+		.dl-sheet .facts dd + dt {
+			margin-top: 0;
+		}
+	}
+
+	@media (max-width: 760px) {
+		.dl-pair,
+		.dl-other__row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

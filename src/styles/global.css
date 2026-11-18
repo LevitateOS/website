@@ -157,62 +157,6 @@
 		padding-inline: var(--fn-page-padding);
 	}
 
-	/* Index column + story column. */
-	.atlas {
-		display: grid;
-		grid-template-columns: var(--fn-index-width) minmax(0, 1fr);
-		column-gap: var(--fn-index-gutter);
-		align-items: start;
-	}
-
-	.atlas__main {
-		min-width: 0;
-	}
-
-	.page-index {
-		position: sticky;
-		top: var(--fn-space-5);
-		padding-top: var(--fn-space-8);
-		font-size: var(--fn-text-label);
-		line-height: 1.4;
-	}
-
-	.page-index ol {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	.page-index a {
-		display: flex;
-		gap: var(--fn-space-2);
-		align-items: baseline;
-		min-height: 32px;
-		padding-block: var(--fn-space-2);
-		color: var(--fn-text-secondary);
-		text-decoration: none;
-	}
-
-	.page-index a:hover {
-		color: var(--fn-text);
-		text-decoration: underline;
-		text-decoration-thickness: 1px;
-	}
-
-	.page-index__n {
-		font-variant-numeric: tabular-nums;
-		min-width: 1.5em;
-		color: var(--fn-brand);
-	}
-
-	.page-index a[aria-current="true"] {
-		color: var(--fn-brand);
-		font-weight: 500;
-		text-decoration: underline;
-		text-decoration-thickness: 1px;
-		text-underline-offset: 0.3em;
-	}
-
 	/* Sections are set apart by space and their headings, not by rules. */
 	.story-section {
 		padding-block: var(--fn-space-8);
@@ -901,7 +845,7 @@
 	}
 
 	/* A product's card names its role in that product's colour. */
-	[data-product] :is(.entry__role, .release__intro > p) {
+	[data-product] .entry__role {
 		color: var(--fn-brand);
 	}
 
@@ -1788,8 +1732,7 @@
 	}
 
 	.docs-list,
-	.docs-list ul,
-	.tradeoffs ul {
+	.docs-list ul {
 		list-style: disc;
 	}
 
@@ -1841,49 +1784,6 @@
 		font-variant-numeric: tabular-nums;
 	}
 
-	/* ---------- Downloads ---------- */
-
-	.release {
-		display: grid;
-		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-		gap: var(--fn-space-5) var(--fn-space-6);
-	}
-
-	.release__intro .lockup {
-		margin-bottom: var(--fn-space-4);
-	}
-
-	.release__intro p + p {
-		margin-top: var(--fn-space-3);
-	}
-
-	.release__details {
-		min-width: 0;
-	}
-
-	.release__details > * + * {
-		margin-top: var(--fn-space-5);
-	}
-
-	.tradeoffs {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: var(--fn-space-4) var(--fn-space-6);
-		font-size: var(--fn-text-support);
-	}
-
-	.tradeoffs h3 {
-		font-family: var(--fn-font-ui);
-		font-size: var(--fn-text-support);
-		font-weight: 500;
-		margin-bottom: var(--fn-space-1);
-	}
-
-	.tradeoffs ul {
-		margin: 0;
-		padding-left: 1.1em;
-	}
-
 	/* ---------- Acknowledgments ---------- */
 
 	.ack-list {
@@ -1929,7 +1829,6 @@
 		}
 
 		.split,
-		.release,
 		.head-credit {
 			grid-template-columns: minmax(0, 1fr);
 		}
@@ -2090,8 +1989,7 @@
 			gap: var(--fn-space-3);
 		}
 
-		.entries,
-		.tradeoffs {
+		.entries {
 			grid-template-columns: minmax(0, 1fr);
 		}
 
@@ -2124,26 +2022,6 @@
 	@media (max-width: 540px) {
 		:root {
 			--fn-page-padding: 22px;
-		}
-
-		.atlas {
-			grid-template-columns: minmax(0, 1fr);
-		}
-
-		.page-index {
-			position: static;
-			padding-top: var(--fn-space-4);
-			border-bottom: var(--fn-rule-width) solid var(--fn-rule);
-		}
-
-		.page-index ol {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0 var(--fn-space-4);
-		}
-
-		.page-index a {
-			min-height: 40px;
 		}
 
 		.ack-list {
