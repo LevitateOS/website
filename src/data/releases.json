@@ -1,4 +1,68 @@
 {
-	"levitateos": null,
-	"acornos": null
+  "acornos": {
+    "date": "2026-11-18",
+    "iso": {
+      "sha512": "da88ead4787e1a311b75f06cae297556f5a6362e2d50085cad56f36b0fcca9ce1403d54c81ea87169a98e292e4c579f662024e630cd03f47e20ea6ce7cbb210f",
+      "size": 1399689216,
+      "url": "https://github.com/LevitateOS/releases/releases/download/acornos-1/acornos-x86_64.iso"
+    },
+    "notes": "https://levitateos.org/releases/acornos/1.0",
+    "parts": [
+      {
+        "name": "parts-desktop",
+        "size": 356774480
+      },
+      {
+        "name": "parts-browser",
+        "size": 106518745
+      },
+      {
+        "name": "parts-system",
+        "size": 72688022
+      },
+      {
+        "name": "parts-fonts",
+        "size": 115291761
+      },
+      {
+        "name": "parts-apps",
+        "size": 1033845
+      }
+    ],
+    "serial": 1,
+    "version": "1.0"
+  },
+  "levitateos": {
+    "date": "2026-11-18",
+    "iso": {
+      "sha512": "b316699493cb18ef8ce069554b386971266142472114ac552af24a04b016247535c82f97e5cb782232fb317e1d002fa89a9165bcbff1f8d90b73629df6725678",
+      "size": 1746161664,
+      "url": "https://github.com/LevitateOS/releases/releases/download/levitateos-1/levitateos-x86_64.iso"
+    },
+    "notes": "https://levitateos.org/releases/levitateos/1.0",
+    "parts": [
+      {
+        "name": "parts-desktop",
+        "size": 519809982
+      },
+      {
+        "name": "parts-browser",
+        "size": 96164947
+      },
+      {
+        "name": "parts-system",
+        "size": 48596680
+      },
+      {
+        "name": "parts-fonts",
+        "size": 121210281
+      },
+      {
+        "name": "parts-apps",
+        "size": 992419
+      }
+    ],
+    "serial": 1,
+    "version": "1.0"
+  }
 }
