@@ -14,7 +14,8 @@ const sharedSlugs = new Set(docsNav.flatMap((section) => section.items.filter((i
 /** Whether the sitemap should list a page: only canonical URLs, not stubs or the AcornOS copies of shared pages. */
 function listed(page: string): boolean {
 	const { pathname } = new URL(page)
-	if (["/acorn/404/", "/docs/", "/acorn/docs/", "/acorn/privacy/"].includes(pathname)) return false
+	if (["/acorn/404/", "/docs/", "/acorn/docs/", "/acorn/privacy/", "/acorn/licenses/"].includes(pathname)) return false
+	if (/^\/acorn\/releases\//.test(pathname)) return false
 	const slug = /^\/acorn\/docs\/([^/]+)\/$/.exec(pathname)?.[1]
 	return !(slug && sharedSlugs.has(slug))
 }

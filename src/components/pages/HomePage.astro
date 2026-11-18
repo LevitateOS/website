@@ -7,6 +7,7 @@ import ProductEntry from "../ProductEntry.astro"
 import ImageFrame from "../ImageFrame.astro"
 import Screenshot from "../Screenshot.astro"
 import { variantOf } from "../../lib/variants"
+import { releaseOf, released } from "../../lib/releases"
 import { docLink } from "../../lib/docs"
 import { DEFAULT_DISTRO, distroName, href, otherFlavor, type DistroId } from "../../lib/flavor"
 import { DISTROS } from "@levitate/docs-content/distros"
@@ -22,6 +23,7 @@ const other = variantOf(otherFlavor(distro).id)
 const record = DISTROS.find((d) => d.id === distro)!
 const { profile } = record
 const osName = distroName(distro)
+const releasedNames = released().map((id) => `${variantOf(id).name} ${releaseOf(id)!.version}`)
 
 /** An annotated example: groups of lines with blank lines between them; each group's note points at one of its lines. */
 function annotate(groups: { lines: string[]; note: string; at?: number; gap?: number }[]) {
@@ -226,11 +228,20 @@ const acknowledgments = [
 		<section class="ending" id="releases" aria-labelledby="releases-title">
 			<div class="wrap ending__row">
 				<div>
-					<h2 id="releases-title">Not released yet. <em>Planned for 2027.</em></h2>
-					<p>LevitateOS and AcornOS ship first for x86_64. The source is public now, and the status page tracks each variant.</p>
+					{releasedNames.length > 0 ? (
+						<>
+							<h2 id="releases-title">{releasedNames.join(" and ")} <em>preview.</em></h2>
+							<p>The first releases are UEFI ISOs for x86_64, tested in virtual machines only. The download page has the checksums, the requirements and the known limits.</p>
+						</>
+					) : (
+						<>
+							<h2 id="releases-title">Not released yet.</h2>
+							<p>LevitateOS and AcornOS ship first for x86_64. The source is public now, and the status page tracks each variant.</p>
+						</>
+					)}
 				</div>
 				<div class="actions">
-					<a class="text-action" href={href("/download/", distro)}>Downloads &amp; status</a>
+					<a class="text-action" href={href("/download/", distro)}>{releasedNames.length > 0 ? "Download" : "Downloads & status"}</a>
 					<a class="text-action" href="https://github.com/LevitateOS/LevitateOS">View the source</a>
 				</div>
 			</div>

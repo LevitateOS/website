@@ -1,6 +1,7 @@
 // llms.txt and llms-full.txt, generated from the docs at build time.
 import { docsNav, plainText } from "@levitate/docs-content"
 import { HARDWARE } from "@levitate/docs-content/pages"
+import { releaseOf, RELEASE_LABEL, formatSize, isoFileName } from "./releases"
 import { DISTROS, docsHref, isDistroPage, pageText, pagesOf } from "./docs"
 
 // The canonical host is astro.config.ts's `site`.
@@ -14,6 +15,14 @@ function header(): string {
 		"",
 		"Siblings (built by the same pipeline, installed the same way):",
 		...DISTROS.map((d) => `- **${d.osName}**: ${d.profile.libc}, ${d.profile.init}, ${d.profile.privilege}, kernel ${d.kernel.version}.`),
+		"",
+		"",
+		"Releases:",
+		...DISTROS.map((d) => {
+			const release = releaseOf(d.id)
+			if (!release) return `- **${d.osName}**: not released yet.`
+			return `- **${d.osName}** ${release.version} (${RELEASE_LABEL}, ${release.date}): ISO ${isoFileName(release)} (${formatSize(release.iso.size)}), SHA-512 ${release.iso.sha512}, notes ${release.notes}`
+		}),
 		"",
 		`Hardware: ${HARDWARE.cpu}, ${HARDWARE.ram} RAM, ${HARDWARE.disk} disk, UEFI with Secure Boot disabled.`,
 	].join("\n")

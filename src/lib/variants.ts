@@ -1,10 +1,11 @@
 // One description of each variant, used by the homepage entries and the downloads page.
-// Keep status honest: nothing here is released until a published artifact exists.
+// Keep status honest: a variant is released only when src/data/releases.json has its entry.
 // The hardware both need is the docs' one baseline.
 // The stack, init, privilege tool, desktop and kernel come from the generated DISTROS
 // (`cargo xtask gen`); the base release is typed here until the generator emits it.
 import { DISTROS } from "@levitate/docs-content/distros"
 import { desktopOn, INIT_NAME, KERNEL_LINE_NAME } from "@levitate/docs-content/pages"
+import { releaseOf, RELEASE_LABEL } from "./releases"
 
 export type ReleaseStatus = "available" | "in-development" | "planned"
 
@@ -51,6 +52,14 @@ const derived = (id: Variant["id"]) => {
 	}
 }
 
+/** The status of a variant, from its release entry. */
+const releaseStatus = (id: Variant["id"]): Pick<Variant, "status" | "statusLabel" | "release"> => {
+	const release = releaseOf(id)
+	return release
+		? { status: "available", statusLabel: "Available", release: `${release.version} ${RELEASE_LABEL}` }
+		: { status: "in-development", statusLabel: "In development", release: "Not released yet" }
+}
+
 export const variants: Variant[] = [
 	{
 		id: "levitate",
@@ -77,9 +86,7 @@ export const variants: Variant[] = [
 		stack: stack("levitate", "GNU"),
 		base: "Fedora 45 RPM packages, signed and locked",
 		...derived("levitate"),
-		status: "in-development",
-		statusLabel: "In development",
-		release: "Planned for 2027",
+		...releaseStatus("levitate"),
 		architectures: "x86_64",
 		format: "Live UEFI ISO",
 		strengths: ["Broad Linux software compatibility", "Userland built from signed Fedora 45 RPM packages", "systemd service management", "Familiar GNU tools"],
@@ -110,9 +117,7 @@ export const variants: Variant[] = [
 		stack: stack("acorn", "busybox"),
 		base: "Alpine Linux 3.24 APK packages",
 		...derived("acorn"),
-		status: "in-development",
-		statusLabel: "In development",
-		release: "Planned for 2027",
+		...releaseStatus("acorn"),
 		architectures: "x86_64",
 		format: "Live UEFI ISO",
 		strengths: ["Faster boot", "Lower memory use", "Smaller disk footprint", "Simpler init system"],

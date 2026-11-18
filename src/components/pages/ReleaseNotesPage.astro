@@ -1,0 +1,94 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import Header from "../layout/Header.astro"
+import Footer from "../layout/Footer.astro"
+import CodeBlock from "../CodeBlock.astro"
+import { href, distroName, type DistroId } from "../../lib/flavor"
+import { formatSize, inline, isoFileName, notesPath, RELEASE_LABEL, releaseOf, verifyCommand } from "../../lib/releases"
+import type { ReleaseNotes } from "../../releases/types"
+
+interface Props {
+	notes: ReleaseNotes
+	/** The flavour of the release's own OS; a page in the other flavour's path only repeats it. */
+	distro: DistroId
+	/** The same page under the AcornOS prefix points at the root one. */
+	canonicalPath?: string
+}
+
+const { notes, distro, canonicalPath = notesPath(notes.os, notes.version) } = Astro.props
+const osName = distroName(distro)
+const release = releaseOf(distro)
+const published = release?.version === notes.version ? release : null
+const title = `${osName} ${notes.version} (${RELEASE_LABEL}) release notes`
+const issues = "https://github.com/LevitateOS/LevitateOS/issues"
+
+const sections = [
+	{ id: "what", title: "What it is", items: notes.what, list: false },
+	{ id: "contents", title: "What is in the ISO", items: notes.contents, list: true },
+	{ id: "install", title: "Installing", items: notes.install, list: true, ordered: true },
+	{ id: "tested", title: "What was tested", items: notes.tested, list: true },
+	{ id: "limits", title: "Known limits", items: notes.limits, list: true },
+]
+---
+
+<BaseLayout distro={distro} canonicalPath={canonicalPath} title={title} description={`What ${osName} ${notes.version} is, what is in its ISO, how it was tested and its known limits.`} preloadDisplay={false}>
+	<Header distro={distro} />
+	<main id="main" class="wrap">
+		<div class="story-section prose release-notes">
+			<p class="eyebrow">Release notes</p>
+			<h1>{osName} {notes.version} <em>{RELEASE_LABEL}</em></h1>
+			{published ? (
+				<p class="lead">Released {published.date}. <a href={href("/download/", distro) + "#" + distro}>Download it</a>.</p>
+			) : (
+				<div class="callout">
+					<strong class="callout__label">Not published yet</strong>
+					<p>These notes describe a release that is not published. The <a href={href("/download/", distro)}>download page</a> lists what is available.</p>
+				</div>
+			)}
+
+			{sections.map((section) => (
+				<>
+					<h2 id={section.id}>{section.title}</h2>
+					{section.list ? (
+						section.ordered ? (
+							<ol class="docs-list">{section.items.map((item) => <li>{inline(item).map((piece) => piece.code ? <code class="inline-code">{piece.text}</code> : piece.text)}</li>)}</ol>
+						) : (
+							<ul class="docs-list">{section.items.map((item) => <li>{inline(item).map((piece) => piece.code ? <code class="inline-code">{piece.text}</code> : piece.text)}</li>)}</ul>
+						)
+					) : (
+						section.items.map((item) => <p>{inline(item).map((piece) => piece.code ? <code class="inline-code">{piece.text}</code> : piece.text)}</p>)
+					)}
+				</>
+			))}
+
+			<h2 id="verify">Checking the ISO</h2>
+			{published ? (
+				<>
+					<p>The ISO is <code class="inline-code">{isoFileName(published)}</code>, {formatSize(published.iso.size)}. Its SHA-512 is:</p>
+					<p><code class="inline-code release__hash">{published.iso.sha512}</code></p>
+					<p>Check the download in the folder that holds it:</p>
+					<CodeBlock language="bash" code={verifyCommand(published)} label="Check the ISO" />
+					<p>It prints <code class="inline-code">{isoFileName(published)}: OK</code> when the file is the one we published.</p>
+				</>
+			) : (
+				<>
+					<p>Each release publishes a SHA-512 checksum for its ISO, and the download page shows it. Check the file with <code class="inline-code">sha512sum -c</code> before writing it to a stick.</p>
+				</>
+			)}
+			<p>The release's own files are signed. The installer checks the signature of <code class="inline-code">release.json</code> against the public key it carries, <code class="inline-code">distro/keys/release/2026-11.pub</code> in the <a href="https://github.com/LevitateOS/LevitateOS/tree/master/distro/keys/release">source repository</a>, and then each part's hash.</p>
+
+			<h2 id="problems">Reporting problems</h2>
+			<p>Open an issue at <a href={issues}>github.com/LevitateOS/LevitateOS/issues</a> and say which release you ran, on what machine or virtual machine, and what happened. Security problems go through private reporting; <a href="https://github.com/LevitateOS/LevitateOS/blob/master/SECURITY.md">SECURITY.md</a> says how.</p>
+
+			<h2 id="licenses">Licences and source</h2>
+			<p>Our own code is MIT or Apache-2.0. The ISO also contains other people's software under its own licences, and the source of the GPL and LGPL programs is available. The <a href={href("/licenses/", distro)}>licences page</a> has the details and the source offer.</p>
+		</div>
+	</main>
+	<Footer distro={distro} />
+</BaseLayout>
+
+<style>
+	.release-notes :global(.release__hash) {
+		overflow-wrap: anywhere;
+	}
+</style>

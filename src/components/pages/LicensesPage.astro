@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import Header from "../layout/Header.astro"
+import Footer from "../layout/Footer.astro"
+import { DEFAULT_DISTRO, href, type DistroId } from "../../lib/flavor"
+
+interface Props {
+	distro?: DistroId
+}
+
+const { distro = DEFAULT_DISTRO } = Astro.props
+const repo = "https://github.com/LevitateOS/LevitateOS"
+---
+
+<BaseLayout distro={distro} canonicalPath="/licenses/" title="Licences · LevitateOS" description="The licences of LevitateOS and AcornOS: our own code, the third-party software in the ISOs, and how to get the source of the GPL and LGPL programs." preloadDisplay={false}>
+	<Header distro={distro} />
+	<main id="main" class="wrap">
+		<div class="story-section prose">
+			<p class="eyebrow">Last updated November 2026</p>
+			<h1>Licences</h1>
+
+			<h2>Our own code</h2>
+			<p>The source code of LevitateOS and AcornOS (the installer, the rec* tools, Recipe, the build system and this website) is dual-licensed: you may use it under either the <a href={`${repo}/blob/master/LICENSE-MIT`}>MIT licence</a> or the <a href={`${repo}/blob/master/LICENSE-APACHE`}>Apache-2.0 licence</a>. Contributions are accepted under the same terms. The <a href={`${repo}/blob/master/LICENSE`}>LICENSE file</a> in the repository lists the components and their licences.</p>
+
+			<h2>Software from other people</h2>
+			<p>The ISOs and the systems installed from them also contain third-party software, each part under its own licence. The Linux kernel is GPL-2.0-only. Much of the rest is under the GPL, the LGPL or other free-software licences such as MIT, BSD and Apache-2.0. LevitateOS's userland is built from Fedora 45 RPM packages and AcornOS's from Alpine Linux 3.24 APK packages, so those packages' licences apply to the programs they contain.</p>
+			<p>The licence texts of the installed software are in <code class="inline-code">/usr/share/licenses</code> inside the image.</p>
+
+			<h2 id="source">Source code offer</h2>
+			<p>For at least three years after the release, on request to the project's issue tracker (<a href={`${repo}/issues`}>https://github.com/LevitateOS/LevitateOS/issues</a>) we provide the complete corresponding source code of every GPL- and LGPL-licensed program in the release on a medium customarily used for software interchange, for no more than the cost of physically performing the distribution. The exact upstream source packages and their hashes are listed in <code class="inline-code">SOURCES.txt</code>.</p>
+			<p><code class="inline-code">SOURCES.txt</code> is an asset of each release in <a href="https://github.com/LevitateOS/releases/releases">LevitateOS/releases</a>, next to the ISO. The release build writes it from the locked package lists and lists each source package with its URL and hash.</p>
+			<p>The upstream sources are also public: Fedora's at <a href="https://src.fedoraproject.org">src.fedoraproject.org</a> and Alpine's at <a href="https://pkgs.alpinelinux.org/packages">pkgs.alpinelinux.org</a>. The kernel is built from pinned upstream source with the configuration in the repository's <code class="inline-code">distro/variants</code> folder.</p>
+
+			<h2>Privacy and security</h2>
+			<p>How this website treats your data is on the <a href={href("/privacy/", distro)}>privacy page</a>. To report a security problem, read <a href={`${repo}/blob/master/SECURITY.md`}>SECURITY.md</a>.</p>
+		</div>
+	</main>
+	<Footer distro={distro} />
+</BaseLayout>

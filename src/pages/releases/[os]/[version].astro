@@ -1,0 +1,17 @@
+---
+import ReleaseNotesPage from "../../../components/pages/ReleaseNotesPage.astro"
+import { allNotes, distroOfOs } from "../../../lib/releases"
+import type { ReleaseNotes } from "../../../releases/types"
+
+export function getStaticPaths() {
+	return allNotes.map((notes) => ({ params: { os: notes.os, version: notes.version }, props: { notes } }))
+}
+
+interface Props {
+	notes: ReleaseNotes
+}
+
+const { notes } = Astro.props
+---
+
+<ReleaseNotesPage notes={notes} distro={distroOfOs(notes.os)!} />

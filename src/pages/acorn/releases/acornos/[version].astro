@@ -1,0 +1,18 @@
+---
+import ReleaseNotesPage from "../../../../components/pages/ReleaseNotesPage.astro"
+import { allNotes, distroOfOs, notesPath } from "../../../../lib/releases"
+import type { ReleaseNotes } from "../../../../releases/types"
+
+// The AcornOS flavour's own copy of AcornOS's notes; the canonical page is the one at the root.
+export function getStaticPaths() {
+	return allNotes.filter((notes) => notes.os === "acornos").map((notes) => ({ params: { version: notes.version }, props: { notes } }))
+}
+
+interface Props {
+	notes: ReleaseNotes
+}
+
+const { notes } = Astro.props
+---
+
+<ReleaseNotesPage notes={notes} distro={distroOfOs(notes.os)!} canonicalPath={notesPath(notes.os, notes.version)} />

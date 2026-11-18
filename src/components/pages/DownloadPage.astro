@@ -8,7 +8,9 @@ import Screenshot from "../Screenshot.astro"
 import { HARDWARE } from "@levitate/docs-content/pages"
 import { docLink } from "../../lib/docs"
 import { variants as allVariants, variantOf } from "../../lib/variants"
+import CodeBlock from "../CodeBlock.astro"
 import { DEFAULT_DISTRO, distroName, type DistroId } from "../../lib/flavor"
+import { formatSize, inline, isoFileName, notesFor, notesPath, osKey, RELEASE_LABEL, releaseOf, released, verifyCommand } from "../../lib/releases"
 
 interface Props {
 	distro?: DistroId
@@ -18,6 +20,8 @@ const { distro = DEFAULT_DISTRO } = Astro.props
 const osName = distroName(distro)
 // This flavour's release section first.
 const variants = [variantOf(distro), ...allVariants.filter((v) => v.id !== distro)]
+
+const anyReleased = released().length > 0
 
 const sections = [
 	{ id: "status", label: "Status" },
@@ -30,7 +34,9 @@ const sections = [
 <BaseLayout
 	title={`Downloads & status · ${osName}`}
 	distro={distro}
-	description="Release status and system requirements for LevitateOS and AcornOS. Both are in development; first releases are planned for 2027, x86_64 first."
+	description={anyReleased
+		? "Download the LevitateOS and AcornOS preview ISOs, with checksums, system requirements and known limits. x86_64, UEFI, tested in virtual machines."
+		: "Release status and system requirements for LevitateOS and AcornOS. Neither is released yet; both ship first for x86_64."}
 >
 	<Header distro={distro} />
 	<div class="wrap atlas">
@@ -40,14 +46,30 @@ const sections = [
 				<ImageFrame art="atlas" class="frame-host--inset frame-host--editorial">
 					<div class="section-head">
 						<p class="eyebrow">Downloads &amp; status</p>
-						<h1 id="status-title">Not released <em>yet.</em></h1>
-						<p class="lead">LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default. First releases are planned for 2027, x86_64 first.</p>
+						{anyReleased ? (
+							<>
+							<h1 id="status-title">Preview <em>releases.</em></h1>
+							<p class="lead">LevitateOS and AcornOS are independent operating systems. Their userlands are built from Fedora 45 RPM packages and Alpine 3.24 APK packages. The first releases are previews: UEFI ISOs for x86_64, tested in virtual machines only.</p>
+							</>
+						) : (
+							<>
+							<h1 id="status-title">Not released <em>yet.</em></h1>
+							<p class="lead">LevitateOS and AcornOS are in development. Each will ship as a live UEFI ISO that installs an A/B system by default, x86_64 first.</p>
+							</>
+						)}
 					</div>
 				</ImageFrame>
-				<div class="callout">
-					<strong class="callout__label">Note</strong>
-					<p>There is nothing to download yet. This page will list each release's version, architecture, format and checksum once a published artifact exists. Until then you can build the ISO from the <a href="https://github.com/LevitateOS/LevitateOS">public source</a> with <code class="inline-code">cargo xtask build release &lt;distro&gt;</code>; the <a href={docLink("getting-started", distro)}>getting started guide</a> has the steps.</p>
-				</div>
+				{anyReleased ? (
+					<div class="callout">
+						<strong class="callout__label">Preview</strong>
+						<p>Installing overwrites the target disk, so back up anything you need first. A preview needs UEFI with Secure Boot off, has no disk encryption and has not run on real hardware yet. Each release's notes list its known limits.</p>
+					</div>
+				) : (
+					<div class="callout">
+						<strong class="callout__label">Note</strong>
+						<p>There is nothing to download yet. This page will list each release's version, date, checksum and size once it is published. Until then you can build the ISO from the <a href="https://github.com/LevitateOS/LevitateOS">public source</a> with <code class="inline-code">cargo xtask build release &lt;distro&gt;</code>; the <a href={docLink("getting-started", distro)}>getting started guide</a> has the steps.</p>
+					</div>
+				)}
 			</section>
 
 			<section class="story-section" id="requirements" aria-labelledby="requirements-title">
@@ -70,7 +92,10 @@ const sections = [
 				</div>
 			</section>
 
-			{variants.map((variant) => (
+			{variants.map((variant) => {
+				const release = releaseOf(variant.id)
+				const notes = release ? notesFor(osKey(variant.id), release.version) : undefined
+				return (
 				<section class="story-section release" id={variant.id} data-product={variant.id} aria-labelledby={`release-${variant.id}`}>
 					<div class="release__intro">
 						<h2 class="lockup" id={`release-${variant.id}`}>
@@ -98,8 +123,39 @@ const sections = [
 							<dt>Architecture</dt>
 							<dd>{variant.architectures}</dd>
 							<dt>Version</dt>
-							<dd>None released</dd>
+							<dd>{release ? `${release.version} (${RELEASE_LABEL}), ${release.date}` : "Not released yet"}</dd>
 						</dl>
+						{release && (
+							<div class="release__download">
+								<h3>Download {variant.name} {release.version} ({RELEASE_LABEL})</h3>
+								<dl class="facts">
+									<dt>ISO</dt>
+									<dd><a class="text-action" href={release.iso.url}>{isoFileName(release)}</a></dd>
+									<dt>Size</dt>
+									<dd>{formatSize(release.iso.size)}</dd>
+									<dt>SHA-512</dt>
+									<dd class="release__hash"><code>{release.iso.sha512}</code></dd>
+									<dt>Date</dt>
+									<dd>{release.date}</dd>
+									{release.parts.length > 0 && (
+										<>
+											<dt>Downloaded during install</dt>
+											<dd>{formatSize(release.parts.reduce((total, part) => total + part.size, 0))} of default software, in {release.parts.length} signed parts</dd>
+										</>
+									)}
+								</dl>
+								<p>Check the download in the folder that holds it:</p>
+								<CodeBlock language="bash" code={verifyCommand(release)} label="Check the ISO" />
+								<p>It prints <code class="inline-code">{isoFileName(release)}: OK</code> when the file is the one we published.</p>
+								{notes && (
+									<>
+										<h3>Known limits</h3>
+										<ul class="docs-list">{notes.limits.map((item) => <li>{inline(item).map((piece) => piece.code ? <code class="inline-code">{piece.text}</code> : piece.text)}</li>)}</ul>
+									</>
+								)}
+								<p><a class="text-action" href={notesPath(osKey(variant.id), release.version)}>Release notes for {release.version}</a></p>
+							</div>
+						)}
 						<div class="tradeoffs">
 							<div>
 								<h3>Strengths</h3>
@@ -113,7 +169,8 @@ const sections = [
 						<p><a class="text-action" href={docLink("variants", distro)}>Compare the variants</a></p>
 					</div>
 				</section>
-			))}
+				)
+			})}
 
 			<section class="story-section" id="before-installing" aria-labelledby="install-title">
 				<div class="split">

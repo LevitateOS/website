@@ -7,6 +7,16 @@ This checklist is specific to:
 
 Use this as the source of truth for launch readiness and first growth phases.
 
+## Open P0 items that are the owner's (2026-11-18)
+
+Claude prepared the pages (release data file, download page, release notes, licences, footer links) and built them locally; none of this is deployed.
+
+- [ ] DNS/apex: remove the conflicting apex `A`/`AAAA` records and point the apex at the Pages target (P0.1).
+- [ ] Choose the canonical host policy, `www -> apex` or `apex -> www` (P0.1).
+- [ ] Deploy (`bun run deploy`), after the release data file holds a real release (`cargo xtask release site <distro>`) (P0.2).
+- [ ] Analytics: decide and record the decision. The default is none, which matches the privacy page; then P0.9 is closed as "none", not implemented.
+- [ ] Final go/no-go (P0.10).
+
 ## Current Quick-Check Status (2026-02-16)
 
 - [x] `bun run check` passes (`typecheck` + `build`).
